@@ -6,18 +6,18 @@ const path = require('path');
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
-  cors: { origin: '*' } // Allow connections from anywhere (fine for this game; restrict in production if needed)
+  cors: { origin: '*' }
 });
 
 const PORT = process.env.PORT || 3000;
 
-// Serve static files (including Staxxit.html as root)
+// Serve static files
 app.use(express.static(__dirname));
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'Staxxit.html'));
 });
 
-// Game utilities (duplicated from client for server-side validation)
+// Game utilities
 const dirs = [
   [1, 0], [1, -1], [0, -1],
   [-1, 0], [-1, 1], [0, 1]
@@ -177,7 +177,7 @@ function getValidPlaces(board, occupied, piecesLeft, player) {
   return valids;
 }
 
-// Precompute outer colors (same as client)
+// Precompute outer colors
 let outerColors = {};
 let dualKeys = new Set(['6,0', '0,6', '-6,6', '0,-6', '6,-6', '-6,0']);
 let outerHexes = [];
@@ -212,11 +212,11 @@ function getAngle(q, r) {
   return Math.atan2(y, x);
 }
 
-// Games: roomId -> { board, phase, currentPlayer, piecesLeft, occupied, players: {socketId: color}, ... }
+// Games: roomId -> game state
 const games = new Map();
 
 function generateRoomId() {
-  return Math.random().toString(36).substr(2, 6).toUpperCase(); // Simple 6-char code
+  return Math.random().toString(36).substr(2, 6).toUpperCase();
 }
 
 io.on('connection', (socket) => {
@@ -230,14 +230,14 @@ io.on('connection', (socket) => {
       currentPlayer: 'W',
       piecesLeft: { W: 18, B: 18 },
       occupied: new Set(),
-      players: { [socket.id]: 'W' }, // Creator is White
-      aiPlayer: null, // No AI for multi-user
-      outerColors // Shared
+      players: { [socket.id]: 'W' },
+      aiPlayer: null,
+      outerColors
     };
     games.set(roomId, game);
     socket.join(roomId);
     callback({ roomId, color: 'W' });
-    io.to(roomId).emit('gameUpdate', game);
+    io.to(roomId).emit('gameUpdate', getSerializableGame(game));
   });
 
   socket.on('joinGame', (roomId, callback) => {
@@ -245,11 +245,11 @@ io.on('connection', (socket) => {
     if (!game || Object.keys(game.players).length >= 2) {
       return callback({ error: 'Invalid or full room' });
     }
-    game.players[socket.id] = 'B'; // Joiner is Blue
+    game.players[socket.id] = 'B';
     socket.join(roomId);
     callback({ color: 'B' });
-    io.to(roomId).emit('gameUpdate', game);
-    io.to(roomId).emit('gameStart'); // Both players ready
+    io.to(roomId).emit('gameUpdate', getSerializableGame(game));
+    io.to(roomId).emit('gameStart');
   });
 
   socket.on('makeMove', (data) => {
@@ -257,7 +257,6 @@ io.on('connection', (socket) => {
     const game = games.get(roomId);
     if (!game || game.players[socket.id] !== game.currentPlayer) return;
 
-    // Validate and apply action (place, move, capture, split)
     let valid = false;
     if (game.phase === 'place') {
       const valids = getValidPlaces(game.board, game.occupied, game.piecesLeft, game.currentPlayer);
@@ -291,24 +290,20 @@ io.on('connection', (socket) => {
       }
       if (!targets.includes(to)) return;
 
-      // Apply
       const stFrom = game.board[from];
       if (getCaptureTargets(game.board, from, player).includes(to)) {
-        // Capture
         const stTo = game.board[to] || { stack: [] };
         game.board[to] = { stack: stTo.stack.concat(stFrom.stack) };
       } else if (getMoveInner(game.board, from, player).includes(to) || getExitTargets(game.board, from, player, game.outerColors).includes(to)) {
-        // Move/Exit
         game.board[to] = { stack: stFrom.stack };
       } else {
-        // Split
         const h = stFrom.stack.length;
-        const h1 = action.splitH1; // From client prompt
+        const h1 = action.splitH1;
         if (h1 >= 1 && h1 < h) {
           game.board[to] = { stack: stFrom.stack.splice(h1) };
           game.occupied.add(to);
         } else {
-          return; // Invalid
+          return;
         }
       }
       delete game.board[from];
@@ -317,14 +312,13 @@ io.on('connection', (socket) => {
 
     if (valid) {
       game.currentPlayer = game.currentPlayer === 'W' ? 'B' : 'W';
-      io.to(roomId).emit('gameUpdate', game);
+      io.to(roomId).emit('gameUpdate', getSerializableGame(game));
       checkEnd(roomId, game);
     }
   });
 
   socket.on('disconnect', () => {
     console.log(`User disconnected: ${socket.id}`);
-    // Clean up: If last player in room, delete game (optional)
     for (let [roomId, game] of games) {
       if (game.players[socket.id]) {
         delete game.players[socket.id];
@@ -380,6 +374,14 @@ function checkEnd(roomId, game) {
     }
     io.to(roomId).emit('gameEnd', { winner });
   }
+}
+
+// Serialization helper: Convert Set to array for JSON
+function getSerializableGame(game) {
+  return {
+    ...game,
+    occupied: Array.from(game.occupied)
+  };
 }
 
 server.listen(PORT, () => {

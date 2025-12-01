@@ -1028,17 +1028,17 @@
             });
         }
 
-        socket.on('gameUpdate', (gameState) => {
-            board = gameState.board;
-            phase = gameState.phase;
-            currentPlayer = gameState.currentPlayer;
-            piecesLeft = gameState.piecesLeft;
-            occupied = new Set(gameState.occupied);
-            outerColors = gameState.outerColors; // Sync if needed
-            selected = null;
-            possibleTargets = [];
-            draw();
-        });
+socket.on('gameUpdate', (gameState) => {
+  board = gameState.board;
+  phase = gameState.phase;
+  currentPlayer = gameState.currentPlayer;
+  piecesLeft = gameState.piecesLeft;
+  occupied = new Set(gameState.occupied); // Reconstruct Set from array
+  outerColors = gameState.outerColors;
+  selected = null;
+  possibleTargets = [];
+  draw();
+});
 
         socket.on('gameStart', () => {
             document.getElementById('roomInfo').innerHTML += ' - Game started!';
