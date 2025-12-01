@@ -252,52 +252,54 @@ io.on('connection', (socket) => {
     io.to(roomId).emit('gameStart');
   });
 
-  socket.on('makeMove', (data) => {
-    const { roomId, action } = data;
-    const game = games.get(roomId);
-    if (!game || game.players[socket.id] !== game.currentPlayer) return;
+socket.on('makeMove', (data) => {
+  const { roomId, action } = data;
+  const game = games.get(roomId);
+  if (!game || game.players[socket.id] !== game.currentPlayer) return;
 
-    let valid = false;
-    if (game.phase === 'place') {
-      const valids = getValidPlaces(game.board, game.occupied, game.piecesLeft, game.currentPlayer);
-      if (valids.includes(action.pos)) {
-        game.board[action.pos] = { stack: [game.currentPlayer] };
-        game.occupied.add(action.pos);
-        game.piecesLeft[game.currentPlayer]--;
-        if (game.piecesLeft.W + game.piecesLeft.B === 0) {
-          game.phase = 'play';
-        }
-        valid = true;
+  let valid = false;
+  if (game.phase === 'place') {
+    const valids = getValidPlaces(game.board, game.occupied, game.piecesLeft, game.currentPlayer);
+    if (valids.includes(action.pos)) {
+      game.board[action.pos] = { stack: [game.currentPlayer] };
+      game.occupied.add(action.pos);
+      game.piecesLeft[game.currentPlayer]--;
+      if (game.piecesLeft.W + game.piecesLeft.B === 0) {
+        game.phase = 'play';
       }
+      valid = true;
+    }
+  } else {
+    const from = action.from;
+    const to = action.to;
+    const player = game.currentPlayer;
+    if (!isInner(from) || !game.board[from] || game.board[from].stack[game.board[from].stack.length - 1] !== player) return;
+
+    const mandatory = hasAnyCapture(game.board, player);
+    let targets = [];
+    if (mandatory) {
+      targets = getCaptureTargets(game.board, from, player);
     } else {
-      const from = action.from;
-      const to = action.to;
-      const player = game.currentPlayer;
-      if (!isInner(from) || !game.board[from] || game.board[from].stack[game.board[from].stack.length - 1] !== player) return;
-
-      const mandatory = hasAnyCapture(game.board, player);
-      let targets = [];
-      if (mandatory) {
-        targets = getCaptureTargets(game.board, from, player);
-      } else {
-        targets = [
-          ...getMoveInner(game.board, from, player),
-          ...getExitTargets(game.board, from, player, game.outerColors)
-        ];
-        if (game.board[from].stack.length > 11) {
-          targets = targets.concat(getSplitAdjs(game.board, from));
-        }
+      targets = [
+        ...getMoveInner(game.board, from, player),
+        ...getExitTargets(game.board, from, player, game.outerColors)
+      ];
+      if (game.board[from].stack.length > 11) {
+        targets = targets.concat(getSplitAdjs(game.board, from));
       }
-      if (!targets.includes(to)) return;
+    }
+    if (!targets.includes(to)) return;
 
-      const stFrom = game.board[from];
-      if (getCaptureTargets(game.board, from, player).includes(to)) {
-        const stTo = game.board[to] || { stack: [] };
-        game.board[to] = { stack: stTo.stack.concat(stFrom.stack) };
-      } else if (getMoveInner(game.board, from, player).includes(to) || getExitTargets(game.board, from, player, game.outerColors).includes(to)) {
-        game.board[to] = { stack: stFrom.stack };
-      } else {
-        const h = stFrom.stack.length;
+    const stFrom = game.board[from];
+    const h = stFrom.stack.length;
+    if (getCaptureTargets(game.board, from, player).includes(to)) {
+      const stTo = game.board[to] || { stack: [] };
+      game.board[to] = { stack: stTo.stack.concat(stFrom.stack) };
+    } else if (getMoveInner(game.board, from, player).includes(to) || getExitTargets(game.board, from, player, game.outerColors).includes(to)) {
+      game.board[to] = { stack: stFrom.stack };
+    } else {
+      // Split only if h > 11 (redundant but defensive)
+      if (h > 11) {
         const h1 = action.splitH1;
         if (h1 >= 1 && h1 < h) {
           game.board[to] = { stack: stFrom.stack.splice(h1) };
@@ -305,17 +307,20 @@ io.on('connection', (socket) => {
         } else {
           return;
         }
+      } else {
+        return;
       }
-      delete game.board[from];
-      valid = true;
     }
+    delete game.board[from];
+    valid = true;
+  }
 
-    if (valid) {
-      game.currentPlayer = game.currentPlayer === 'W' ? 'B' : 'W';
-      io.to(roomId).emit('gameUpdate', getSerializableGame(game));
-      checkEnd(roomId, game);
-    }
-  });
+  if (valid) {
+    game.currentPlayer = game.currentPlayer === 'W' ? 'B' : 'W';
+    io.to(roomId).emit('gameUpdate', getSerializableGame(game));
+    checkEnd(roomId, game);
+  }
+});
 
   socket.on('disconnect', () => {
     console.log(`User disconnected: ${socket.id}`);
