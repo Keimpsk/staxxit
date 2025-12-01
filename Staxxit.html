@@ -1006,49 +1006,52 @@
         }
 
         function replayLastOpponentMove() {
-            if (!canReplayOpponent || lastOpponentAction === null || opponentPrevState === null) return;
+    if (!canReplayOpponent || lastOpponentAction === null || opponentPrevState === null) return;
 
-            restoreState(opponentPrevState);
+    const currentState = saveState();  // Save current to restore later
+
+    restoreState(opponentPrevState);
+    draw();
+
+    setTimeout(() => {
+        flashingFrom = lastOpponentAction.type === 'place' ? lastOpponentAction.pos : lastOpponentAction.from;
+        draw();
+        setTimeout(() => {
+            flashingFrom = null;
+            const player = opponentPrevState.currentPlayer;
+            if (lastOpponentAction.type === 'place') {
+                const pos = lastOpponentAction.pos;
+                board[pos] = { stack: [player] };
+                occupied.add(pos);
+                piecesLeft[player]--;
+                if (piecesLeft.W + piecesLeft.B === 0) {
+                    phase = 'play';
+                }
+            } else {
+                const from = lastOpponentAction.from;
+                const to = lastOpponentAction.to;
+                const stFrom = getState(from);
+                if (lastOpponentAction.type === 'capture') {
+                    const stTo = getState(to);
+                    board[to].stack = stTo.stack.concat(stFrom.stack);
+                } else if (lastOpponentAction.type === 'split') {
+                    board[to] = { stack: stFrom.stack.splice(lastOpponentAction.splitH1) };
+                    occupied.add(to);
+                } else {
+                    board[to] = { stack: stFrom.stack };
+                }
+                delete board[from];
+            }
+            flashingTo = lastOpponentAction.type === 'place' ? lastOpponentAction.pos : lastOpponentAction.to;
             draw();
-
             setTimeout(() => {
-                flashingFrom = lastOpponentAction.type === 'place' ? lastOpponentAction.pos : lastOpponentAction.from;
+                flashingTo = null;
+                restoreState(currentState);  // Restore original state
                 draw();
-                setTimeout(() => {
-                    flashingFrom = null;
-                    const player = opponentPrevState.currentPlayer;
-                    if (lastOpponentAction.type === 'place') {
-                        const pos = lastOpponentAction.pos;
-                        board[pos] = { stack: [player] };
-                        occupied.add(pos);
-                        piecesLeft[player]--;
-                        if (piecesLeft.W + piecesLeft.B === 0) {
-                            phase = 'play';
-                        }
-                    } else {
-                        const from = lastOpponentAction.from;
-                        const to = lastOpponentAction.to;
-                        const stFrom = getState(from);
-                        if (lastOpponentAction.type === 'capture') {
-                            const stTo = getState(to);
-                            board[to].stack = stTo.stack.concat(stFrom.stack);
-                        } else if (lastOpponentAction.type === 'split') {
-                            board[to] = { stack: stFrom.stack.splice(lastOpponentAction.splitH1) };
-                            occupied.add(to);
-                        } else {
-                            board[to] = { stack: stFrom.stack };
-                        }
-                        delete board[from];
-                    }
-                    flashingTo = lastOpponentAction.type === 'place' ? lastOpponentAction.pos : lastOpponentAction.to;
-                    draw();
-                    setTimeout(() => {
-                        flashingTo = null;
-                        draw();
-                    }, 400);
-                }, 400);
             }, 400);
-        }
+        }, 400);
+    }, 400);
+}
 
         function createOnlineGame() {
             socket.emit('createGame', (res) => {
