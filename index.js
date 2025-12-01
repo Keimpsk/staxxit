@@ -1,1073 +1,389 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Staxxit - Interactive Board Game Simulator</title>
-    <style>
-        body { font-family: Arial, sans-serif; background: #f4f4f4; text-align: center; padding: 20px; }
-        canvas { border: 2px solid #333; background: #fff; cursor: pointer; }
-        button { margin: 10px; padding: 10px 20px; font-size: 16px; cursor: pointer; }
-        button:disabled { opacity: 0.5; cursor: not-allowed; }
-        #info { margin: 20px; font-size: 18px; }
-        #multiplayer { margin: 20px; }
-        input { padding: 10px; font-size: 16px; }
-    </style>
-</head>
-<body>
-    <h1>🕸️ Staxxit</h1>
-    <p>Interactive game. Play hotseat, vs AI, or online multiplayer. White starts. Click to place/move/capture. Must capture if possible!</p>
-    <canvas id="game" width="1400" height="900"></canvas>
-    <br>
-    <div id="localControls">
-        <button onclick="quickSetup()">Quick Random Setup (Hotseat)</button>
-        <button onclick="quickSetup('B')">Quick Setup (vs AI as Blue)</button>
-        <button onclick="quickSetup('W')">Quick Setup (vs AI as White)</button>
-        <button onclick="newGame()">New Game (Hotseat)</button>
-        <button onclick="newGame('B')">New Game (vs AI as Blue)</button>
-        <button onclick="newGame('W')">New Game (vs AI as White)</button>
-    </div>
-    <div id="multiplayer">
-        <button onclick="createOnlineGame()">Create Online Game</button>
-        <input id="joinCode" placeholder="Enter join code" />
-        <button onclick="joinOnlineGame()">Join Online Game</button>
-        <div id="roomInfo"></div>
-    </div>
-    <button onclick="toggleDebug()">Toggle Coord Labels</button>
-    <button id="toggleSuggestionsBtn" onclick="toggleSuggestions()">Suggestions on</button>
-    <button id="aiLevelBtn" onclick="toggleAILevel()">AI level: easy</button>
-    <button id="undoBtn" onclick="undoMove()" disabled>Undo</button>
-    <button id="replayBtn" onclick="replayLastAIMove()" disabled>Show last AI move again</button>
-    <div id="info"></div>
+const express = require('express');
+const http = require('http');
+const { Server } = require('socket.io');
+const path = require('path');
 
-    <script src="/socket.io/socket.io.js"></script>
-    <script>
-        const socket = io();
+const app = express();
+const server = http.createServer(app);
+const io = new Server(server, {
+  cors: { origin: '*' }
+});
 
-        const canvas = document.getElementById('game');
-        const ctx = canvas.getContext('2d');
-        const size = 36;
-        let debug = false;
-        let showSuggestions = true;
-        let aiDifficulty = 'easy';
+const PORT = process.env.PORT || 3000;
 
-        const dirs = [
-            [1, 0], [1, -1], [0, -1],
-            [-1, 0], [-1, 1], [0, 1]
+// Serve static files
+app.use(express.static(__dirname));
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'Staxxit.html'));
+});
+
+// Game utilities
+const dirs = [
+  [1, 0], [1, -1], [0, -1],
+  [-1, 0], [-1, 1], [0, 1]
+];
+
+function parseKey(key) {
+  return key.split(',').map(Number);
+}
+
+function cubeDist(aq, ar, bq, br) {
+  const as = -aq - ar;
+  const bs = -bq - br;
+  return Math.max(Math.abs(aq - bq), Math.abs(ar - br), Math.abs(as - bs));
+}
+
+function isInner(key) {
+  const [q, r] = parseKey(key);
+  return cubeDist(0, 0, q, r) <= 5;
+}
+
+function isOuter(key) {
+  const [q, r] = parseKey(key);
+  return cubeDist(0, 0, q, r) === 6;
+}
+
+function neighbors(key) {
+  const [q, r] = parseKey(key);
+  const neigh = [];
+  for (let d = 0; d < 6; d++) {
+    const nq = q + dirs[d][0];
+    const nr = r + dirs[d][1];
+    const nkey = `${nq},${nr}`;
+    const ns = -nq - nr;
+    if (Math.max(Math.abs(nq), Math.abs(nr), Math.abs(ns)) <= 6) {
+      neigh.push(nkey);
+    }
+  }
+  return neigh;
+}
+
+function pathClear(board, fromKey, dq, dr, k) {
+  for (let i = 1; i < k; i++) {
+    const [fq, fr] = parseKey(fromKey);
+    const iq = fq + i * dq;
+    const ir = fr + i * dr;
+    const ikey = `${iq},${ir}`;
+    if (!isInner(ikey) || (board[ikey] && board[ikey].stack.length > 0)) {
+      return false;
+    }
+  }
+  return true;
+}
+
+function getCaptureTargets(board, pos, player) {
+  const targets = [];
+  const st = board[pos] || { stack: [] };
+  const h = st.stack.length;
+  const [q, r] = parseKey(pos);
+  for (let d = 0; d < 6; d++) {
+    const dq = dirs[d][0];
+    const dr = dirs[d][1];
+    const tq = q + h * dq;
+    const tr = r + h * dr;
+    const tkey = `${tq},${tr}`;
+    if (!isInner(tkey)) continue;
+    if (!pathClear(board, pos, dq, dr, h)) continue;
+    const tst = board[tkey] || { stack: [] };
+    if (tst.stack.length > 0 && tst.stack[tst.stack.length - 1] !== player) {
+      targets.push(tkey);
+    }
+  }
+  return targets;
+}
+
+function getMoveInner(board, pos, player) {
+  const targets = [];
+  const st = board[pos] || { stack: [] };
+  const h = st.stack.length;
+  const [q, r] = parseKey(pos);
+  for (let d = 0; d < 6; d++) {
+    const dq = dirs[d][0];
+    const dr = dirs[d][1];
+    for (let k = 1; k <= h; k++) {
+      const tq = q + k * dq;
+      const tr = r + k * dr;
+      const tkey = `${tq},${tr}`;
+      if (!isInner(tkey)) break;
+      if (!pathClear(board, pos, dq, dr, k)) break;
+      const tst = board[tkey] || { stack: [] };
+      if (tst.stack.length === 0) {
+        targets.push(tkey);
+      } else {
+        break;
+      }
+    }
+  }
+  return targets;
+}
+
+function getExitTargets(board, pos, player, outerColors) {
+  const targets = [];
+  const st = board[pos] || { stack: [] };
+  const h = st.stack.length;
+  const [q, r] = parseKey(pos);
+  for (let d = 0; d < 6; d++) {
+    const dq = dirs[d][0];
+    const dr = dirs[d][1];
+    const tq = q + h * dq;
+    const tr = r + h * dr;
+    const tkey = `${tq},${tr}`;
+    if (!isOuter(tkey)) continue;
+    if (!pathClear(board, pos, dq, dr, h)) continue;
+    const tst = board[tkey] || { stack: [] };
+    if (tst.stack.length === 0 && (outerColors[tkey] === player || outerColors[tkey] === 'both')) {
+      targets.push(tkey);
+    }
+  }
+  return targets;
+}
+
+function getSplitAdjs(board, pos) {
+  return neighbors(pos).filter(n => isInner(n) && (!board[n] || board[n].stack.length === 0));
+}
+
+function hasAnyCapture(board, player) {
+  for (let key in board) {
+    if (!isInner(key)) continue;
+    const st = board[key] || { stack: [] };
+    if (st.stack.length > 0 && st.stack[st.stack.length - 1] === player && getCaptureTargets(board, key, player).length > 0) {
+      return true;
+    }
+  }
+  return false;
+}
+
+function getValidPlaces(board, occupied, piecesLeft, player) {
+  let valids = [];
+  if (piecesLeft[player] === 18) {
+    if (player === 'W') {
+      valids = ['0,0'];
+    } else {
+      if (occupied.has('0,0')) {
+        valids = neighbors('0,0').filter(p => isInner(p) && !board[p]);
+      }
+    }
+  } else {
+    const cands = new Set();
+    for (let occ of occupied) {
+      for (let n of neighbors(occ)) {
+        if (isInner(n) && !board[n]) {
+          cands.add(n);
+        }
+      }
+    }
+    valids = Array.from(cands);
+  }
+  return valids;
+}
+
+// Precompute outer colors
+let outerColors = {};
+let dualKeys = new Set(['6,0', '0,6', '-6,6', '0,-6', '6,-6', '-6,0']);
+let outerHexes = [];
+for (let q = -6; q <= 6; q++) {
+  for (let r = -6; r <= 6; r++) {
+    const s = -q - r;
+    const d = Math.max(Math.abs(q), Math.abs(r), Math.abs(s));
+    if (d === 6) {
+      outerHexes.push([q, r]);
+    }
+  }
+}
+let sortedOuter = outerHexes.slice().sort((a, b) => getAngle(a[0], a[1]) - getAngle(b[0], b[1]));
+let startIdx = sortedOuter.findIndex(p => p[0] === 6 && p[1] === 0);
+if (startIdx !== -1) {
+  sortedOuter = sortedOuter.slice(startIdx).concat(sortedOuter.slice(0, startIdx));
+}
+let colorToggle = 'W';
+for (let i = 0; i < 36; i++) {
+  const p = sortedOuter[i];
+  const key = `${p[0]},${p[1]}`;
+  if (dualKeys.has(key)) {
+    outerColors[key] = 'both';
+  } else {
+    outerColors[key] = colorToggle;
+    colorToggle = colorToggle === 'W' ? 'B' : 'W';
+  }
+}
+function getAngle(q, r) {
+  const x = Math.sqrt(3) * q + (Math.sqrt(3) / 2) * r;
+  const y = (3 / 2) * r;
+  return Math.atan2(y, x);
+}
+
+// Games: roomId -> game state
+const games = new Map();
+
+function generateRoomId() {
+  return Math.random().toString(36).substr(2, 6).toUpperCase();
+}
+
+io.on('connection', (socket) => {
+  console.log(`User connected: ${socket.id}`);
+
+  socket.on('createGame', (callback) => {
+    const roomId = generateRoomId();
+    const game = {
+      board: {},
+      phase: 'place',
+      currentPlayer: 'W',
+      piecesLeft: { W: 18, B: 18 },
+      occupied: new Set(),
+      players: { [socket.id]: 'W' },
+      aiPlayer: null,
+      outerColors
+    };
+    games.set(roomId, game);
+    socket.join(roomId);
+    callback({ roomId, color: 'W' });
+    io.to(roomId).emit('gameUpdate', getSerializableGame(game));
+  });
+
+  socket.on('joinGame', (roomId, callback) => {
+    const game = games.get(roomId);
+    if (!game || Object.keys(game.players).length >= 2) {
+      return callback({ error: 'Invalid or full room' });
+    }
+    game.players[socket.id] = 'B';
+    socket.join(roomId);
+    callback({ color: 'B' });
+    io.to(roomId).emit('gameUpdate', getSerializableGame(game));
+    io.to(roomId).emit('gameStart');
+  });
+
+  socket.on('makeMove', (data) => {
+    const { roomId, action } = data;
+    const game = games.get(roomId);
+    if (!game || game.players[socket.id] !== game.currentPlayer) return;
+
+    let valid = false;
+    if (game.phase === 'place') {
+      const valids = getValidPlaces(game.board, game.occupied, game.piecesLeft, game.currentPlayer);
+      if (valids.includes(action.pos)) {
+        game.board[action.pos] = { stack: [game.currentPlayer] };
+        game.occupied.add(action.pos);
+        game.piecesLeft[game.currentPlayer]--;
+        if (game.piecesLeft.W + game.piecesLeft.B === 0) {
+          game.phase = 'play';
+        }
+        valid = true;
+      }
+    } else {
+      const from = action.from;
+      const to = action.to;
+      const player = game.currentPlayer;
+      if (!isInner(from) || !game.board[from] || game.board[from].stack[game.board[from].stack.length - 1] !== player) return;
+
+      const mandatory = hasAnyCapture(game.board, player);
+      let targets = [];
+      if (mandatory) {
+        targets = getCaptureTargets(game.board, from, player);
+      } else {
+        targets = [
+          ...getMoveInner(game.board, from, player),
+          ...getExitTargets(game.board, from, player, game.outerColors)
         ];
-
-        let innerHexes = [];
-        let outerHexes = [];
-        let outerColors = {};
-        let dualKeys = new Set(['6,0', '0,6', '-6,6', '0,-6', '6,-6', '-6,0']);
-        let board = {};
-        let phase = 'place';
-        let currentPlayer = 'W';
-        let piecesLeft = { W: 18, B: 18 };
-        let occupied = new Set();
-        let selected = null;
-        let possibleTargets = [];
-        let history = [];
-        let aiPlayer = null;
-        let flashingFrom = null;
-        let flashingTo = null;
-        let lastAIAction = null;
-        let aiPrevState = null;
-        let canReplayAI = false;
-
-        let isOnline = false;
-        let myColor = null;
-        let roomId = null;
-
-        function precomputeHexes() {
-            innerHexes = [];
-            outerHexes = [];
-            for (let q = -6; q <= 6; q++) {
-                for (let r = -6; r <= 6; r++) {
-                    const s = -q - r;
-                    const d = Math.max(Math.abs(q), Math.abs(r), Math.abs(s));
-                    if (d <= 5) {
-                        innerHexes.push([q, r]);
-                    } else if (d === 6) {
-                        outerHexes.push([q, r]);
-                    }
-                }
-            }
-            let sortedOuter = outerHexes.slice().sort((a, b) => getAngle(a[0], a[1]) - getAngle(b[0], b[1]));
-            let startIdx = sortedOuter.findIndex(p => p[0] === 6 && p[1] === 0);
-            if (startIdx !== -1) {
-                sortedOuter = sortedOuter.slice(startIdx).concat(sortedOuter.slice(0, startIdx));
-            }
-            let colorToggle = 'W';
-            for (let i = 0; i < 36; i++) {
-                const p = sortedOuter[i];
-                const key = p[0] + ',' + p[1];
-                if (dualKeys.has(key)) {
-                    outerColors[key] = 'both';
-                } else {
-                    outerColors[key] = colorToggle;
-                    colorToggle = (colorToggle === 'W') ? 'B' : 'W';
-                }
-            }
+        if (game.board[from].stack.length > 11) {
+          targets = targets.concat(getSplitAdjs(game.board, from));
         }
+      }
+      if (!targets.includes(to)) return;
 
-        function getAngle(q, r) {
-            const x = Math.sqrt(3) * q + (Math.sqrt(3) / 2) * r;
-            const y = (3 / 2) * r;
-            return Math.atan2(y, x);
+      const stFrom = game.board[from];
+      if (getCaptureTargets(game.board, from, player).includes(to)) {
+        const stTo = game.board[to] || { stack: [] };
+        game.board[to] = { stack: stTo.stack.concat(stFrom.stack) };
+      } else if (getMoveInner(game.board, from, player).includes(to) || getExitTargets(game.board, from, player, game.outerColors).includes(to)) {
+        game.board[to] = { stack: stFrom.stack };
+      } else {
+        const h = stFrom.stack.length;
+        const h1 = action.splitH1;
+        if (h1 >= 1 && h1 < h) {
+          game.board[to] = { stack: stFrom.stack.splice(h1) };
+          game.occupied.add(to);
+        } else {
+          return;
         }
+      }
+      delete game.board[from];
+      valid = true;
+    }
 
-        function cubeDist(aq, ar, bq, br) {
-            const as = -aq - ar;
-            const bs = -bq - br;
-            return Math.max(Math.abs(aq - bq), Math.abs(ar - br), Math.abs(as - bs));
+    if (valid) {
+      game.currentPlayer = game.currentPlayer === 'W' ? 'B' : 'W';
+      io.to(roomId).emit('gameUpdate', getSerializableGame(game));
+      checkEnd(roomId, game);
+    }
+  });
+
+  socket.on('disconnect', () => {
+    console.log(`User disconnected: ${socket.id}`);
+    for (let [roomId, game] of games) {
+      if (game.players[socket.id]) {
+        delete game.players[socket.id];
+        if (Object.keys(game.players).length === 0) {
+          games.delete(roomId);
+        } else {
+          io.to(roomId).emit('playerLeft');
         }
-
-        function hexToPixel(q, r) {
-            const x = size * (Math.sqrt(3) * q + (Math.sqrt(3) / 2) * r);
-            const y = size * (3 / 2 * r);
-            return [x + canvas.width / 2 - size * 3, y + canvas.height / 2];
-        }
-
-        function pixelToHex(x, y) {
-            x -= canvas.width / 2 - size * 3;
-            y -= canvas.height / 2;
-            const q = (Math.sqrt(3) / 3 * x - 1 / 3 * y) / size;
-            const r = (0 * x + 2 / 3 * y) / size;
-            return hexRound(q, r);
-        }
-
-        function hexRound(q, r) {
-            const s = -q - r;
-            const rq = Math.round(q);
-            const rr = Math.round(r);
-            const rs = Math.round(s);
-            const dq = Math.abs(rq - q);
-            const dr = Math.abs(rr - r);
-            const ds = Math.abs(rs - s);
-            if (dq > dr && dq > ds) {
-                return [ -rr - rs, rr ];
-            } else if (dr > ds) {
-                return [ rq, -rq - rs ];
-            } else {
-                return [ rq, rr ];
-            }
-        }
-
-        function parseKey(key) {
-            return key.split(',').map(Number);
-        }
-
-        function getState(key) {
-            return board[key] || { stack: [] };
-        }
-
-        function isInner(key) {
-            if (!key) return false;
-            const [q, r] = parseKey(key);
-            return cubeDist(0, 0, q, r) <= 5;
-        }
-
-        function isOuter(key) {
-            if (!key) return false;
-            const [q, r] = parseKey(key);
-            return cubeDist(0, 0, q, r) === 6;
-        }
-
-        function neighbors(key) {
-            const [q, r] = parseKey(key);
-            const neigh = [];
-            for (let d = 0; d < 6; d++) {
-                const nq = q + dirs[d][0];
-                const nr = r + dirs[d][1];
-                const nkey = nq + ',' + nr;
-                const [nq2, nr2] = [nq, nr];
-                const ns = -nq2 - nr2;
-                if (Math.max(Math.abs(nq2), Math.abs(nr2), Math.abs(ns)) <= 6) {
-                    neigh.push(nkey);
-                }
-            }
-            return neigh;
-        }
-
-        function pathClear(fromKey, dq, dr, k) {
-            for (let i = 1; i < k; i++) {
-                const [fq, fr] = parseKey(fromKey);
-                const iq = fq + i * dq;
-                const ir = fr + i * dr;
-                const ikey = iq + ',' + ir;
-                if (!isInner(ikey) || getState(ikey).stack.length > 0) {
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        function getCaptureTargets(pos, player) {
-            const targets = [];
-            const st = getState(pos);
-            const h = st.stack.length;
-            const [q, r] = parseKey(pos);
-            for (let d = 0; d < 6; d++) {
-                const dq = dirs[d][0];
-                const dr = dirs[d][1];
-                const tq = q + h * dq;
-                const tr = r + h * dr;
-                const tkey = tq + ',' + tr;
-                if (!isInner(tkey) ) continue;
-                if (!pathClear(pos, dq, dr, h)) continue;
-                const tst = getState(tkey);
-                if (tst.stack.length > 0 && tst.stack[tst.stack.length - 1] !== player) {
-                    targets.push(tkey);
-                }
-            }
-            return targets;
-        }
-
-        function getMoveInner(pos, player) {
-            const targets = [];
-            const st = getState(pos);
-            const h = st.stack.length;
-            const [q, r] = parseKey(pos);
-            for (let d = 0; d < 6; d++) {
-                const dq = dirs[d][0];
-                const dr = dirs[d][1];
-                for (let k = 1; k <= h; k++) {
-                    const tq = q + k * dq;
-                    const tr = r + k * dr;
-                    const tkey = tq + ',' + tr;
-                    if (!isInner(tkey)) break;
-                    if (!pathClear(pos, dq, dr, k)) break;
-                    const tst = getState(tkey);
-                    if (tst.stack.length === 0) {
-                        targets.push(tkey);
-                    } else {
-                        break;
-                    }
-                }
-            }
-            return targets;
-        }
-
-        function getExitTargets(pos, player) {
-            const targets = [];
-            const st = getState(pos);
-            const h = st.stack.length;
-            const [q, r] = parseKey(pos);
-            for (let d = 0; d < 6; d++) {
-                const dq = dirs[d][0];
-                const dr = dirs[d][1];
-                const tq = q + h * dq;
-                const tr = r + h * dr;
-                const tkey = tq + ',' + tr;
-                if (!isOuter(tkey)) continue;
-                if (!pathClear(pos, dq, dr, h)) continue;
-                if (getState(tkey).stack.length === 0 && (outerColors[tkey] === player || outerColors[tkey] === 'both')) {
-                    targets.push(tkey);
-                }
-            }
-            return targets;
-        }
-
-        function getSplitAdjs(pos) {
-            return neighbors(pos).filter(n => isInner(n) && getState(n).stack.length === 0);
-        }
-
-        function hasAnyCapture(player) {
-            for (let key in board) {
-                if (!isInner(key)) continue;
-                const st = getState(key);
-                if (st.stack.length > 0 && st.stack[st.stack.length - 1] === player && getCaptureTargets(key, player).length > 0) {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        function getValidPlaces(player) {
-            let valids = [];
-            if (piecesLeft[player] === 18) {
-                if (player === 'W') {
-                    valids = ['0,0'];
-                } else {
-                    if (occupied.has('0,0')) {
-                        valids = neighbors('0,0').filter(p => isInner(p) && !board[p]);
-                    }
-                }
-            } else {
-                const cands = new Set();
-                for (let occ of occupied) {
-                    for (let n of neighbors(occ)) {
-                        if (isInner(n) && !board[n]) {
-                            cands.add(n);
-                        }
-                    }
-                }
-                valids = Array.from(cands);
-            }
-            return valids;
-        }
-
-        function saveState() {
-            const boardCopy = {};
-            for (let key in board) {
-                boardCopy[key] = { stack: [...board[key].stack] };
-            }
-            return {
-                board: boardCopy,
-                phase: phase,
-                currentPlayer: currentPlayer,
-                piecesLeft: { ...piecesLeft },
-                occupied: new Set(occupied),
-                selected: selected,
-                possibleTargets: [...possibleTargets]
-            };
-        }
-
-        function restoreState(state) {
-            board = {};
-            for (let key in state.board) {
-                board[key] = { stack: [...state.board[key].stack] };
-            }
-            phase = state.phase;
-            currentPlayer = state.currentPlayer;
-            piecesLeft = state.piecesLeft;
-            occupied = state.occupied;
-            selected = state.selected;
-            possibleTargets = state.possibleTargets;
-            draw();
-        }
-
-        function doPlace(pos, isAI = false) {
-            const prevState = saveState();
-            board[pos] = { stack: [currentPlayer] };
-            occupied.add(pos);
-            piecesLeft[currentPlayer]--;
-            if (piecesLeft.W + piecesLeft.B === 0) {
-                phase = 'play';
-            }
-            switchPlayer();
-            if (!isAI) {
-                canReplayAI = false;
-                history.push(prevState);
-            }
-            document.getElementById('undoBtn').disabled = history.length === 0;
-        }
-
-        function switchPlayer() {
-            currentPlayer = currentPlayer === 'W' ? 'B' : 'W';
-        }
-
-        function onHexClick(key) {
-            if (isOnline) {
-                if (myColor !== currentPlayer || aiPlayer === currentPlayer) return;
-            } else if (aiPlayer === currentPlayer) return;
-            if (phase === 'place') {
-                const valids = getValidPlaces(currentPlayer);
-                if (valids.includes(key)) {
-                    if (isOnline) {
-                        socket.emit('makeMove', { roomId, action: { type: 'place', pos: key } });
-                    } else {
-                        doPlace(key);
-                        checkEnd();
-                        draw();
-                        triggerAIMove();
-                    }
-                    return;
-                }
-            } else {
-                const st = getState(key);
-                if (!isOuter(key) && st.stack.length > 0 && st.stack[st.stack.length - 1] === currentPlayer) {
-                    if (selected === key) {
-                        selected = null;
-                        possibleTargets = [];
-                        draw();
-                        return;
-                    }
-                    selected = key;
-                    const mandatory = hasAnyCapture(currentPlayer);
-                    if (mandatory) {
-                        possibleTargets = getCaptureTargets(key, currentPlayer);
-                    } else {
-                        possibleTargets = [
-                            ...getMoveInner(key, currentPlayer),
-                            ...getExitTargets(key, currentPlayer)
-                        ];
-                        if (st.stack.length > 11) {
-                            possibleTargets = possibleTargets.concat(getSplitAdjs(key));
-                        }
-                    }
-                    if (possibleTargets.length === 0) {
-                        selected = null;
-                    }
-                    draw();
-                    return;
-                } else if (selected && possibleTargets.includes(key)) {
-                    const from = selected;
-                    const to = key;
-                    const capTargets = getCaptureTargets(from, currentPlayer);
-                    const splitAdjs = getState(from).stack.length > 11 ? getSplitAdjs(from) : [];
-                    let action = { from, to };
-                    if (capTargets.includes(to)) {
-                        action.type = 'capture';
-                    } else if (splitAdjs.includes(to)) {
-                        const h = getState(from).stack.length;
-                        const h1str = prompt(`Split: height for original stack at ${from} (1 to ${h-1}):`);
-                        const h1 = parseInt(h1str);
-                        if (h1 >= 1 && h1 < h && !isNaN(h1)) {
-                            action.type = 'split';
-                            action.splitH1 = h1;
-                        } else {
-                            alert('Invalid split height!');
-                            draw();
-                            return;
-                        }
-                    } else {
-                        action.type = 'move';
-                    }
-                    if (isOnline) {
-                        socket.emit('makeMove', { roomId, action });
-                    } else {
-                        const prevState = saveState();
-                        const stFrom = getState(from);
-                        if (action.type === 'capture') {
-                            const stTo = getState(to);
-                            board[to].stack = stTo.stack.concat(stFrom.stack);
-                        } else if (action.type === 'move') {
-                            board[to] = { stack: stFrom.stack };
-                        } else if (action.type === 'split') {
-                            board[to] = { stack: stFrom.stack.splice(action.splitH1) };
-                            occupied.add(to);
-                        }
-                        delete board[from];
-                        selected = null;
-                        possibleTargets = [];
-                        switchPlayer();
-                        canReplayAI = false;
-                        history.push(prevState);
-                        document.getElementById('undoBtn').disabled = false;
-                        draw();
-                        checkEnd();
-                        triggerAIMove();
-                    }
-                    return;
-                }
-            }
-            selected = null;
-            possibleTargets = [];
-            draw();
-        }
-
-        function triggerAIMove() {
-            if (aiPlayer !== currentPlayer) return;
-            setTimeout(aiMove, 500);
-        }
-
-        function actionScore(act, player) {
-            const from = act.from;
-            const to = act.to;
-            if (isOuter(to)) return 10;
-            const capTargets = getCaptureTargets(from, player);
-            if (capTargets.includes(to)) return 5;
-            const splitAdjs = getState(from).stack.length > 11 ? getSplitAdjs(from) : [];
-            if (splitAdjs.includes(to)) {
-                return -1;
-            }
-            const delta = cubeDist(...parseKey(to), 0, 0) - cubeDist(...parseKey(from), 0, 0);
-            return delta;
-        }
-
-        function aiMove() {
-            if (phase === 'place') {
-                let valids = getValidPlaces(currentPlayer);
-                if (valids.length > 0) {
-                    aiPrevState = saveState();
-                    let pos;
-                    if (aiDifficulty === 'hard') {
-                        valids.sort((a, b) => cubeDist(...parseKey(b), 0, 0) - cubeDist(...parseKey(a), 0, 0));
-                        pos = valids[0];
-                    } else {
-                        const idx = Math.floor(Math.random() * valids.length);
-                        pos = valids[idx];
-                    }
-                    lastAIAction = {type: 'place', pos: pos};
-                    flashingFrom = pos;
-                    draw();
-                    setTimeout(() => {
-                        flashingFrom = null;
-                        doPlace(pos, true);
-                        flashingTo = pos;
-                        draw();
-                        setTimeout(() => {
-                            flashingTo = null;
-                            canReplayAI = true;
-                            draw();
-                            checkEnd();
-                            triggerAIMove();
-                        }, 400);
-                    }, 400);
-                }
-                return;
-            }
-
-            const mandatory = hasAnyCapture(currentPlayer);
-            let allActions = [];
-            for (let key in board) {
-                if (!isInner(key)) continue;
-                const st = getState(key);
-                if (st.stack.length > 0 && st.stack[st.stack.length - 1] === currentPlayer) {
-                    let targets;
-                    if (mandatory) {
-                        targets = getCaptureTargets(key, currentPlayer);
-                    } else {
-                        targets = [
-                            ...getExitTargets(key, currentPlayer),
-                            ...getMoveInner(key, currentPlayer)
-                        ];
-                        if (st.stack.length > 11) {
-                            targets = targets.concat(getSplitAdjs(key));
-                        }
-                    }
-                    targets.forEach(t => allActions.push({ from: key, to: t }));
-                }
-            }
-
-            if (allActions.length === 0) {
-                switchPlayer();
-                draw();
-                return;
-            }
-
-            aiPrevState = saveState();
-
-            let action;
-            if (aiDifficulty === 'hard') {
-                allActions.sort((a, b) => actionScore(b, currentPlayer) - actionScore(a, currentPlayer));
-                action = allActions[0];
-            } else {
-                const idx = Math.floor(Math.random() * allActions.length);
-                action = allActions[idx];
-            }
-
-            const from = action.from;
-            const to = action.to;
-
-            const stFrom = getState(from);
-            const h = stFrom.stack.length;
-            const capTargets = getCaptureTargets(from, currentPlayer);
-            const splitAdjs = h > 11 ? getSplitAdjs(from) : [];
-            let type = capTargets.includes(to) ? 'capture' : splitAdjs.includes(to) ? 'split' : 'move';
-            let splitH1 = null;
-            if (type === 'split') {
-                splitH1 = Math.floor(Math.random() * (h - 1)) + 1;
-            }
-            lastAIAction = {type: type, from: from, to: to, splitH1: splitH1};
-
-            flashingFrom = from;
-            draw();
-            setTimeout(() => {
-                flashingFrom = null;
-                if (type === 'capture') {
-                    const stTo = getState(to);
-                    board[to].stack = stTo.stack.concat(stFrom.stack);
-                } else if (type === 'move') {
-                    board[to] = { stack: stFrom.stack };
-                } else if (type === 'split') {
-                    board[to] = { stack: stFrom.stack.splice(splitH1) };
-                    occupied.add(to);
-                }
-                delete board[from];
-                flashingTo = to;
-                draw();
-                setTimeout(() => {
-                    flashingTo = null;
-                    switchPlayer();
-                    canReplayAI = true;
-                    draw();
-                    checkEnd();
-                    triggerAIMove();
-                }, 400);
-            }, 400);
-        }
-
-        function checkEnd() {
-            if (phase === 'place') return;
-            let boardW = 0, boardB = 0;
-            let outerStaxW = 0, outerPiecesW = 0;
-            let outerStaxB = 0, outerPiecesB = 0;
-            for (let key in board) {
-                const st = board[key];
-                if (st.stack.length === 0) continue;
-                const [q, r] = parseKey(key);
-                const d = cubeDist(0, 0, q, r);
-                const isOut = d === 6;
-                const owner = st.stack[st.stack.length - 1];
-                const height = st.stack.length;
-                if (owner === 'W') {
-                    if (isOut) {
-                        outerStaxW++;
-                        outerPiecesW += height;
-                    } else {
-                        boardW++;
-                    }
-                } else if (owner === 'B') {
-                    if (isOut) {
-                        outerStaxB++;
-                        outerPiecesB += height;
-                    } else {
-                        boardB++;
-                    }
-                }
-            }
-            if (boardW === 0 || boardB === 0) {
-                let msg;
-                if (outerStaxW > outerStaxB) {
-                    msg = 'White wins!';
-                } else if (outerStaxB > outerStaxW) {
-                    msg = 'Blue wins!';
-                } else if (outerPiecesW > outerPiecesB) {
-                    msg = 'White wins on piece count!';
-                } else if (outerPiecesB > outerPiecesW) {
-                    msg = 'Blue wins on piece count!';
-                } else {
-                    msg = 'Draw!';
-                }
-                if (outerStaxW + outerStaxB === 0) {
-                    msg = 'Draw - no stax exited.';
-                }
-                alert(msg);
-            }
-        }
-
-        function drawHex(x, y, s, fillStyle = 'transparent') {
-            ctx.strokeStyle = '#333';
-            ctx.lineWidth = 1.5;
-            ctx.fillStyle = fillStyle;
-            ctx.beginPath();
-            ctx.moveTo(x + s * Math.cos(Math.PI / 2), y + s * Math.sin(Math.PI / 2));
-            for (let i = 1; i < 6; i++) {
-                const angle = Math.PI / 2 + (Math.PI / 3) * i;
-                ctx.lineTo(x + s * Math.cos(angle), y + s * Math.sin(angle));
-            }
-            ctx.closePath();
-            if (fillStyle !== 'transparent') ctx.fill();
-            ctx.stroke();
-        }
-
-        function drawHexPiece(x, y, s, fillStyle, strokeStyle, isTop = false) {
-            ctx.fillStyle = fillStyle;
-            ctx.strokeStyle = strokeStyle;
-            ctx.lineWidth = 2;
-            ctx.beginPath();
-            ctx.moveTo(x + s * Math.cos(Math.PI / 2), y + s * Math.sin(Math.PI / 2));
-            for (let i = 1; i < 6; i++) {
-                const angle = Math.PI / 2 + (Math.PI / 3) * i;
-                ctx.lineTo(x + s * Math.cos(angle), y + s * Math.sin(angle));
-            }
-            ctx.closePath();
-            ctx.fill();
-            ctx.stroke();
-
-            if (isTop) {
-                const grad = ctx.createLinearGradient(x - s / 2, y - s / 2, x + s / 2, y + s / 2);
-                grad.addColorStop(0, 'rgba(255,255,255,0.4)');
-                grad.addColorStop(1, 'rgba(0,0,0,0.4)');
-                ctx.fillStyle = grad;
-                ctx.fill();
-            }
-            ctx.fillStyle = '';
-        }
-
-        function drawStack(x, y, stack) {
-            const height = stack.length;
-            const pieceSize = size * 0.75;
-            const extrude = 6;
-            const offset = (height + 1) * extrude / 2;
-
-            for (let i = 0; i < height; i++) {
-                const owner = stack[i];
-                const stackY = y + (height - i) * extrude - offset;
-
-                const baseColor = owner === 'W' ? '#f8f8f8' : '#4a90d9';
-                const topColor = owner === 'W' ? '#ffffff' : '#5aa0f0';
-                const sideColor = owner === 'W' ? '#d0d0d0' : '#357abd';
-                const strokeColor = owner === 'W' ? '#bbb' : '#357abd';
-
-                if (i > 0) {
-                    ctx.fillStyle = sideColor;
-                    const shiftX = 2;
-                    const shiftY = extrude / 2;
-                    ctx.beginPath();
-                    ctx.moveTo(x + shiftX + pieceSize * Math.cos(Math.PI / 2), stackY + shiftY + pieceSize * Math.sin(Math.PI / 2) - extrude);
-                    for (let j = 1; j < 6; j++) {
-                        const angle = Math.PI / 2 + (Math.PI / 3) * j;
-                        ctx.lineTo(x + shiftX + pieceSize * Math.cos(angle), stackY + shiftY + pieceSize * Math.sin(angle) - extrude);
-                    }
-                    ctx.closePath();
-                    ctx.fill();
-                }
-
-                drawHexPiece(x, stackY, pieceSize, i === height - 1 ? topColor : baseColor, strokeColor, i === height - 1);
-            }
-        }
-
-        function draw() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            const wood = '#deb887';
-            const outerW = '#e0e0e0';
-            const outerB = '#000080';
-            const outerBoth = '#e0bbff';
-            for (let h of innerHexes) {
-                const key = h[0] + ',' + h[1];
-                const [px, py] = hexToPixel(h[0], h[1]);
-                let fillColor = wood;
-                if (key === '0,0') {
-                    fillColor = '#e0e0e0';
-                }
-                drawHex(px, py, size, fillColor);
-            }
-            for (let h of outerHexes) {
-                const key = h[0] + ',' + h[1];
-                const [px, py] = hexToPixel(h[0], h[1]);
-                const oc = outerColors[key];
-                const s = size * 1.1;
-                if (oc === 'both') {
-                    let rotation = Math.PI / 3;
-                    if (key === '6,0') rotation += Math.PI / 6;
-                    if (key === '-6,0') rotation += Math.PI / 6 + Math.PI;
-                    if (key === '6,-6') rotation -= Math.PI / 6;
-                    if (key === '-6,6') rotation -= Math.PI / 6 + Math.PI;
-                    if (key === '0,-6') rotation -= Math.PI / 2;
-                    if (key === '0,6') rotation -= Math.PI / 2 + Math.PI;
-                    ctx.save();
-                    ctx.beginPath();
-                    ctx.moveTo(px + s * Math.cos(Math.PI / 2), py + s * Math.sin(Math.PI / 2));
-                    for (let i = 1; i < 6; i++) {
-                        const angle = Math.PI / 2 + (Math.PI / 3) * i;
-                        ctx.lineTo(px + s * Math.cos(angle), py + s * Math.sin(angle));
-                    }
-                    ctx.closePath();
-                    ctx.clip();
-                    ctx.translate(px, py);
-                    ctx.rotate(rotation);
-                    ctx.fillStyle = outerB;
-                    ctx.fillRect(-s * Math.sqrt(3)/2 - 1, -s - 1, s * Math.sqrt(3)/2 + 1, 2 * s + 2);
-                    ctx.restore();
-
-                    ctx.save();
-                    ctx.beginPath();
-                    ctx.moveTo(px + s * Math.cos(Math.PI / 2), py + s * Math.sin(Math.PI / 2));
-                    for (let i = 1; i < 6; i++) {
-                        const angle = Math.PI / 2 + (Math.PI / 3) * i;
-                        ctx.lineTo(px + s * Math.cos(angle), py + s * Math.sin(angle));
-                    }
-                    ctx.closePath();
-                    ctx.clip();
-                    ctx.translate(px, py);
-                    ctx.rotate(rotation);
-                    ctx.fillStyle = outerW;
-                    ctx.fillRect(0, -s - 1, s * Math.sqrt(3)/2 + 1, 2 * s + 2);
-                    ctx.restore();
-
-                    ctx.beginPath();
-                    ctx.moveTo(px + s * Math.cos(Math.PI / 2), py + s * Math.sin(Math.PI / 2));
-                    for (let i = 1; i < 6; i++) {
-                        const angle = Math.PI / 2 + (Math.PI / 3) * i;
-                        ctx.lineTo(px + s * Math.cos(angle), py + s * Math.sin(angle));
-                    }
-                    ctx.closePath();
-                    ctx.strokeStyle = '#333';
-                    ctx.lineWidth = 1.5;
-                    ctx.stroke();
-                } else {
-                    let fill = outerW;
-                    if (oc === 'B') fill = outerB;
-                    drawHex(px, py, s, fill);
-                }
-            }
-
-            for (let key in board) {
-                const st = board[key];
-                if (st.stack.length > 0) {
-                    const [q, r] = parseKey(key);
-                    const [px, py] = hexToPixel(q, r);
-                    drawStack(px, py, st.stack);
-                }
-            }
-
-            if ((!isOnline || myColor === currentPlayer) && aiPlayer !== currentPlayer) {
-                if (phase === 'place') {
-                    if (showSuggestions) {
-                        const valids = getValidPlaces(currentPlayer);
-                        ctx.fillStyle = 'rgba(0, 200, 0, 0.4)';
-                        for (let v of valids) {
-                            const [q, r] = parseKey(v);
-                            const [px, py] = hexToPixel(q, r);
-                            drawHex(px, py, size * 0.8, 'rgba(0,200,0,0.4)');
-                        }
-                    }
-                } else {
-                    if (selected) {
-                        const [q, r] = parseKey(selected);
-                        const [px, py] = hexToPixel(q, r);
-                        ctx.strokeStyle = '#ff0';
-                        ctx.lineWidth = 4;
-                        drawHex(px, py, size * 1.05, 'transparent');
-                        ctx.lineWidth = 1.5;
-                    }
-                    if (showSuggestions) {
-                        ctx.fillStyle = 'rgba(0, 255, 0, 0.5)';
-                        for (let t of possibleTargets) {
-                            const [q, r] = parseKey(t);
-                            const [px, py] = hexToPixel(q, r);
-                            const targetSize = isOuter(t) ? size * 1.1 * 0.85 : size * 0.85;
-                            drawHex(px, py, targetSize, 'rgba(0,255,0,0.5)');
-                        }
-                    }
-                }
-            }
-
-            if (flashingFrom) {
-                const [q, r] = parseKey(flashingFrom);
-                const [px, py] = hexToPixel(q, r);
-                ctx.strokeStyle = '#f00';
-                ctx.lineWidth = 4;
-                const hexSize = isInner(flashingFrom) ? size : size * 1.1;
-                drawHex(px, py, hexSize * 1.05, 'transparent');
-                ctx.lineWidth = 1.5;
-            }
-            if (flashingTo) {
-                const [q, r] = parseKey(flashingTo);
-                const [px, py] = hexToPixel(q, r);
-                ctx.strokeStyle = '#f00';
-                ctx.lineWidth = 4;
-                const hexSize = isInner(flashingTo) ? size : size * 1.1;
-                drawHex(px, py, hexSize * 1.05, 'transparent');
-                ctx.lineWidth = 1.5;
-            }
-
-            ctx.fillStyle = '#000';
-            ctx.font = 'bold 24px Arial';
-            ctx.textAlign = 'left';
-            let playerName = currentPlayer === 'W' ? 'White' : 'Blue';
-            let info = phase === 'place' ? `${playerName}'s placement (${piecesLeft[currentPlayer]} left)` : `${playerName}'s turn`;
-            if (isOnline) {
-                info += ` (Your color: ${myColor === 'W' ? 'White' : 'Blue'})`;
-            } else if (aiPlayer === currentPlayer) info += ' (AI thinking...)';
-            ctx.fillText(info, 20, 40);
-            if (selected) {
-                const st = getState(selected);
-                ctx.fillText(`Selected: h=${st.stack.length} | Options: ${possibleTargets.length}`, 20, 70);
-            }
-            document.getElementById('info').innerHTML = `Phase: ${phase} | Total stacks: ${Object.keys(board).filter(k => getState(k).stack.length > 0).length}`;
-            document.getElementById('undoBtn').disabled = history.length === 0 || isOnline;
-            document.getElementById('replayBtn').disabled = !canReplayAI || lastAIAction === null || aiPlayer === null;
-
-            if (debug) {
-                ctx.font = '14px monospace';
-                ctx.fillStyle = '#666';
-                for (let h of [...innerHexes, ...outerHexes]) {
-                    const [px, py] = hexToPixel(h[0], h[1]);
-                    ctx.textAlign = 'center';
-                    ctx.fillText(`${h[0]},${h[1]}`, px, py + 4);
-                }
-            }
-        }
-
-        function newGame(ai = null) {
-            isOnline = false;
-            board = {};
-            phase = 'place';
-            currentPlayer = 'W';
-            piecesLeft = { W: 18, B: 18 };
-            occupied = new Set();
-            selected = null;
-            possibleTargets = [];
-            history = [];
-            aiPlayer = ai;
-            flashingFrom = null;
-            flashingTo = null;
-            lastAIAction = null;
-            aiPrevState = null;
-            canReplayAI = false;
-            aiDifficulty = 'easy';
-            document.getElementById('aiLevelBtn').innerHTML = 'AI level: easy';
-            document.getElementById('roomInfo').innerHTML = '';
-            draw();
-            if (aiPlayer === 'W') triggerAIMove();
-        }
-
-        function quickSetup(ai = null) {
-            newGame(ai);
-            currentPlayer = 'W';
-            let placingPlayer = 'W';
-            board['0,0'] = { stack: ['W'] };
-            occupied.add('0,0');
-            piecesLeft['W']--;
-            placingPlayer = 'B';
-            while (piecesLeft.W + piecesLeft.B > 0) {
-                const valids = getValidPlaces(placingPlayer);
-                if (valids.length === 0) break;
-                const idx = Math.floor(Math.random() * valids.length);
-                const pos = valids[idx];
-                board[pos] = { stack: [placingPlayer] };
-                occupied.add(pos);
-                piecesLeft[placingPlayer]--;
-                placingPlayer = placingPlayer === 'W' ? 'B' : 'W';
-            }
-            phase = 'play';
-            currentPlayer = 'W';
-            draw();
-            history = [];
-            document.getElementById('undoBtn').disabled = true;
-            triggerAIMove();
-        }
-
-        function toggleDebug() {
-            debug = !debug;
-            draw();
-        }
-
-        function toggleSuggestions() {
-            showSuggestions = !showSuggestions;
-            document.getElementById('toggleSuggestionsBtn').innerHTML = showSuggestions ? 'Suggestions on' : 'Suggestions off';
-            draw();
-        }
-
-        function toggleAILevel() {
-            aiDifficulty = aiDifficulty === 'easy' ? 'hard' : 'easy';
-            document.getElementById('aiLevelBtn').innerHTML = `AI level: ${aiDifficulty}`;
-        }
-
-        function undoMove() {
-            if (history.length > 0 && !isOnline) {
-                const prevState = history.pop();
-                restoreState(prevState);
-                if (history.length === 0) {
-                    document.getElementById('undoBtn').disabled = true;
-                }
-            }
-        }
-
-        function replayLastAIMove() {
-            if (!canReplayAI || lastAIAction === null || aiPrevState === null) return;
-
-            restoreState(aiPrevState);
-            draw();
-
-            setTimeout(() => {
-                flashingFrom = lastAIAction.type === 'place' ? lastAIAction.pos : lastAIAction.from;
-                draw();
-                setTimeout(() => {
-                    flashingFrom = null;
-                    const player = aiPrevState.currentPlayer;
-                    if (lastAIAction.type === 'place') {
-                        const pos = lastAIAction.pos;
-                        board[pos] = { stack: [player] };
-                        occupied.add(pos);
-                        piecesLeft[player]--;
-                        if (piecesLeft.W + piecesLeft.B === 0) {
-                            phase = 'play';
-                        }
-                    } else {
-                        const from = lastAIAction.from;
-                        const to = lastAIAction.to;
-                        const stFrom = getState(from);
-                        if (lastAIAction.type === 'capture') {
-                            const stTo = getState(to);
-                            board[to].stack = stTo.stack.concat(stFrom.stack);
-                        } else if (lastAIAction.type === 'split') {
-                            board[to] = { stack: stFrom.stack.splice(lastAIAction.splitH1) };
-                            occupied.add(to);
-                        } else {
-                            board[to] = { stack: stFrom.stack };
-                        }
-                        delete board[from];
-                    }
-                    flashingTo = lastAIAction.type === 'place' ? lastAIAction.pos : lastAIAction.to;
-                    draw();
-                    setTimeout(() => {
-                        flashingTo = null;
-                        currentPlayer = currentPlayer === 'W' ? 'B' : 'W';
-                        draw();
-                    }, 400);
-                }, 400);
-            }, 400);
-        }
-
-        function createOnlineGame() {
-            socket.emit('createGame', (res) => {
-                if (res.error) {
-                    alert(res.error);
-                    return;
-                }
-                isOnline = true;
-                roomId = res.roomId;
-                myColor = res.color;
-                document.getElementById('roomInfo').innerHTML = `Room code: ${roomId} (share with friend). Waiting for player...`;
-                document.getElementById('localControls').style.display = 'none';
-            });
-        }
-
-        function joinOnlineGame() {
-            const code = document.getElementById('joinCode').value.toUpperCase();
-            if (!code) return;
-            socket.emit('joinGame', code, (res) => {
-                if (res.error) {
-                    alert(res.error);
-                    return;
-                }
-                isOnline = true;
-                roomId = code;
-                myColor = res.color;
-                document.getElementById('roomInfo').innerHTML = `Joined room ${roomId} as ${myColor === 'W' ? 'White' : 'Blue'}`;
-                document.getElementById('localControls').style.display = 'none';
-            });
-        }
-
-        socket.on('gameUpdate', (gameState) => {
-            board = gameState.board;
-            phase = gameState.phase;
-            currentPlayer = gameState.currentPlayer;
-            piecesLeft = gameState.piecesLeft;
-            occupied = new Set(gameState.occupied);
-            outerColors = gameState.outerColors;
-            selected = null;
-            possibleTargets = [];
-            draw();
-        });
-
-        socket.on('gameStart', () => {
-            document.getElementById('roomInfo').innerHTML += ' - Game started!';
-            draw();
-        });
-
-        socket.on('playerLeft', () => {
-            alert('Other player left the game.');
-            newGame();
-        });
-
-        socket.on('gameEnd', (data) => {
-            let msg = data.winner ? `${data.winner === 'W' ? 'White' : 'Blue'} wins!` : 'Draw!';
-            alert(msg);
-            newGame();
-        });
-
-        canvas.addEventListener('click', (e) => {
-            const rect = canvas.getBoundingClientRect();
-            const mx = e.clientX - rect.left;
-            const my = e.clientY - rect.top;
-            const hex = pixelToHex(mx, my);
-            const d = cubeDist(0, 0, hex[0], hex[1]);
-            if (d > 6) return;
-            const key = hex[0] + ',' + hex[1];
-            onHexClick(key);
-        });
-
-        precomputeHexes();
-        newGame();
-        draw();
-    </script>
-</body>
-</html>
+      }
+    }
+  });
+});
+
+function checkEnd(roomId, game) {
+  if (game.phase === 'place') return;
+  let boardW = 0, boardB = 0;
+  let outerStaxW = 0, outerPiecesW = 0;
+  let outerStaxB = 0, outerPiecesB = 0;
+  for (let key in game.board) {
+    const st = game.board[key];
+    if (st.stack.length === 0) continue;
+    const [q, r] = parseKey(key);
+    const d = cubeDist(0, 0, q, r);
+    const isOut = d === 6;
+    const owner = st.stack[st.stack.length - 1];
+    const height = st.stack.length;
+    if (owner === 'W') {
+      if (isOut) {
+        outerStaxW++;
+        outerPiecesW += height;
+      } else {
+        boardW++;
+      }
+    } else if (owner === 'B') {
+      if (isOut) {
+        outerStaxB++;
+        outerPiecesB += height;
+      } else {
+        boardB++;
+      }
+    }
+  }
+  if (boardW === 0 || boardB === 0) {
+    let winner = null;
+    if (outerStaxW > outerStaxB) {
+      winner = 'W';
+    } else if (outerStaxB > outerStaxW) {
+      winner = 'B';
+    } else if (outerPiecesW > outerPiecesB) {
+      winner = 'W';
+    } else if (outerPiecesB > outerPiecesW) {
+      winner = 'B';
+    }
+    io.to(roomId).emit('gameEnd', { winner });
+  }
+}
+
+// Serialization helper: Convert Set to array for JSON
+function getSerializableGame(game) {
+  return {
+    ...game,
+    occupied: Array.from(game.occupied)
+  };
+}
+
+server.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});

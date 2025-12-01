@@ -40,9 +40,9 @@
     <button id="replayBtn" onclick="replayLastAIMove()" disabled>Show last AI move again</button>
     <div id="info"></div>
 
-    <script src="/socket.io/socket.io.js"></script> <!-- Socket.io client -->
+    <script src="/socket.io/socket.io.js"></script>
     <script>
-        const socket = io(); // Connect to server
+        const socket = io();
 
         const canvas = document.getElementById('game');
         const ctx = canvas.getContext('2d');
@@ -67,8 +67,8 @@
         let occupied = new Set();
         let selected = null;
         let possibleTargets = [];
-        let history = []; // For undo (local only)
-        let aiPlayer = null; // 'W' or 'B' if AI is playing that color, null for hotseat or multi
+        let history = [];
+        let aiPlayer = null;
         let flashingFrom = null;
         let flashingTo = null;
         let lastAIAction = null;
@@ -79,7 +79,6 @@
         let myColor = null;
         let roomId = null;
 
-        // Precompute hexes
         function precomputeHexes() {
             innerHexes = [];
             outerHexes = [];
@@ -94,7 +93,6 @@
                     }
                 }
             }
-            // Outer colors
             let sortedOuter = outerHexes.slice().sort((a, b) => getAngle(a[0], a[1]) - getAngle(b[0], b[1]));
             let startIdx = sortedOuter.findIndex(p => p[0] === 6 && p[1] === 0);
             if (startIdx !== -1) {
@@ -128,7 +126,7 @@
         function hexToPixel(q, r) {
             const x = size * (Math.sqrt(3) * q + (Math.sqrt(3) / 2) * r);
             const y = size * (3 / 2 * r);
-            return [x + canvas.width / 2 - size * 3, y + canvas.height / 2];  // center board
+            return [x + canvas.width / 2 - size * 3, y + canvas.height / 2];
         }
 
         function pixelToHex(x, y) {
@@ -244,7 +242,7 @@
                     if (tst.stack.length === 0) {
                         targets.push(tkey);
                     } else {
-                        break;  // blocked
+                        break;
                     }
                 }
             }
@@ -408,10 +406,11 @@
                     const from = selected;
                     const to = key;
                     const capTargets = getCaptureTargets(from, currentPlayer);
+                    const splitAdjs = getState(from).stack.length > 11 ? getSplitAdjs(from) : [];
                     let action = { from, to };
                     if (capTargets.includes(to)) {
                         action.type = 'capture';
-                    } else if (getSplitAdjs(from).includes(to)) {
+                    } else if (splitAdjs.includes(to)) {
                         const h = getState(from).stack.length;
                         const h1str = prompt(`Split: height for original stack at ${from} (1 to ${h-1}):`);
                         const h1 = parseInt(h1str);
@@ -862,7 +861,7 @@
                 ctx.fillText(`Selected: h=${st.stack.length} | Options: ${possibleTargets.length}`, 20, 70);
             }
             document.getElementById('info').innerHTML = `Phase: ${phase} | Total stacks: ${Object.keys(board).filter(k => getState(k).stack.length > 0).length}`;
-            document.getElementById('undoBtn').disabled = history.length === 0 || isOnline; // No undo in online
+            document.getElementById('undoBtn').disabled = history.length === 0 || isOnline;
             document.getElementById('replayBtn').disabled = !canReplayAI || lastAIAction === null || aiPlayer === null;
 
             if (debug) {
@@ -997,7 +996,6 @@
             }, 400);
         }
 
-        // Online multiplayer functions
         function createOnlineGame() {
             socket.emit('createGame', (res) => {
                 if (res.error) {
@@ -1028,17 +1026,17 @@
             });
         }
 
-socket.on('gameUpdate', (gameState) => {
-  board = gameState.board;
-  phase = gameState.phase;
-  currentPlayer = gameState.currentPlayer;
-  piecesLeft = gameState.piecesLeft;
-  occupied = new Set(gameState.occupied); // Reconstruct Set from array
-  outerColors = gameState.outerColors;
-  selected = null;
-  possibleTargets = [];
-  draw();
-});
+        socket.on('gameUpdate', (gameState) => {
+            board = gameState.board;
+            phase = gameState.phase;
+            currentPlayer = gameState.currentPlayer;
+            piecesLeft = gameState.piecesLeft;
+            occupied = new Set(gameState.occupied);
+            outerColors = gameState.outerColors;
+            selected = null;
+            possibleTargets = [];
+            draw();
+        });
 
         socket.on('gameStart', () => {
             document.getElementById('roomInfo').innerHTML += ' - Game started!';
@@ -1047,7 +1045,7 @@ socket.on('gameUpdate', (gameState) => {
 
         socket.on('playerLeft', () => {
             alert('Other player left the game.');
-            newGame(); // Reset to local
+            newGame();
         });
 
         socket.on('gameEnd', (data) => {
@@ -1056,7 +1054,6 @@ socket.on('gameUpdate', (gameState) => {
             newGame();
         });
 
-        // Events
         canvas.addEventListener('click', (e) => {
             const rect = canvas.getBoundingClientRect();
             const mx = e.clientX - rect.left;
@@ -1068,7 +1065,6 @@ socket.on('gameUpdate', (gameState) => {
             onHexClick(key);
         });
 
-        // Init
         precomputeHexes();
         newGame();
         draw();
