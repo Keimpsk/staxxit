@@ -38,6 +38,7 @@
     <button id="aiLevelBtn" onclick="toggleAILevel()">AI level: easy</button>
     <button id="undoBtn" onclick="undoMove()" disabled>Undo</button>
     <button id="replayBtn" onclick="replayLastAIMove()" disabled>Show last AI move again</button>
+    <button id="replayOpponentBtn" onclick="replayLastOpponentMove()" disabled>Replay opponent's move</button>
     <div id="info"></div>
 
     <script src="/socket.io/socket.io.js"></script>
@@ -78,6 +79,10 @@
         let isOnline = false;
         let myColor = null;
         let roomId = null;
+
+        let lastOpponentAction = null;
+        let opponentPrevState = null;
+        let canReplayOpponent = false;
 
         function precomputeHexes() {
             innerHexes = [];
@@ -366,7 +371,7 @@
                 const valids = getValidPlaces(currentPlayer);
                 if (valids.includes(key)) {
                     if (isOnline) {
-                        socket.emit('makeMove', { roomId, action: { type: 'place', pos: key } });
+                        socket.emit('makeMove', { roomId, action: { pos: key } });
                     } else {
                         doPlace(key);
                         checkEnd();
@@ -863,6 +868,7 @@
             document.getElementById('info').innerHTML = `Phase: ${phase} | Total stacks: ${Object.keys(board).filter(k => getState(k).stack.length > 0).length}`;
             document.getElementById('undoBtn').disabled = history.length === 0 || isOnline;
             document.getElementById('replayBtn').disabled = !canReplayAI || lastAIAction === null || aiPlayer === null;
+            document.getElementById('replayOpponentBtn').disabled = !canReplayOpponent || isOnline === false;
 
             if (debug) {
                 ctx.font = '14px monospace';
@@ -891,6 +897,9 @@
             lastAIAction = null;
             aiPrevState = null;
             canReplayAI = false;
+            lastOpponentAction = null;
+            opponentPrevState = null;
+            canReplayOpponent = false;
             aiDifficulty = 'easy';
             document.getElementById('aiLevelBtn').innerHTML = 'AI level: easy';
             document.getElementById('roomInfo').innerHTML = '';
@@ -996,6 +1005,51 @@
             }, 400);
         }
 
+        function replayLastOpponentMove() {
+            if (!canReplayOpponent || lastOpponentAction === null || opponentPrevState === null) return;
+
+            restoreState(opponentPrevState);
+            draw();
+
+            setTimeout(() => {
+                flashingFrom = lastOpponentAction.type === 'place' ? lastOpponentAction.pos : lastOpponentAction.from;
+                draw();
+                setTimeout(() => {
+                    flashingFrom = null;
+                    const player = opponentPrevState.currentPlayer;
+                    if (lastOpponentAction.type === 'place') {
+                        const pos = lastOpponentAction.pos;
+                        board[pos] = { stack: [player] };
+                        occupied.add(pos);
+                        piecesLeft[player]--;
+                        if (piecesLeft.W + piecesLeft.B === 0) {
+                            phase = 'play';
+                        }
+                    } else {
+                        const from = lastOpponentAction.from;
+                        const to = lastOpponentAction.to;
+                        const stFrom = getState(from);
+                        if (lastOpponentAction.type === 'capture') {
+                            const stTo = getState(to);
+                            board[to].stack = stTo.stack.concat(stFrom.stack);
+                        } else if (lastOpponentAction.type === 'split') {
+                            board[to] = { stack: stFrom.stack.splice(lastOpponentAction.splitH1) };
+                            occupied.add(to);
+                        } else {
+                            board[to] = { stack: stFrom.stack };
+                        }
+                        delete board[from];
+                    }
+                    flashingTo = lastOpponentAction.type === 'place' ? lastOpponentAction.pos : lastOpponentAction.to;
+                    draw();
+                    setTimeout(() => {
+                        flashingTo = null;
+                        draw();
+                    }, 400);
+                }, 400);
+            }, 400);
+        }
+
         function createOnlineGame() {
             socket.emit('createGame', (res) => {
                 if (res.error) {
@@ -1027,6 +1081,7 @@
         }
 
         socket.on('gameUpdate', (gameState) => {
+            const prevState = saveState();
             board = gameState.board;
             phase = gameState.phase;
             currentPlayer = gameState.currentPlayer;
@@ -1035,7 +1090,15 @@
             outerColors = gameState.outerColors;
             selected = null;
             possibleTargets = [];
+            if (isOnline && gameState.lastAction && gameState.lastAction.player !== myColor) {
+                lastOpponentAction = gameState.lastAction;
+                opponentPrevState = prevState;
+                canReplayOpponent = true;
+            } else {
+                canReplayOpponent = false;
+            }
             draw();
+            document.getElementById('replayOpponentBtn').disabled = !canReplayOpponent;
         });
 
         socket.on('gameStart', () => {
