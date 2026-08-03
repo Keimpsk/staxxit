@@ -10,6 +10,8 @@ const io = new Server(server, {
 });
 
 const PORT = process.env.PORT || 3000;
+// Bind 127.0.0.1 behind nginx; set HOST=0.0.0.0 for local dev if needed
+const HOST = process.env.HOST || "0.0.0.0";
 
 // Serve static files
 app.use(express.static(__dirname));
@@ -399,6 +401,6 @@ function getSerializableGame(game) {
   };
 }
 
-server.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+server.listen(PORT, HOST, () => {
+  console.log(`Server running on http://${HOST}:${PORT}`);
 });
