@@ -381,6 +381,7 @@ double logadd(double a, double b) {
 }
 struct Config {
   bool variant = false, verify = false, escape_first[2] = {false, false};
+  bool early_escape_first[2] = {false, false};
   uint64_t games = 1000, seed = 42, start = 0;
   int threads = 1, limit = 536;
   int strategy[2] = {0, 0}, policy[2] = {0, 0};
@@ -388,6 +389,11 @@ struct Config {
   std::string output, records;
   bool replay = false;
   uint64_t replay_id = 0;
+
+  bool prefer_escape(const State& s) const {
+    return escape_first[s.side] ||
+           (early_escape_first[s.side] && s.res[1 - s.side] > 0);
+  }
 };
 #include "game_records.hpp"
 struct Stats {
@@ -495,8 +501,7 @@ void game(const Config& cfg, uint64_t id, Stats& stats,
       int strat = cfg.strategy[s.side], stage = (18 - s.res[s.side]) / 6;
       if (stage < 3 && cfg.schedule[s.side][stage] >= 0)
         strat = cfg.schedule[s.side][stage];
-      Move a = choose(s, moves, strat, cfg.policy[s.side],
-                      cfg.escape_first[s.side], rng);
+      Move a = choose(s, moves, strat, cfg.policy[s.side], cfg.prefer_escape(s), rng);
       if (recording) archive.append(s, a, int(moves.size()), strat);
       if (a.t == 'p') {
         stats.actions[0]++;
@@ -591,6 +596,8 @@ void output_json(std::ostream& o, const Config& c, const Stats& s,
     << ",\"black_policy\":" << c.policy[1]
     << ",\"white_escape_first\":" << (c.escape_first[0] ? "true" : "false")
     << ",\"black_escape_first\":" << (c.escape_first[1] ? "true" : "false")
+    << ",\"white_early_escape_first\":" << (c.early_escape_first[0] ? "true" : "false")
+    << ",\"black_early_escape_first\":" << (c.early_escape_first[1] ? "true" : "false")
     << ",\"white_schedule\":";
   array_json(o, c.schedule[0]);
   o << ",\"black_schedule\":";
@@ -632,7 +639,8 @@ void output_json(std::ostream& o, const Config& c, const Stats& s,
   o << "],\"duration\":";
   array_json(o, s.duration);
   bool valid = c.strategy[0] == 0 && c.strategy[1] == 0 && c.policy[0] == 0 &&
-               c.policy[1] == 0 && !c.escape_first[0] && !c.escape_first[1];
+               c.policy[1] == 0 && !c.escape_first[0] && !c.escape_first[1] &&
+               !c.early_escape_first[0] && !c.early_escape_first[1];
   for (auto schedule : c.schedule)
     for (int x : schedule) valid = valid && x < 0;
   o << ",\"tree_estimator_valid\":" << (valid ? "true" : "false")
@@ -725,6 +733,10 @@ Config parse(int argc, char** argv) {
       c.escape_first[k == "--white-escape-first" ? 0 : 1] = true;
       continue;
     }
+    if (k == "--white-early-escape-first" || k == "--black-early-escape-first") {
+      c.early_escape_first[k == "--white-early-escape-first" ? 0 : 1] = true;
+      continue;
+    }
     if (i + 1 >= argc) throw std::runtime_error("missing value for " + k);
     std::string v = argv[++i];
     if (k == "--variant") {
@@ -775,6 +787,8 @@ Config parse(int argc, char** argv) {
   if (!c.records.empty() && (c.records == c.output || c.replay))
     throw std::runtime_error("records must use a separate output path and cannot combine with replay");
   for (int i = 0; i < 2; i++) {
+    if (c.early_escape_first[i] && (!c.variant || c.escape_first[i]))
+      throw std::runtime_error("early escape preference requires variant B and no general escape preference");
     if (c.strategy[i] < 0 || c.strategy[i] > 11 || c.policy[i] < 0 ||
         c.policy[i] > 5)
       throw std::runtime_error("invalid strategy/policy");

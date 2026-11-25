@@ -1,0 +1,25 @@
+{
+  "status": "passed",
+  "traces": 40,
+  "selections": 40,
+  "replayed_turns": 10246,
+  "sampled_games": 4880000,
+  "tasks": 290,
+  "checkpoint_merge_checked": true,
+  "verified_chunks": 488,
+  "checkpoint_candidate_traces": 4642,
+  "independently_summed_games": 4880000,
+  "checkpoint_scope": "Every integer aggregate and category merge; full oracle replay for final dossiers, not all discarded or retained chunk candidates.",
+  "source_provenance": {
+    "source_commit": "72dbf10594331917eab78219953e93bba3e28da6",
+    "source_sha256": {
+      "staxxit.cpp": "9cb8444836036228d0bfad801c17a85bbfd5a175c4fa2d7803580210c6d25412",
+      "game_records.hpp": "e9c0419dacdd08532fc0b7c2285a0061c690a093536e52f81cd27329abd20ad8"
+    },
+    "executable_checked": true,
+    "engine_sha256": "d5cbb847399ccd5ecbd4a83996c36cde6e83f1301eb8c50c3db40f52b1f5225c"
+  },
+  "catalog_sha256": "bfcb15e4901122e84eca01762a3888666e648e3b65e032dbf2c94668242eb616",
+  "input_sha256": "bfcb15e4901122e84eca01762a3888666e648e3b65e032dbf2c94668242eb616",
+  "validator_sha256": "8d6c743dadd8c5c94b6e3b89bfa5373ca3a773093c9ba39536ad29c00c8eb017"
+}

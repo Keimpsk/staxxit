@@ -1,5 +1,22 @@
 # Staxxit onderzoeksengine
 
+De nieuwe [partijgalerij](GALLERY.md) bewaart automatisch bijzondere partijen
+met volledige replaybestanden, zetlijsten en borddiagrammen. De hoofdgalerij
+is gebaseerd op 4.880.000 partijen; een aparte reeks laat dezelfde eerste
+100.000 willekeurige partijen per variant langer doorlopen. Zie de
+[selectiecriteria](GALLERY_METHODS.md) en [replaycontroles](GALLERY_VALIDATION.md).
+
+```powershell
+.\analysis\build.ps1 -OutputName staxxit_gallery.exe
+& $Python analysis/run_gallery.py --results-dir analysis/results/gallery_new
+& $Python analysis/validate_gallery.py analysis/results/gallery_new/catalog.json
+```
+
+De bewaarde gepubliceerde galerij kan ook zonder lokale checkpoints worden
+gecontroleerd met `validate_gallery.py .../catalog.json --artifacts-only`.
+Gebruik voor afwijkende steekproeven een eigen resultaatmap. Historische
+engineversies en de herkomst van iedere galerij staan in de manifests.
+
 Alles gebeurt op `complexity-analysis-cpp`; merge niets naar `main`.
 De bestaande HTML/JavaScript-simulator wordt niet gebruikt of aangepast.
 
@@ -33,7 +50,7 @@ $env:STAXXIT_CPP = (Resolve-Path .\analysis\build\staxxit.exe).Path
 & $Python analysis/benchmark.py --games 30000
 ```
 
-Linux/macOS equivalent voor de build:
+Linux/macOS met een C++17-compiler en Python:
 
 ```bash
 mkdir -p analysis/build
@@ -41,6 +58,12 @@ g++ -O3 -march=native -std=c++17 -pthread -Wall -Wextra analysis/staxxit.cpp -o 
 python3 analysis/tests/differential.py --cpp analysis/build/staxxit
 python3 analysis/run_study.py --engine analysis/build/staxxit --suite baseline --threads 16
 ```
+
+Voor de volledige reproductie op Linux kan `bash analysis/reproduce.sh` worden
+gebruikt. Het script detecteert het aantal beschikbare logische CPU's. Een
+optioneel eerste argument stelt het aantal threads in, een tweede argument
+stelt de uitvoermap in (standaard `analysis/build/reproduction`).
+`CXX` en `PYTHON` selecteren de compiler en interpreter.
 
 `-march=native` stemt de binary af op de bouwmachine. Laat dit weg voor een
 binary die op andere CPU's moet werken. Steenbehoud gebruikt runtimefouten,
@@ -68,6 +91,10 @@ Een losse reeks:
 
 Standaard: 1.000.000 partijen per variant voor `baseline`, 10.000 per
 geordende combinatie voor `matrix` (12x12x2=2.880.000 partijen).
+De suite `early_escape` gebruikt 100.000 partijen per conditie
+(800.000 in totaal) en varieert alleen ontsnappingsprioriteit zolang
+de tegenstander voorraad heeft. Gebruik `--champion-a 8 --champion-b 8`
+om de gepubliceerde configuratie te reproduceren.
 De standaardseed is 20261125, zetlimiet536, chunk10.000. Zie `--help`.
 `--start` in de C++-CLI kiest de eerste partij-index; threads en chunkindeling
 veranderen de individuele partij niet. Willekeurigheid is uniform over
@@ -122,10 +149,15 @@ Op deze lokale onderzoekscheckout, met de oorspronkelijke checkpoints/binary:
 & $Python analysis/verify_results.py
 ```
 
-Een nieuwe volledige reproductie heeft een eigen runnerhash; `run_all.ps1`
-controleert die met `verify_results.py --use-current-runner`. De verifier
-controleert alle taakroosters en telt de checkpointcijfers onafhankelijk op.
-De gepubliceerde productierunner blijft via zijn vaste Git-commit controleerbaar.
+Een volledige reproductie heeft een eigen binary- en runnerhash.
+`run_all.ps1` en `reproduce.sh` controleren die met
+`verify_results.py --use-current-runner`. De verifier controleert de
+taakroosters en telt de checkpointcijfers onafhankelijk op. Voeg bij het
+auditen van een aparte reproductiemap `--compare-with analysis/results` toe
+om de gehele tellers per taak met de gepubliceerde cijfers te vergelijken.
+Historische Windows-JSON-bestanden hadden CRLF-regelafbrekingen tijdens
+het maken van `integrity.json`. Git bewaart ze met LF. Hashes van die
+bestanden verschillen daardoor per representatie.
 
 Na uitsluitend runneronderhoud kan `--resume-run <run_id>` de oorspronkelijke
 run-identiteit behouden. Alle enginehashes en simulatie-instellingen moeten

@@ -200,6 +200,13 @@ padkansen worden gebruikt; een deterministische strategie die sommige legale
 zetten kans nul geeft, kan de volledige boom niet op deze manier schatten.
 De nulmeting met uniforme zetten is daarom de geschikte bron.
 
+De onafhankelijke oracletelling kan zonder samenvoegen van transposities
+exact doorlopen tot diepte 8. Op die laatste diepte zijn er 15.752.700
+geschiedenissen bij A en 34.919.910 bij B. Gebruik
+`python analysis/tree_prefix_exact.py --depth 8 --output analysis/results/tree_prefix_exact_depth8.json`
+voor dezelfde kalibratie. Het rapport vergelijkt deze cijfers met de
+schattingen uit uniforme bemonstering.
+
 ### Onzekerheid en interpretatie
 
 Rapporteer naast de schatting het aantal onafhankelijke partijen, de limiet,

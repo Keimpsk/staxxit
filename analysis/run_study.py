@@ -75,6 +75,18 @@ def tasks_for(suite, champions, schedules=None):
         return [task(suite, 'B', champions['B'], champions['B'],
                 (['--white-escape-first'] if w else []) + (['--black-escape-first'] if b else []),
                 f'we{w}_be{b}') for w in range(2) for b in range(2)]
+    if suite == 'early_escape':
+        tasks = []
+        for wp, bp, switches in ((0, 0, ((0, 0), (1, 0), (0, 1), (1, 1))),
+                                 (1, 2, ((0, 0), (1, 0))),
+                                 (2, 1, ((0, 0), (0, 1)))):
+            policy = ['--white-policy', str(wp), '--black-policy', str(bp)]
+            for we, be in switches:
+                flags = (['--white-early-escape-first'] if we else []) + (
+                    ['--black-early-escape-first'] if be else [])
+                tasks.append(task(suite, 'B', champions['B'], champions['B'],
+                                  policy + flags, f'wp{wp}_bp{bp}_we{we}_be{be}'))
+        return tasks
     if suite == 'adaptive':
         return [task(suite, v, champions[v], champions[v],
                 (['--white-schedule', schedules[v]] if w else []) +
@@ -88,8 +100,9 @@ def tasks_for(suite, champions, schedules=None):
 def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--engine', type=Path, default=HERE/'build'/'staxxit.exe')
-    p.add_argument('--suite', choices=['baseline', 'matrix', 'phased', 'policies', 'escape', 'adaptive', 'sensitivity'], required=True)
-    p.add_argument('--games', type=int, help='games per task (default 1m baseline, 10k otherwise)')
+    p.add_argument('--suite', choices=['baseline', 'matrix', 'phased', 'policies', 'escape',
+                                       'early_escape', 'adaptive', 'sensitivity'], required=True)
+    p.add_argument('--games', type=int, help='games per task (1m baseline, 100k early_escape, 10k otherwise)')
     p.add_argument('--chunk', type=int, default=10000)
     p.add_argument('--seed', type=int, default=20261125)
     p.add_argument('--limit', type=int, default=536)
@@ -103,7 +116,8 @@ def main():
     p.add_argument('--only', help='task-id substring filter for diagnosis')
     p.add_argument('--resume-run', help='Existing 16-hex checkpoint id; permits runner-only maintenance with identical engine/settings')
     a = p.parse_args()
-    n = a.games if a.games is not None else (1000000 if a.suite == 'baseline' else 10000)
+    defaults = {'baseline': 1_000_000, 'early_escape': 100_000}
+    n = a.games if a.games is not None else defaults.get(a.suite, 10_000)
     if n <= 0 or a.chunk <= 0 or a.threads <= 0:
         p.error('games, chunk and threads must be positive')
     champions = {'A': a.champion_a, 'B': a.champion_b}

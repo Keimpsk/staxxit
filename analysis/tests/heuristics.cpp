@@ -68,9 +68,20 @@ int main() {
     escape.b[at(-5, 0)] = {1, 1};
     auto exits = legal(escape, true);
     require(choose(escape, exits, 0, 0, true, rng).t == 'e', "escape preference");
+    Config early;
+    early.variant = true;
+    early.early_escape_first[0] = true;
+    require(early.prefer_escape(escape), "early preference with opponent reserve");
+    escape.res[1] = 0;
+    require(!early.prefer_escape(escape), "early preference ends with opponent reserve");
+    escape.res[1] = 1;
+    escape.side = 1;
+    require(!early.prefer_escape(escape), "early preference applies only to configured side");
+    escape.side = 0;
     escape.b[at(4, 0)] = {1, 1};
     exits = legal(escape, true);
-    require(choose(escape, exits, 0, 0, true, rng).t == 'c', "capture obligation above escape preference");
+    require(choose(escape, exits, 0, 0, early.prefer_escape(escape), rng).t == 'c',
+            "capture obligation above early escape preference");
 
     // Deterministic tie sampling over the six equal own-neighbor placements.
     // The fixed broad bounds detect a constant/strongly biased tie selector;

@@ -1,0 +1,41 @@
+variant,category,strategy,player,task_id,seed,game_id,outcome,turns,captures,max_height,rank,trace_file,markdown_file
+A,best_strategy,0,0,matrix_A_w00_b10,11838126149845820780,8554,wit wint,431,30,12,"[6, 26, -431]",games/A-matrix_A_w00_b10-g000008554.json,games/A-matrix_A_w00_b10-g000008554.md
+A,best_strategy,1,1,matrix_A_w07_b01,18070246813497016260,7616,zwart wint,190,21,12,"[8, 18, -190]",games/A-matrix_A_w07_b01-g000007616.json,games/A-matrix_A_w07_b01-g000007616.md
+A,best_strategy,2,0,matrix_A_w02_b09,6380483150441911850,2445,wit wint,271,36,16,"[5, 28, -271]",games/A-matrix_A_w02_b09-g000002445.json,games/A-matrix_A_w02_b09-g000002445.md
+A,best_strategy,3,0,matrix_A_w03_b00,7647925101142375469,1585,wit wint,169,29,13,"[6, 27, -169]",games/A-matrix_A_w03_b00-g000001585.json,games/A-matrix_A_w03_b00-g000001585.md
+A,best_strategy,4,1,matrix_A_w01_b04,1333058312689410288,3672,zwart wint,174,17,7,"[9, 20, -174]",games/A-matrix_A_w01_b04-g000003672.json,games/A-matrix_A_w01_b04-g000003672.md
+A,best_strategy,5,1,matrix_A_w07_b05,5486001037763991875,7372,zwart wint,212,28,10,"[7, 27, -212]",games/A-matrix_A_w07_b05-g000007372.json,games/A-matrix_A_w07_b05-g000007372.md
+A,best_strategy,6,1,matrix_A_w07_b06,12592433640094502521,8609,zwart wint,124,15,6,"[10, 18, -124]",games/A-matrix_A_w07_b06-g000008609.json,games/A-matrix_A_w07_b06-g000008609.md
+A,best_strategy,7,1,matrix_A_w05_b07,2915720847467803998,302,zwart wint,152,22,10,"[6, 11, -152]",games/A-matrix_A_w05_b07-g000000302.json,games/A-matrix_A_w05_b07-g000000302.md
+A,best_strategy,8,1,matrix_A_w05_b08,18139184206650248679,9614,zwart wint,160,14,10,"[10, 11, -160]",games/A-matrix_A_w05_b08-g000009614.json,games/A-matrix_A_w05_b08-g000009614.md
+A,best_strategy,9,0,matrix_A_w09_b10,15847142585101834906,7123,wit wint,185,32,13,"[5, 30, -185]",games/A-matrix_A_w09_b10-g000007123.json,games/A-matrix_A_w09_b10-g000007123.md
+A,best_strategy,10,1,matrix_A_w05_b10,1291622443867926515,5999,zwart wint,344,32,16,"[6, 27, -344]",games/A-matrix_A_w05_b10-g000005999.json,games/A-matrix_A_w05_b10-g000005999.md
+A,best_strategy,11,0,matrix_A_w11_b02,1653354576845482743,5593,wit wint,165,33,19,"[6, 27, -165]",games/A-matrix_A_w11_b02-g000005593.json,games/A-matrix_A_w11_b02-g000005593.md
+A,comeback_material,-1,1,baseline_A,149805519438865530,42836,zwart wint,84,28,13,"[34, -69]",games/A-baseline_A-g000042836.json,games/A-baseline_A-g000042836.md
+A,comeback_score,-1,0,matrix_A_w01_b08,2519081205747909876,6701,wit wint,509,26,14,"[6, 6, -74]",games/A-matrix_A_w01_b08-g000006701.json,games/A-matrix_A_w01_b08-g000006701.md
+A,longest_observed,-1,-1,baseline_A,149805519438865530,27,zetlimiet,536,32,11,[536],games/A-baseline_A-g000000027.json,games/A-baseline_A-g000000027.md
+A,longest_regular,-1,-1,baseline_A,149805519438865530,22583,zwart wint,536,36,16,[536],games/A-baseline_A-g000022583.json,games/A-baseline_A-g000022583.md
+A,most_captures,-1,-1,baseline_A,149805519438865530,397409,zetlimiet,536,56,22,[56],games/A-baseline_A-g000397409.json,games/A-baseline_A-g000397409.md
+A,shortest_won,-1,1,matrix_A_w09_b06,15889882869105506929,4907,zwart wint,64,23,9,[-64],games/A-matrix_A_w09_b06-g000004907.json,games/A-matrix_A_w09_b06-g000004907.md
+A,tactical_offer,-1,0,baseline_A,149805519438865530,750520,wit wint,222,38,27,"[10, 12]",games/A-baseline_A-g000750520.json,games/A-baseline_A-g000750520.md
+A,tallest_stack,-1,-1,matrix_A_w10_b05,17287571410888348408,2222,zwart wint,116,34,35,[35],games/A-matrix_A_w10_b05-g000002222.json,games/A-matrix_A_w10_b05-g000002222.md
+B,best_strategy,0,0,matrix_B_w00_b00,370381873271887765,1902,wit wint,249,32,14,"[6, 27, -249]",games/B-matrix_B_w00_b00-g000001902.json,games/B-matrix_B_w00_b00-g000001902.md
+B,best_strategy,1,1,matrix_B_w07_b01,12260102446256890261,7034,zwart wint,208,30,16,"[7, 27, -208]",games/B-matrix_B_w07_b01-g000007034.json,games/B-matrix_B_w07_b01-g000007034.md
+B,best_strategy,2,0,matrix_B_w02_b02,16536390203589672186,7159,wit wint,193,33,15,"[6, 28, -193]",games/B-matrix_B_w02_b02-g000007159.json,games/B-matrix_B_w02_b02-g000007159.md
+B,best_strategy,3,1,matrix_B_w00_b03,8465566909532227651,7565,zwart wint,222,31,13,"[5, 30, -222]",games/B-matrix_B_w00_b03-g000007565.json,games/B-matrix_B_w00_b03-g000007565.md
+B,best_strategy,4,1,matrix_B_w04_b04,12577036167300568922,1141,zwart wint,174,18,10,"[8, 17, -174]",games/B-matrix_B_w04_b04-g000001141.json,games/B-matrix_B_w04_b04-g000001141.md
+B,best_strategy,5,1,matrix_B_w07_b05,10328324586349505088,916,zwart wint,414,39,20,"[8, 26, -414]",games/B-matrix_B_w07_b05-g000000916.json,games/B-matrix_B_w07_b05-g000000916.md
+B,best_strategy,6,0,matrix_B_w06_b07,1293399886469996358,7437,wit wint,124,17,8,"[10, 14, -124]",games/B-matrix_B_w06_b07-g000007437.json,games/B-matrix_B_w06_b07-g000007437.md
+B,best_strategy,7,0,matrix_B_w07_b09,2771521892797903674,4862,wit wint,213,31,12,"[5, 29, -213]",games/B-matrix_B_w07_b09-g000004862.json,games/B-matrix_B_w07_b09-g000004862.md
+B,best_strategy,8,0,matrix_B_w08_b01,3400092927904783605,4863,wit wint,84,9,5,"[10, 10, -84]",games/B-matrix_B_w08_b01-g000004863.json,games/B-matrix_B_w08_b01-g000004863.md
+B,best_strategy,9,0,matrix_B_w09_b07,10715217976159151397,6282,wit wint,265,30,12,"[6, 27, -265]",games/B-matrix_B_w09_b07-g000006282.json,games/B-matrix_B_w09_b07-g000006282.md
+B,best_strategy,10,0,matrix_B_w10_b01,3873865279045279613,4184,wit wint,175,26,12,"[7, 13, -175]",games/B-matrix_B_w10_b01-g000004184.json,games/B-matrix_B_w10_b01-g000004184.md
+B,best_strategy,11,1,matrix_B_w10_b11,14427776327870586666,2944,zwart wint,360,33,14,"[6, 24, -360]",games/B-matrix_B_w10_b11-g000002944.json,games/B-matrix_B_w10_b11-g000002944.md
+B,comeback_material,-1,1,baseline_B,3975178610736981847,4319,zwart wint,82,28,11,"[34, -69]",games/B-baseline_B-g000004319.json,games/B-baseline_B-g000004319.md
+B,comeback_score,-1,0,matrix_B_w05_b08,16828847216102972751,1749,wit wint,337,24,11,"[5, 11, -114]",games/B-matrix_B_w05_b08-g000001749.json,games/B-matrix_B_w05_b08-g000001749.md
+B,longest_observed,-1,-1,baseline_B,3975178610736981847,19,zetlimiet,536,33,16,[536],games/B-baseline_B-g000000019.json,games/B-baseline_B-g000000019.md
+B,longest_regular,-1,-1,baseline_B,3975178610736981847,28308,zwart wint,536,34,19,[536],games/B-baseline_B-g000028308.json,games/B-baseline_B-g000028308.md
+B,most_captures,-1,-1,matrix_B_w11_b07,7738452252746052592,6782,zwart wint,521,55,19,[55],games/B-matrix_B_w11_b07-g000006782.json,games/B-matrix_B_w11_b07-g000006782.md
+B,shortest_won,-1,0,matrix_B_w08_b05,16228259881896218526,2508,wit wint,63,20,5,[-63],games/B-matrix_B_w08_b05-g000002508.json,games/B-matrix_B_w08_b05-g000002508.md
+B,tactical_offer,-1,1,matrix_B_w00_b11,8633352406448347433,5673,zwart wint,144,37,26,"[10, 14]",games/B-matrix_B_w00_b11-g000005673.json,games/B-matrix_B_w00_b11-g000005673.md
+B,tallest_stack,-1,-1,baseline_B,3975178610736981847,802613,wit wint,166,35,35,[35],games/B-baseline_B-g000802613.json,games/B-baseline_B-g000802613.md

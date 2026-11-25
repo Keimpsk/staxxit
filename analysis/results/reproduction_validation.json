@@ -1,0 +1,308 @@
+{
+  "status": "passed",
+  "checkout_base": "e2bf3de5fafd01758ce44f210778192038a5f121",
+  "environment": {
+    "os": "Debian GNU/Linux 13 (trixie)",
+    "kernel": "6.12.116+deb13-amd64",
+    "cpu": "AMD RYZEN AI MAX+ 395 w/ Radeon 8060S",
+    "available_logical_cpus": 2,
+    "memory_bytes": 4112338944,
+    "hypervisor": "VMware",
+    "python": "3.13.5",
+    "compiler": "x86_64-linux-gnu-g++-14 (Debian 14.2.0-19) 14.2.0",
+    "compiler_flags": "-O3 -march=native -std=c++17 -pthread -Wall -Wextra -static-libstdc++ -static-libgcc"
+  },
+  "python_reference_sha256": {
+    "staxxit_analysis.py": "af8a1ffefa4b10235947ad33351b3f592b7f4dbf9dd941c11136ba4da15ec166",
+    "staxxit_variants.py": "5218dcf225dc2df49ba2094490bb8e1a0349391b9cb5407d759b4d2269b314f2"
+  },
+  "published_artifact_checks": {
+    "baseline": {
+      "git_lf_sha256": "5158255f4c7bdf76a0ea86e10cf7b1c7d1bc9da6cc148ce3b381e8b5f3a6cf9b",
+      "audited_windows_crlf_sha256": "06cb5e8d62c76e105cf582214a283e11519686c7d0d1d0724bd509ade5276720"
+    },
+    "matrix": {
+      "git_lf_sha256": "1e6fd26641a4264ce123f24f26a02fcd91e3b1d9296d16d4a98f6e3171b577db",
+      "audited_windows_crlf_sha256": "2c97dc661e95b0e13a9bbdaa3ffacfa908ed657f7763b021c74c10c3fa1568d6"
+    },
+    "phased": {
+      "git_lf_sha256": "c2ae01d3efd5a6339239603513e5feabf68ab33afe7e8a2c9f62ac95f60e0fae",
+      "audited_windows_crlf_sha256": "54a1adc8f129181cd97ddbd7a97852db49af8b4b506a5b8148e8b536f26b9b7b"
+    },
+    "policies": {
+      "git_lf_sha256": "0eb05fca4f7791aaeb8ebf8edc9f4548d7557a08eb119203e7d034651e1fa051",
+      "audited_windows_crlf_sha256": "736701c73750eac716a949c2fe4443adad4884fec7fa99c8eae7cf7f1f5d3439"
+    },
+    "escape": {
+      "git_lf_sha256": "59e6fa987b40d5d563dc24c361863ca180a9dc35e1bb4746ee5c27bfe728a89f",
+      "audited_windows_crlf_sha256": "4bd6784f216410a135e8f92419d5ed08102fe8631add6d005f79784d59b39496"
+    },
+    "adaptive": {
+      "git_lf_sha256": "5bf72d6d73b680318adea56108dc518469acdfdcb9be140ae99b8d7baa4d0282",
+      "audited_windows_crlf_sha256": "aa54363132e0afc4e7d27ac452dd0efa05f687d0b23e5fb7c693662bcddf54c4"
+    },
+    "sensitivity": {
+      "git_lf_sha256": "6902c840b94d3be85987e8476e6100275457ce1f7f73cf013da7c2fc337819f0",
+      "audited_windows_crlf_sha256": "5c5ec86f09a30c533d91316bd3be7c2ea11942e56ac919ca08b75bded1669341"
+    }
+  },
+  "differential_python": {
+    "status": "passed",
+    "seed": 20261125,
+    "games_per_variant": 1000,
+    "synthetic_states": 10000,
+    "turn_limit": 536,
+    "compared_states": 373682,
+    "compared_transitions": 351711,
+    "action_coverage": {
+      "p": 91048,
+      "c": 67679,
+      "m": 186598,
+      "s": 3105,
+      "e": 3281
+    },
+    "outcomes": {
+      "A": {
+        "draw": 230,
+        "black": 407,
+        "white": 348,
+        "limit": 15
+      },
+      "B": {
+        "black": 363,
+        "draw": 249,
+        "limit": 14,
+        "white": 374
+      }
+    },
+    "cpp_requests": 0,
+    "elapsed_seconds": 23.155299746999958,
+    "note": "Validation sample only; not a baseline simulation result."
+  },
+  "differential_cpp": {
+    "status": "passed",
+    "seed": 20261125,
+    "games_per_variant": 1000,
+    "synthetic_states": 10000,
+    "turn_limit": 536,
+    "compared_states": 373682,
+    "compared_transitions": 351711,
+    "action_coverage": {
+      "p": 91048,
+      "c": 67679,
+      "m": 186598,
+      "s": 3105,
+      "e": 3281
+    },
+    "outcomes": {
+      "A": {
+        "draw": 230,
+        "black": 407,
+        "white": 348,
+        "limit": 15
+      },
+      "B": {
+        "black": 363,
+        "draw": 249,
+        "limit": 14,
+        "white": 374
+      }
+    },
+    "cpp_requests": 373682,
+    "elapsed_seconds": 98.39954943400016,
+    "note": "Validation sample only; not a baseline simulation result.",
+    "executable_sha256": "d567083b456e8bf7753d886479905560159f78dcfa32668b071776d5b4816f16"
+  },
+  "runner_comparison": {
+    "status": "passed",
+    "seed": 20261125,
+    "start": 0,
+    "limit": 536,
+    "checks": [
+      {
+        "variant": "A",
+        "games": 1000,
+        "integer_fields": [
+          "games",
+          "turns",
+          "passes",
+          "center_resets",
+          "early_capture",
+          "early_escape",
+          "conservation_checks",
+          "outcomes",
+          "actions",
+          "phase_turns",
+          "actions_by_player",
+          "early_capture_by_player",
+          "early_escape_by_player",
+          "phase_choices",
+          "placement_phase_turns",
+          "placement_phase_choices",
+          "source_heights",
+          "max_heights",
+          "first_empty",
+          "duration",
+          "depth_n"
+        ],
+        "exact_full_game_comparison": true,
+        "thread_counts": [
+          1,
+          4
+        ],
+        "start_offset_batches": [
+          500,
+          500
+        ],
+        "forced_limit_test": true,
+        "outcomes": [
+          367,
+          402,
+          216,
+          0,
+          0,
+          15
+        ],
+        "conservation_checks": 165580
+      },
+      {
+        "variant": "B",
+        "games": 1000,
+        "integer_fields": [
+          "games",
+          "turns",
+          "passes",
+          "center_resets",
+          "early_capture",
+          "early_escape",
+          "conservation_checks",
+          "outcomes",
+          "actions",
+          "phase_turns",
+          "actions_by_player",
+          "early_capture_by_player",
+          "early_escape_by_player",
+          "phase_choices",
+          "placement_phase_turns",
+          "placement_phase_choices",
+          "source_heights",
+          "max_heights",
+          "first_empty",
+          "duration",
+          "depth_n"
+        ],
+        "exact_full_game_comparison": true,
+        "thread_counts": [
+          1,
+          4
+        ],
+        "start_offset_batches": [
+          500,
+          500
+        ],
+        "forced_limit_test": true,
+        "outcomes": [
+          363,
+          380,
+          243,
+          0,
+          0,
+          14
+        ],
+        "conservation_checks": 164647
+      }
+    ],
+    "elapsed_seconds": 10.082032001000016,
+    "executable_sha256": "d567083b456e8bf7753d886479905560159f78dcfa32668b071776d5b4816f16",
+    "note": "Audit sample, not the research baseline. RNG and move order match C++ to compare entire games exactly."
+  },
+  "unittest_cases_passed": 28,
+  "heuristic_test": {
+    "status": "passed",
+    "groups": 6,
+    "policy_legality_checks": 1440,
+    "tie_draws": 12000
+  },
+  "benchmark": {
+    "engine_sha256": "d567083b456e8bf7753d886479905560159f78dcfa32668b071776d5b4816f16",
+    "note": "Single measured trial per condition; shared machine, thermal/load effects uncontrolled.",
+    "rows": [
+      {
+        "variant": "A",
+        "threads": 1,
+        "games": 30000,
+        "elapsed_seconds": 4.301549557000044,
+        "games_per_second": 6974.230937588543,
+        "turns_per_second": 1141450.989913575,
+        "outcome_sha256": "0da8e6494a3a39fee046da4c5a3e89f50a49d84d0845dc08e8efb286fc87d7c1"
+      },
+      {
+        "variant": "A",
+        "threads": 2,
+        "games": 30000,
+        "elapsed_seconds": 2.2252659749999566,
+        "games_per_second": 13481.534493871271,
+        "turns_per_second": 2206481.407239463,
+        "outcome_sha256": "0da8e6494a3a39fee046da4c5a3e89f50a49d84d0845dc08e8efb286fc87d7c1"
+      },
+      {
+        "variant": "B",
+        "threads": 1,
+        "games": 30000,
+        "elapsed_seconds": 4.813481256999921,
+        "games_per_second": 6232.4954431624765,
+        "turns_per_second": 1022884.4233765093,
+        "outcome_sha256": "0256cebcb75038e11f226c3971ffaf125bb911cac17cfc7f2b521fe36a0fcb03"
+      },
+      {
+        "variant": "B",
+        "threads": 2,
+        "games": 30000,
+        "elapsed_seconds": 2.4654288500000803,
+        "games_per_second": 12168.268413018297,
+        "turns_per_second": 1997070.4082577112,
+        "outcome_sha256": "0256cebcb75038e11f226c3971ffaf125bb911cac17cfc7f2b521fe36a0fcb03"
+      }
+    ]
+  },
+  "benchmark_matches_published_integer_digest": true,
+  "bounds_json_sha256": "a8bbb1918bd9310ea3fd8854832c906be7a08125ee73e9d7849829b12f899f94",
+  "exact_prefix_counts_by_variant": {
+    "A": [
+      1,
+      1,
+      6,
+      48,
+      468,
+      5328,
+      68928
+    ],
+    "B": [
+      1,
+      1,
+      6,
+      54,
+      582,
+      7560,
+      112134
+    ]
+  },
+  "cycle_replay": {
+    "A": {
+      "prefix_turns": 56,
+      "cycle_turns": 4,
+      "identical_state_sha256": "8a276af1b65222572fe0aed4ca35339a7ceab25b8e2fbe6000cf16256c6fd0dc"
+    },
+    "B": {
+      "prefix_turns": 64,
+      "cycle_turns": 4,
+      "identical_state_sha256": "08b03f5ca34c448ca9cfe23c69bbf0f0428e77dab36dcd950eb2bb95b5d00f2d"
+    }
+  },
+  "early_escape_resume": {
+    "run_id": "98cfce87c27ac168",
+    "games_reloaded": 800000,
+    "resumed_threads": 1,
+    "identical_result_sha256": "529451cd0317525fbe4158c31d7f86f51b6fb3efac2c4c09b7b78e73ad495347"
+  }
+}

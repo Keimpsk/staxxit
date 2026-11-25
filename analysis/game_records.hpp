@@ -159,6 +159,8 @@ void record_config(std::ostream& o, const Config& c) {
     << ",\"white_policy\":" << c.policy[0] << ",\"black_policy\":" << c.policy[1]
     << ",\"white_escape_first\":" << (c.escape_first[0] ? "true" : "false")
     << ",\"black_escape_first\":" << (c.escape_first[1] ? "true" : "false")
+    << ",\"white_early_escape_first\":" << (c.early_escape_first[0] ? "true" : "false")
+    << ",\"black_early_escape_first\":" << (c.early_escape_first[1] ? "true" : "false")
     << ",\"white_schedule\":";
   record_array(o, c.schedule[0]);
   o << ",\"black_schedule\":";

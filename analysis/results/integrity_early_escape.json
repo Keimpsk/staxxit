@@ -1,0 +1,38 @@
+{
+  "status": "partial_pass",
+  "all_required_suites_checked": false,
+  "checked_at_utc": "2026-11-25T14:14:00.542760+00:00",
+  "required_tasks": 498,
+  "required_games": 9120000,
+  "verified_tasks": 8,
+  "verified_games": 800000,
+  "center_resets_zero_hypothesis_checked": true,
+  "provenance": {
+    "engine_sha256": "d567083b456e8bf7753d886479905560159f78dcfa32668b071776d5b4816f16",
+    "source_sha256": "8d20fe2a9ccc5ef2eb67d70aa2bb90c41b0a765c711d06d408ef38d17b9e9354",
+    "runner_sha256": "34f7fb29fe51eeaed08126d0c754152bc05fc92a3d343d3896c0b6f26ad980b5"
+  },
+  "runner_versions": {
+    "recorded_commit": "3ae6a1de7c9fa2b3cade991709381915fdeef2d5",
+    "verification_mode": "current",
+    "recorded_git_blob": "8e4166d4a886dceedf848c320c614e5afcc8bcde",
+    "recorded_runner_sha256": "206967d54eeeabc909365c713107f28e6b2cc04fe1467acb51f959627993bd57",
+    "current_maintenance_runner_sha256": "34f7fb29fe51eeaed08126d0c754152bc05fc92a3d343d3896c0b6f26ad980b5",
+    "note": "Published manifests must match the immutable production runner; subsequent checkpoint-maintenance code is recorded separately."
+  },
+  "verifier_sha256": "b65833bc8f91c01a32a57ac0a1c0d73c1dece2e57da2c765505fb8f68ba2e99c",
+  "suites": {
+    "early_escape": {
+      "status": "passed",
+      "tasks": 8,
+      "games": 800000,
+      "independently_summed_chunks": 80,
+      "run_id": "98cfce87c27ac168",
+      "compared_artifact_sha256": null,
+      "artifact_sha256": "529451cd0317525fbe4158c31d7f86f51b6fb3efac2c4c09b7b78e73ad495347",
+      "checkpoint_manifest_sha256": "27fd723eceb1a35a2fc7efbc043b4395db1c2c3032a45660fce9f2473c0c8cf7"
+    }
+  },
+  "errors": [],
+  "scope": "Integer counters, complete task grids, final engine/source/runner hashes, and independent checkpoint reaggregation; not a proof of strategic optimality."
+}

@@ -2,19 +2,23 @@
 
 Onderzoeksdatum: 25 november 2026. Onderzoeksbranch: `complexity-analysis-cpp`.
 
-Er zijn **8.320.000 onderzoekspartijen** uitgevoerd in zeven volledige series
-met samen 490 condities. De nulmeting omvat 1.000.000 partijen per variant;
+Er zijn **9.120.000 onderzoekspartijen** uitgevoerd in acht volledige series
+met samen 498 condities. De nulmeting omvat 1.000.000 partijen per variant;
 de volledige plaatsingsmatrix omvat 1.440.000 partijen per variant. Zwart wint
 onder uniforme keuzes iets vaker. Buitenringplaatsing presteert het best van
 de twaalf geteste heuristieken. Voor variant B verbetert een onafhankelijke
-vervolgproef de score door de laatste zes plaatsingen te verspreiden. Ontsnappen
-prioriteren is zeer sterk tegen uniforme beweging, maar dominantie is niet
-bewezen. Beide onbeperkte geschiedenisbomen zijn oneindig door bereikbare cycli.
+vervolgproef de score door de laatste zes plaatsingen te verspreiden. In
+variant B levert uitsluitend vroege ontsnappingsprioriteit 58 tot 60
+procentpunt meer winst op voor een snelle plaatser tegen een slaggerichte
+tegenstander. Bij twee uniforme voorraadbeleidsregels omvatten de intervallen
+voor dezelfde ingreep nul. Beide onbeperkte geschiedenisbomen zijn oneindig
+door bereikbare cycli.
 De eindige-boomschattingen op grote diepte blijken ondanks de grote steekproef
 statistisch instabiel; zij worden daarom verkennend gerapporteerd.
 
 Alle simulatietabellen hieronder komen uit volledig afgeronde bestanden met
-`complete: true`. Validatie- en benchmarkruns tellen niet mee in de 8.320.000.
+`complete: true`. Validatie, benchmarks en reproducties met dezelfde seeds
+tellen niet mee in de 9.120.000.
 
 ![Gemeten nulmeting, duurverdeling en witwinstmatrices](results/overview.png)
 
@@ -172,6 +176,20 @@ bij het atomisch vervangen van een bestand. Dezelfde opdracht is hervat;
 850.000 reeds gecheckpointte partijen hoefden niet opnieuw te worden uitgevoerd.
 De uiteindelijke aantallen in dit rapport gebruiken uitsluitend de volledig
 afgeronde series met gecontroleerde taakdekking.
+
+De Linux-reproductie kreeg op dezelfde CPU-familie twee virtuele kernen.
+De GCC 14.2.0-build behaalde met één thread 6.974 partijen per seconde
+voor A en 6.232 voor B. Met twee threads was dat 13.482 en 12.168.
+De benchmark gebruikte dezelfde seeds als op Windows. De hashes over
+de geheeltallige benchmarkuitkomsten komen overeen. Details en de
+herhaalde enginevalidatie staan in `results/reproduction_validation.json`.
+Alle 8.320.000 partijen uit de oorspronkelijke zeven series zijn met
+dezelfde seeds opnieuw gespeeld op Linux. De audit telde 832 nieuwe
+chunks op. Elke geheeltallige teller van de 490 taken stemt overeen met
+de oorspronkelijke uitkomst, en de twee CSV-winstmatrices zijn
+byte-identiek. De nieuwe vroege-ontsnappingsreeks heeft een afzonderlijke
+audit. Zie `results/integrity_reproduction.json` en
+`results/integrity_early_escape.json`.
 
 ## Statistische methode
 
@@ -472,12 +490,45 @@ bewegingskeuze, ongeacht de kleur. Wanneer beide spelers ontsnapping
 prioriteren, wordt de partij veel korter en verdwijnt het eenzijdige
 voordeel. Dat is een sterk praktisch effect tegen deze beperkte
 tegenstander, **geen bewijs van een dominante strategie**.
-Het effect mag ook niet uitsluitend aan vroeg ontsnappen worden
-toegeschreven: in de vier condities waren er respectievelijk slechts
+In de vier condities waren er respectievelijk
 5, 27, 95 en 97 ontsnappingshandelingen vóór uitputting van de
-tegenstandersvoorraad. De vlag verandert ook alle latere keuzes.
-Een volgende plaatsingsmatrix met een sterkere gedeelde bewegingskeuze
-is daarom een belangrijke vervolgproef.
+tegenstandersvoorraad. De vlag verandert ook alle latere keuzes, waardoor
+deze proef het gezamenlijke effect over de bewegingsfase meet.
+
+### Uitsluitend vroeg ontsnappen prioriteren
+
+In **800.000 nieuwe partijen** varieert de prioriteit uitsluitend zolang de
+tegenstander voorraad heeft. Na uitputting kiezen beide spelers weer uniform
+uit de legale bewegingshandelingen. Elke conditie telt 100.000 partijen,
+met plaatsingsstrategie ID 8 aan beide kanten. De vier uniforme condities
+testen de schakelaar voor beide kleuren. De overige vier geven de behandelde
+speler zo snel mogelijk een lege voorraad (policy 1), tegen een tegenstander
+die indien mogelijk eerst slaat (policy 2).
+
+| Voorraadbeleid | Speler met gewijzigde prioriteit | Prioriteit tegenstander | Eigen winst uit → aan | Verschil [95%-BI] in procentpunt | Eigen vroege ontsnappingen uit → aan |
+|---|---|---|---:|---:|---:|
+| Beide uniform | Wit | Uit | 39,964% → 40,364% | +0,400 [−0,030; +0,830] | 72 → 787 |
+| Beide uniform | Zwart | Uit | 43,989% → 43,851% | −0,138 [−0,573; +0,297] | 30 → 305 |
+| Beide uniform | Wit | Aan | 40,222% → 40,451% | +0,229 [−0,201; +0,659] | 88 → 773 |
+| Beide uniform | Zwart | Aan | 43,546% → 43,734% | +0,188 [−0,247; +0,623] | 34 → 295 |
+| Snel plaatsen tegen vroeg slaan | Wit | Uit | 32,335% → 91,957% | +59,622 [+59,285; +59,956] | 34.180 → 216.798 |
+| Snel plaatsen tegen vroeg slaan | Zwart | Uit | 34,665% → 92,592% | +57,927 [+57,589; +58,262] | 34.208 → 213.479 |
+
+De snelle plaatser putte in alle vier asymmetrische condities als eerste zijn
+voorraad uit. Zolang de slaggerichte tegenstander voorraad heeft, kan deze
+geen buitenvelden bezetten. De prioriteit benut die periode om buitenvelden
+te bezetten. Het effect is aangetoond tegen het geteste slaggerichte beleid
+met uniforme keuzes na voorraaduitputting. Een uitspraak over dominantie
+zou ook de uitkomst tegen alle andere tegenstrategieën vereisen.
+Een partij kan meerdere vroege ontsnappingen bevatten. De winstnoemer blijft
+alle partijen, inclusief afzonderlijk geregistreerde onderzoeksafbrekingen.
+De intervallen zijn per vergelijking berekend met methode 10 van Newcombe
+voor twee onafhankelijke proporties. Vergelijkingen die een conditie delen,
+zijn onderling afhankelijk. [Newcombe (1998)](https://pubmed.ncbi.nlm.nih.gov/9595617/)
+
+De acht uitkomstverdelingen, zes contrasten en gegevensherkomst staan in
+`results/early_escape.csv`, `results/early_escape_contrasts.csv` en
+`results/early_escape.json`.
 
 ## Gevoeligheid voor voorlopige regels en zetlimiet
 
@@ -555,9 +606,9 @@ variantie staan bij
 [Knuth (1975)](https://www-cs-faculty.stanford.edu/~knuth/persi75-talk.pdf) en
 [Belov e.a. (IJCAI 2017), paragraaf 2](https://ijcai.org/proceedings/2017/67).
 
-Als kalibratie zijn alle legale zetgeschiedenissen tot diepte 6 exact door de
+Als kalibratie zijn alle legale zetgeschiedenissen tot diepte 8 exact door de
 onafhankelijke Pythonoracle opgesomd, zonder transposities samen te voegen.
-`tree_prefix_exact.py` en `results/tree_prefix_exact.json` reproduceren dit:
+De resultaten staan in `results/tree_prefix_exact_depth8.json`.
 
 | Diepte in handelingen | Exact aantal geschiedenisknopen A | Exact aantal geschiedenisknopen B |
 |---|---:|---:|
@@ -568,11 +619,15 @@ onafhankelijke Pythonoracle opgesomd, zonder transposities samen te voegen.
 | 4 | 468 | 582 |
 | 5 | 5.328 | 7.560 |
 | 6 | 68.928 | 112.134 |
+| 7 | 994.086 | 1.885.614 |
+| 8 | 15.752.700 | 34.919.910 |
 
 De nulmeting schat het aantal knopen op diepte 6 op respectievelijk 68.945,16
 en 112.108,07: afwijkingen van +0,0249% en −0,0231% ten opzichte van de exacte
-tellingen. Dat controleert de ondiepe kalibratie; het bewijst geen nauwkeurigheid
-van dezelfde schatter op veel grotere diepte.
+tellingen. Op diepte 8 schat de nulmeting 15.757.597,44 voor A (+0,0311%)
+en 34.903.434,31 voor B (−0,0472%). Dieptes 6 tot en met 8 vallen alle
+binnen de empirische 95%-intervallen van de nulmeting. De precisie op
+grotere diepte wordt hieronder afzonderlijk beoordeeld.
 
 De volledige nulmeting levert de volgende **empirische, sterk instabiele**
 schattingen voor het aantal knopen in de geschiedenisboom tot de vastgelegde
@@ -635,5 +690,5 @@ voortbouwen.
 - [NIST/SEMATECH, 7.2.4.1](https://itl.nist.gov/div898/handbook/prc/section2/prc241.htm):
   score-inversie voor proportie-intervallen.
 
-Alle zeven onderzoekseries zijn volledig geregistreerd. De JSON-manifests,
+Alle acht onderzoekseries zijn volledig geregistreerd. De JSON-manifests,
 bronhashes en taakdekking leggen de exacte herkomst van de meetresultaten vast.

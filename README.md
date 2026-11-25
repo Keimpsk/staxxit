@@ -6,3 +6,6 @@ nieuwe Staxxit-variant. De grafische simulator is niet gewijzigd.
 Start bij [analysis/README.md](analysis/README.md). Zie het Nederlandstalige
 [onderzoeksrapport](analysis/REPORT.md), de exacte [regels](analysis/RULES.md),
 [strategieformules](analysis/STRATEGIES.md) en [overdracht](analysis/Handover.md).
+
+De [galerij met bijzondere partijen](analysis/GALLERY.md) bevat automatisch
+geselecteerde records, volledige zetlijsten en naspeelbare tussenstanden.

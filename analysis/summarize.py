@@ -109,9 +109,38 @@ def describe(r):
 def write_csv(path, rows):
     if not rows: return
     with Path(path).open('w', newline='', encoding='utf-8') as stream:
-        writer = csv.DictWriter(stream, fieldnames=list(rows[0]))
+        writer = csv.DictWriter(stream, fieldnames=list(rows[0]), lineterminator='\n')
         writer.writeheader()
         writer.writerows(rows)
+
+def early_escape_contrasts(items):
+    """Own win-rate changes for an isolated early-escape preference switch."""
+    results = {item['task']['id'].removeprefix('early_escape_B_'): item['result'] for item in items}
+    contrasts = (
+        ('white', 'wp0_bp0_we1_be0', 'wp0_bp0_we0_be0'),
+        ('black', 'wp0_bp0_we0_be1', 'wp0_bp0_we0_be0'),
+        ('white', 'wp0_bp0_we1_be1', 'wp0_bp0_we0_be1'),
+        ('black', 'wp0_bp0_we1_be1', 'wp0_bp0_we1_be0'),
+        ('white', 'wp1_bp2_we1_be0', 'wp1_bp2_we0_be0'),
+        ('black', 'wp2_bp1_we0_be1', 'wp2_bp1_we0_be0'),
+    )
+    rows = []
+    for color, treatment, control in contrasts:
+        side = OUTCOMES.index(color)
+        a, b = results[treatment], results[control]
+        wins_a, wins_b = a['outcomes'][side], b['outcomes'][side]
+        p, q = wins_a/a['games'], wins_b/b['games']
+        lo_a, hi_a = wilson(wins_a, a['games'])
+        lo_b, hi_b = wilson(wins_b, b['games'])
+        difference = p-q
+        rows.append(dict(color=color, treatment='early_escape_B_'+treatment,
+                         control='early_escape_B_'+control,
+                         treatment_win_rate=p, control_win_rate=q, win_rate_difference=difference,
+                         ci95_low=difference-math.hypot(p-lo_a, hi_b-q),
+                         ci95_high=difference+math.hypot(hi_a-p, q-lo_b),
+                         treatment_early_escapes=a['early_escape_by_player'][side],
+                         control_early_escapes=b['early_escape_by_player'][side]))
+    return rows
 
 def render_suite(path):
     data = json.loads(path.read_text(encoding='utf-8'))
@@ -128,7 +157,13 @@ def render_suite(path):
         row.update(mean_turns=s['mean_turns'], median_turns=s['median_turns'],
                    regular_completion=s['regular_completion'], regular_white_score=s['regular_white_score'],
                    white_score_lower=s['white_score_bounds'][0], white_score_upper=s['white_score_bounds'][1])
+        if path.stem == 'early_escape':
+            row['white_early_escapes'], row['black_early_escapes'] = item['result']['early_escape_by_player']
         rows.append(row)
+    if path.stem == 'early_escape' and data['complete']:
+        contrasts = early_escape_contrasts(data['results'])
+        data['win_rate_contrasts'] = dict(method='Newcombe method 10, marginal 95% intervals', rows=contrasts)
+        write_csv(path.with_name('early_escape_contrasts.csv'), contrasts)
     path.with_name(path.stem+'_summary.json').write_text(json.dumps(data, indent=2, allow_nan=False)+'\n', encoding='utf-8')
     write_csv(path.with_suffix('.csv'), rows)
     if path.stem == 'matrix':
@@ -168,7 +203,8 @@ def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--results-dir', type=Path, default=HERE/'results')
     a = p.parse_args()
-    for suite in ('baseline', 'matrix', 'phased', 'policies', 'escape', 'adaptive', 'sensitivity'):
+    for suite in ('baseline', 'matrix', 'phased', 'policies', 'escape', 'early_escape',
+                  'adaptive', 'sensitivity'):
         path = a.results_dir/f'{suite}.json'
         if path.exists():
             data = render_suite(path)

@@ -203,6 +203,16 @@ dat het bedoelde contrast in de gespeelde partijen vaak voorkwam.
 Vroeg ontsnappen is pas legaal wanneer de eigen voorraad leeg is. Een proef van
 twee ontsnappingsprioriteiten tegen elkaar is dus een beleidsexperiment ná
 uitputting van de eigen voorraad, eventueel vóór die van de ander.
+De suite `early_escape` laat uitsluitend de prioriteit in dat tussenvenster
+variëren. Zij bevat een 2 × 2 vergelijking bij uniform voorraadbeleid en twee
+kleurgespiegelde paren van snel plaatsen tegen slaan zodra het kan. Elke
+conditie krijgt een eigen taak-seed. Dit schat het effect van het beleid over
+alle 100.000 partijen per conditie. De zes kleurgerichte
+verschillen gebruiken Newcombes methode 10 op het eigen winstpercentage.
+De afzonderlijke 95%-intervallen combineren twee Wilsonintervallen met
+onafhankelijke steekproeven per verschil. Gedeelde condities maken verschillen
+onderling afhankelijk. [Newcombe (1998)](https://pubmed.ncbi.nlm.nih.gov/9595617/)
+
 Een 2 × 2 vergelijking kan praktische voordelen en tegenvoorbeelden tonen.
 Zij kan **geen dominante strategie bewijzen**: dominantie vereist een garantie
 tegen alle toegestane tegenstrategieën, niet alleen de bemonsterde opponent.

@@ -1,0 +1,28 @@
+{
+  "status": "passed",
+  "tests": 10,
+  "command": "python -m unittest discover -s analysis/tests -p test_records.py",
+  "unittest_output": "..........\n----------------------------------------------------------------------\nRan 10 tests in 5.817s\n\nOK\n",
+  "exhaustively_replayed_games_per_variant": 48,
+  "regression_games_per_variant": 1000,
+  "thread_counts": [
+    1,
+    4
+  ],
+  "chunk_ranges": [
+    [
+      0,
+      500
+    ],
+    [
+      500,
+      1000
+    ]
+  ],
+  "recording_engine_sha256": "65301c60d5636dbf6c8425f7b0e7b61a12a4b2b48c633747b27ef1b399e9b17d",
+  "reference_engine_sha256": "7960cb96613703d91ca0ce7cfdc61064d6573cb191448e81d286fd8f31b5553c",
+  "tests_sha256": "9a121e779b5832fd8c79c056633f70acb6b8c359db092a760496357789be36ba",
+  "validator_sha256": "8d6c743dadd8c5c94b6e3b89bfa5373ca3a773093c9ba39536ad29c00c8eb017",
+  "historical_sampling_source_commit": "72dbf10594331917eab78219953e93bba3e28da6",
+  "historical_sampling_engine_sha256": "d5cbb847399ccd5ecbd4a83996c36cde6e83f1301eb8c50c3db40f52b1f5225c"
+}

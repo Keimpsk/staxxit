@@ -1,0 +1,17 @@
+variant,category,strategy,player,task_id,seed,game_id,outcome,turns,captures,max_height,rank,trace_file,markdown_file
+A,comeback_material,-1,1,baseline_A,149805519438865530,42836,zwart wint,84,28,13,"[34, -69]",games/A-baseline_A-g000042836.json,games/A-baseline_A-g000042836.md
+A,comeback_score,-1,1,baseline_A,149805519438865530,48448,zwart wint,202,29,12,"[3, 12, -97]",games/A-baseline_A-g000048448.json,games/A-baseline_A-g000048448.md
+A,longest_observed,-1,-1,baseline_A,149805519438865530,13752,herhaling,2846,34,15,[2846],games/A-baseline_A-g000013752.json,games/A-baseline_A-g000013752.md
+A,longest_regular,-1,-1,baseline_A,149805519438865530,53221,zwart wint,2246,33,20,[2246],games/A-baseline_A-g000053221.json,games/A-baseline_A-g000053221.md
+A,most_captures,-1,-1,baseline_A,149805519438865530,88322,wit wint,385,50,19,[50],games/A-baseline_A-g000088322.json,games/A-baseline_A-g000088322.md
+A,shortest_won,-1,1,baseline_A,149805519438865530,82262,zwart wint,66,26,9,[-66],games/A-baseline_A-g000082262.json,games/A-baseline_A-g000082262.md
+A,tactical_offer,-1,1,baseline_A,149805519438865530,8016,zwart wint,227,37,21,"[10, 8]",games/A-baseline_A-g000008016.json,games/A-baseline_A-g000008016.md
+A,tallest_stack,-1,-1,baseline_A,149805519438865530,33173,zwart wint,288,36,30,[30],games/A-baseline_A-g000033173.json,games/A-baseline_A-g000033173.md
+B,comeback_material,-1,1,baseline_B,3975178610736981847,4319,zwart wint,82,28,11,"[34, -69]",games/B-baseline_B-g000004319.json,games/B-baseline_B-g000004319.md
+B,comeback_score,-1,0,baseline_B,3975178610736981847,31382,wit wint,135,28,12,"[4, 11, -74]",games/B-baseline_B-g000031382.json,games/B-baseline_B-g000031382.md
+B,longest_observed,-1,-1,baseline_B,3975178610736981847,22974,zwart wint,2751,35,15,[2751],games/B-baseline_B-g000022974.json,games/B-baseline_B-g000022974.md
+B,longest_regular,-1,-1,baseline_B,3975178610736981847,22974,zwart wint,2751,35,15,[2751],games/B-baseline_B-g000022974.json,games/B-baseline_B-g000022974.md
+B,most_captures,-1,-1,baseline_B,3975178610736981847,13163,zwart wint,458,50,17,[50],games/B-baseline_B-g000013163.json,games/B-baseline_B-g000013163.md
+B,shortest_won,-1,1,baseline_B,3975178610736981847,19771,zwart wint,67,26,7,[-67],games/B-baseline_B-g000019771.json,games/B-baseline_B-g000019771.md
+B,tactical_offer,-1,1,baseline_B,3975178610736981847,7129,zwart wint,142,34,19,"[10, 8]",games/B-baseline_B-g000007129.json,games/B-baseline_B-g000007129.md
+B,tallest_stack,-1,-1,baseline_B,3975178610736981847,53782,zwart wint,307,34,29,[29],games/B-baseline_B-g000053782.json,games/B-baseline_B-g000053782.md

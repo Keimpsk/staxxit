@@ -1,0 +1,7 @@
+color,treatment,control,treatment_win_rate,control_win_rate,win_rate_difference,ci95_low,ci95_high,treatment_early_escapes,control_early_escapes
+white,early_escape_B_wp0_bp0_we1_be0,early_escape_B_wp0_bp0_we0_be0,0.40364,0.39964,0.0040000000000000036,-0.0002969678077402839,0.008296759258056629,787,72
+black,early_escape_B_wp0_bp0_we0_be1,early_escape_B_wp0_bp0_we0_be0,0.43851,0.43989,-0.0013799999999999923,-0.005729967979634333,0.002970041822099437,305,30
+white,early_escape_B_wp0_bp0_we1_be1,early_escape_B_wp0_bp0_we0_be1,0.40451,0.40222,0.0022899999999999587,-0.0020099531084924616,0.006589833532841979,773,88
+black,early_escape_B_wp0_bp0_we1_be1,early_escape_B_wp0_bp0_we1_be0,0.43734,0.43546,0.0018799999999999928,-0.002466974801986448,0.006226874351812758,295,34
+white,early_escape_B_wp1_bp2_we1_be0,early_escape_B_wp1_bp2_we0_be0,0.91957,0.32335,0.59622,0.5928525155379553,0.5995595499771501,216798,34180
+black,early_escape_B_wp2_bp1_we0_be1,early_escape_B_wp2_bp1_we0_be0,0.92592,0.34665,0.57927,0.5758901691018566,0.582623732628086,213479,34208

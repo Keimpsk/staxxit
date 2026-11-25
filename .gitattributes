@@ -1,0 +1,5 @@
+analysis/*.py text eol=lf
+analysis/*.cpp text eol=lf
+analysis/*.hpp text eol=lf
+analysis/results/gallery/** text eol=lf
+analysis/results/gallery_long/** text eol=lf
