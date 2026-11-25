@@ -4,3 +4,7 @@ npm-debug.log*
 .DS_Store
 *.log
 live-from-render.html
+analysis/build/
+analysis/checkpoints/
+__pycache__/
+*.pyc

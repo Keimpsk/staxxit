@@ -1,0 +1,319 @@
+{
+  "schema": "staxxit.configuration_upper_bounds.v1",
+  "meaning": "Exact counts of combinatoric supersets; NOT counts of reachable legal positions.",
+  "stones_per_color": 18,
+  "inner_cells": 91,
+  "outer_cells": {
+    "white": 15,
+    "black": 15,
+    "neutral": 6
+  },
+  "max_escape_height": 11,
+  "variant_A": {
+    "placement_before_ply_36": {
+      "exact": "23416540714091893007807969656069358",
+      "log10": 34.369522737886406,
+      "scientific": "2.341654071409e+34"
+    },
+    "zero_reserves_any_side": {
+      "exact": "637661402840420185012089800965417367804333680",
+      "log10": 44.804590130268224,
+      "scientific": "6.376614028404e+44"
+    },
+    "combined_state_upper_bound": {
+      "exact": "637661402863836725726181693973225337460403038",
+      "log10": 44.804590130284176,
+      "scientific": "6.376614028638e+44"
+    },
+    "placement_by_ply": [
+      {
+        "ply": 0,
+        "white": 0,
+        "black": 0,
+        "side": "white",
+        "boards": "1"
+      },
+      {
+        "ply": 1,
+        "white": 1,
+        "black": 0,
+        "side": "black",
+        "boards": "1"
+      },
+      {
+        "ply": 2,
+        "white": 1,
+        "black": 1,
+        "side": "white",
+        "boards": "90"
+      },
+      {
+        "ply": 3,
+        "white": 2,
+        "black": 1,
+        "side": "black",
+        "boards": "8010"
+      },
+      {
+        "ply": 4,
+        "white": 2,
+        "black": 2,
+        "side": "white",
+        "boards": "352440"
+      },
+      {
+        "ply": 5,
+        "white": 3,
+        "black": 2,
+        "side": "black",
+        "boards": "15331140"
+      },
+      {
+        "ply": 6,
+        "white": 3,
+        "black": 3,
+        "side": "white",
+        "boards": "439492680"
+      },
+      {
+        "ply": 7,
+        "white": 4,
+        "black": 3,
+        "side": "black",
+        "boards": "12452292600"
+      },
+      {
+        "ply": 8,
+        "white": 4,
+        "black": 4,
+        "side": "white",
+        "boards": "261498144600"
+      },
+      {
+        "ply": 9,
+        "white": 5,
+        "black": 4,
+        "side": "black",
+        "boards": "5426086500450"
+      },
+      {
+        "ply": 10,
+        "white": 5,
+        "black": 5,
+        "side": "white",
+        "boards": "88987818607380"
+      },
+      {
+        "ply": 11,
+        "white": 6,
+        "black": 5,
+        "side": "black",
+        "boards": "1441602661439556"
+      },
+      {
+        "ply": 12,
+        "white": 6,
+        "black": 6,
+        "side": "white",
+        "boards": "19221368819194080"
+      },
+      {
+        "ply": 13,
+        "white": 7,
+        "black": 6,
+        "side": "black",
+        "boards": "253081356119388720"
+      },
+      {
+        "ply": 14,
+        "white": 7,
+        "black": 7,
+        "side": "white",
+        "boards": "2820049396758902880"
+      },
+      {
+        "ply": 15,
+        "white": 8,
+        "black": 7,
+        "side": "black",
+        "boards": "31020543364347931680"
+      },
+      {
+        "ply": 16,
+        "white": 8,
+        "black": 8,
+        "side": "white",
+        "boards": "294695161961305350960"
+      },
+      {
+        "ply": 17,
+        "white": 9,
+        "black": 8,
+        "side": "black",
+        "boards": "2762767143387237665250"
+      },
+      {
+        "ply": 18,
+        "white": 9,
+        "black": 9,
+        "side": "white",
+        "boards": "22716085401183954136500"
+      },
+      {
+        "ply": 19,
+        "white": 10,
+        "black": 9,
+        "side": "black",
+        "boards": "184252692698492072440500"
+      },
+      {
+        "ply": 20,
+        "white": 10,
+        "black": 10,
+        "side": "white",
+        "boards": "1326619387429142921571600"
+      },
+      {
+        "ply": 21,
+        "white": 11,
+        "black": 10,
+        "side": "black",
+        "boards": "9418997650746914743158360"
+      },
+      {
+        "ply": 22,
+        "white": 11,
+        "black": 11,
+        "side": "white",
+        "boards": "59939075959298548365553200"
+      },
+      {
+        "ply": 23,
+        "white": 12,
+        "black": 11,
+        "side": "black",
+        "boards": "375981476471963621565742800"
+      },
+      {
+        "ply": 24,
+        "white": 12,
+        "black": 12,
+        "side": "white",
+        "boards": "2130561700007793855539209200"
+      },
+      {
+        "ply": 25,
+        "white": 13,
+        "black": 12,
+        "side": "black",
+        "boards": "11895636158376849026760584700"
+      },
+      {
+        "ply": 26,
+        "white": 13,
+        "black": 13,
+        "side": "white",
+        "boards": "60393229727144002751246045400"
+      },
+      {
+        "ply": 27,
+        "white": 14,
+        "black": 13,
+        "side": "black",
+        "boards": "301966148635720013756230227000"
+      },
+      {
+        "ply": 28,
+        "white": 14,
+        "black": 14,
+        "side": "white",
+        "boards": "1380416679477577205742766752000"
+      },
+      {
+        "ply": 29,
+        "white": 15,
+        "black": 14,
+        "side": "black",
+        "boards": "6211875057649097425842450384000"
+      },
+      {
+        "ply": 30,
+        "white": 15,
+        "black": 15,
+        "side": "white",
+        "boards": "25675750238282936026815461587200"
+      },
+      {
+        "ply": 31,
+        "white": 16,
+        "black": 15,
+        "side": "black",
+        "boards": "104414717635683939842382877121280"
+      },
+      {
+        "ply": 32,
+        "white": 16,
+        "black": 16,
+        "side": "white",
+        "boards": "391555191133814774408935789204800"
+      },
+      {
+        "ply": 33,
+        "white": 17,
+        "black": 16,
+        "side": "black",
+        "boards": "1443859767305941980632950722692700"
+      },
+      {
+        "ply": 34,
+        "white": 17,
+        "black": 17,
+        "side": "white",
+        "boards": "4926109794337919698630067171539800"
+      },
+      {
+        "ply": 35,
+        "white": 18,
+        "black": 17,
+        "side": "black",
+        "boards": "16516956369250671930700813457515800"
+      }
+    ]
+  },
+  "variant_B": {
+    "all_reserves_any_side_upper_bound": {
+      "exact": "823444427278144967900654111032274842667357228",
+      "log10": 44.91563429477373,
+      "scientific": "8.234444272781e+44"
+    }
+  },
+  "color_only_relaxation": {
+    "zero_reserves_any_side": {
+      "exact": "637661518145757984637208733039600409912368880",
+      "log10": 44.80459020879967,
+      "scientific": "6.376615181458e+44"
+    },
+    "all_reserves_any_side": {
+      "exact": "823444565665432737768374995492584541314443216",
+      "log10": 44.91563436776084,
+      "scientific": "8.234445656654e+44"
+    }
+  },
+  "assumptions": [
+    "Distinct board coordinates; no symmetry quotient.",
+    "Stones of one color indistinguishable; ordered bottom-to-top color strings distinguish stacks.",
+    "Escaped stacks remain on distinct outer cells permanently and count toward stone conservation.",
+    "Outer top color restrictions enforced; maximal escape height enforced.",
+    "Connectivity, capture history, stopping rule, and turn compatibility not fully enforced.",
+    "No repetition history, pass counter, or move-limit counter included in board-state counts."
+  ],
+  "checks": {
+    "independent_formula_coefficients": 361,
+    "color_swap_symmetry": true,
+    "single_white_positions": 112,
+    "bounded_leq_unbounded": true
+  },
+  "sources": [
+    "https://www-cs-faculty.stanford.edu/~knuth/persi75-talk.pdf"
+  ]
+}

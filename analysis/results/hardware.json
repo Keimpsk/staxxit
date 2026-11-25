@@ -1,0 +1,16 @@
+{
+  "observed_date_local": "2026-11-25",
+  "manufacturer": "ASUSTeK COMPUTER INC.",
+  "model": "ROG Flow Z13 GZ302EA_GZ302EA",
+  "cpu": "AMD RYZEN AI MAX+ 395 w/ Radeon 8060S",
+  "physical_cores": 16,
+  "logical_processors": 32,
+  "physical_memory_bytes": 29687091200,
+  "os": "Microsoft Windows 11 Home",
+  "os_version": "10.0.26300",
+  "compiler": "g++ (GCC) 16.2.0, w64devkit 2.11.0",
+  "compiler_archive_sha256": "54c2bb9962e8a30c8270e34c5efc3d5fee579f53087fa7d435b95fbba2af7b2b",
+  "compiler_source": "https://github.com/skeeto/w64devkit/releases/tag/v2.11.0",
+  "python": "3.12.14",
+  "notes": "CIM read-only detection; power profile, thermal state and background load not controlled. GPU not used."
+}
