@@ -188,6 +188,8 @@ def main():
     for output in outputs:
         output.parent.mkdir(parents=True, exist_ok=True)
         fig.savefig(output, dpi=args.dpi, metadata={'Creator': 'Staxxit analysis/plot_results.py'})
+        if output.suffix.lower() == '.svg':
+            output.write_text('\n'.join(line.rstrip() for line in output.read_text(encoding='utf-8').splitlines())+'\n', encoding='utf-8')
     plt.close(fig)
     provenance = {
         'baseline_sha256': hashlib.sha256(baseline_path.read_bytes()).hexdigest(),

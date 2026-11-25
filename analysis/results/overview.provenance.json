@@ -1,7 +1,7 @@
 {
   "baseline_sha256": "06cb5e8d62c76e105cf582214a283e11519686c7d0d1d0724bd509ade5276720",
   "matrix_sha256": "2c97dc661e95b0e13a9bbdaa3ffacfa908ed657f7763b021c74c10c3fa1568d6",
-  "script_sha256": "c9e1cdbd539b0187e6f306f2be3f7bdc2461090692d178ca0f2f1d1147480190",
+  "script_sha256": "7225a68726a4043ea7b598527df7fdf9c4c988bce6a1417d406358ebdf77b223",
   "matplotlib_version": "3.11.2",
   "numpy_version": "2.5.5",
   "dpi": 200,
