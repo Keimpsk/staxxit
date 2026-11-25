@@ -117,6 +117,22 @@ plaatsingsfase actief; een winstverschil is daarom het totale effect van deze
 voorkeur, niet uitsluitend een causaal effect van de vroege ontsnappingen.
 Empirisch succes tegen de geteste policies bewijst geen dominante strategie.
 
+De suite `early_escape` gebruikt afzonderlijke opties
+`--white-early-escape-first` en `--black-early-escape-first`. De prioriteit
+geldt uitsluitend zolang de tegenstander voorraad heeft. Zodra die voorraad
+leeg is, keert de speler terug naar uniforme keuze uit de legale acties.
+Slagplicht bepaalt eerst de legale set. De prioriteit verandert alleen de
+keuze wanneer die set minstens één ontsnapping bevat.
+
+Beide spelers plaatsen volgens ID 8. Bij twee uniforme voorraadbeleidsregels
+worden de vier combinaties van vroege prioriteit onderzocht. Twee extra
+paren vergelijken de schakelaar voor de snel plaatsende speler (policy 1)
+tegen een tegenstander die zo vaak mogelijk vroeg slaat (policy 2).
+Beide kleurtoewijzingen worden getest. Elke conditie heeft 100.000 partijen
+met eigen taak-seed. Prestaties worden over alle partijen in de conditie
+gemeten, inclusief afbrekingen als afzonderlijke uitkomsten. Zo wordt
+selectie op het daadwerkelijk voorkomen van vroege ontsnapping vermeden.
+
 ## Eerste, middelste en laatste zes plaatsingen
 
 `--white-schedule a,b,c` en `--black-schedule a,b,c` kiezen het strategie-ID

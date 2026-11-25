@@ -2,10 +2,15 @@
 
 ## Status op 25 november 2026
 
-De zeven onderzoekseries zijn volledig uitgevoerd: **490 taken, 8.320.000
-partijen**. De onafhankelijke integriteitscontrole heeft alle 832 lokale
-checkpointchunks opnieuw opgeteld en vergeleken met de afgeleverde resultaten.
-`results/integrity.json` bevat de status en exacte bronhashes.
+De acht onderzoekseries omvatten **498 taken en 9.120.000 partijen**.
+`results/integrity.json` documenteert de controle van de 832
+oorspronkelijke Windows-checkpointchunks. De nieuwe Linux-reeks staat in
+`results/early_escape.json` en heeft een eigen audit van 80 chunks in
+`results/integrity_early_escape.json`.
+Alle oorspronkelijke 8.320.000 partijen zijn ook opnieuw berekend op
+Linux met dezelfde taak-seeds. De 832 nieuwe chunks reproduceren iedere
+geheeltallige teller van alle 490 oorspronkelijke taken. Beide
+winstmatrices zijn byte-identiek. Zie `results/integrity_reproduction.json`.
 
 | Serie | Taken | Partijen | Opzet |
 |---|---:|---:|---|
@@ -14,11 +19,12 @@ checkpointchunks opnieuw opgeteld en vergeleken met de afgeleverde resultaten.
 | phased | 144 | 1.440.000 | 3 fasen x12 kandidaten x2 kleuren x2 varianten |
 | policies | 36 | 360.000 | Zes B-voorraadbeleidsregels, alle geordende paren |
 | escape | 4 | 40.000 | B-ontsnappingsvoorkeur aan/uit, beide kleuren |
+| early_escape | 8 | 800.000 | B-voorkeur uitsluitend bij tegenstandervoorraad |
 | adaptive | 8 | 800.000 | Onafhankelijke bevestiging faseschema vs vast |
 | sensitivity | 8 | 800.000 | Uniform, limieten128/256/1024/2048 per variant |
 
-Validatie-, benchmark-, kalibratie- en proefpartijen zitten niet in deze
-8.320.000. Alle onderzoekstellingen zijn daadwerkelijk berekend.
+Validatie, benchmarks, kalibratie en reproducties met dezelfde seeds
+tellen niet mee in de 9.120.000.
 
 ## Branch en herkomst
 
@@ -30,11 +36,12 @@ grafische simulator niet. De oorspronkelijke C++-bron kwam uit commit
 Hun exacte Git-blobhashes staan in `VALIDATION.md`.
 
 De historische productierunner is bewaard in commit
-`3ae6a1de7c9fa2b3cade991709381915fdeef2d5`. De enginesource is sindsdien
-semantisch ongewijzigd. De daadwerkelijk geteste en gebruikte executable heeft
+`3ae6a1de7c9fa2b3cade991709381915fdeef2d5`. De Windows-executable heeft
 SHA-256 `7960cb96613703d91ca0ce7cfdc61064d6573cb191448e81d286fd8f31b5553c`.
-Alle zeven productiemanifests verwijzen naar dezelfde engine/source/runner.
-De latere onderhoudsrunner wordt afzonderlijk geregistreerd.
+De zeven oorspronkelijke productiemanifests verwijzen naar dezelfde
+engine, broncode en runner. De Linux-build voegt een voorwaardelijke
+ontsnappingsoptie toe. `reproduction_validation.json` bevat de
+Linux-hardware, compiler, broncontrole, benchmarks en hervattingsproef.
 
 ## Wat lezen
 
@@ -61,6 +68,11 @@ Lees de onafhankelijke `adaptive`-serie voordat je dit een verbetering noemt:
 effecten verschillen tussen A en B. De hoogste gemeten score is geen bewijs
 van algemene speltheoretische optimaliteit. Voor B vergelijken de aanvullende
 reeksen plaatsen/slaan en ontsnappen onder het vastgelegde bewegingsbeleid.
+Isoleer de vroege fase met `early_escape_contrasts.csv`. Bij twee uniforme
+voorraadbeleidsregels omvatten alle vier 95%-intervallen nul. Snel plaatsen
+met vroege ontsnappingsprioriteit tegen een slaggerichte tegenstander wint
+91,957% als wit en 92,592% als zwart. De uitkomsten gelden voor deze
+tegenstrategieën en de gekozen ringindeling.
 
 De exacte configuratiebovengrenzen zijn circa6,3766e44 (A) en8,2344e44 (B).
 Dit zijn supersets, geen aantallen bereikbare legale posities. Beide varianten
@@ -76,12 +88,12 @@ staan in `METHODOLOGY.md`/`REPORT.md`.
 
 ## Reproduceren en hervatten
 
-Zie `README.md` en `run_all.ps1`. De hoofdengine is standaard C++17; de
+Zie `README.md`, `run_all.ps1` en `reproduce.sh`. De hoofdengine is standaard C++17 en de
 onderzoeks- en verificatiescripts gebruiken alleen de Pythonstandaardbibliotheek.
 De optionele figuur gebruikt Matplotlib; de gebruikte pakketten staan lokaal
 in de genegeerde map `build/plot_packages`.
 
-Op deze machine is Python3.12.14 meegeleverd met de Codex-runtime. Het gebruikte
+Op de oorspronkelijke Windows-machine was Python 3.12.14 meegeleverd met de Codex-runtime. Het gebruikte
 pad was:
 
 ```text
@@ -90,9 +102,11 @@ C:\Program Files\WindowsApps\OpenAI.CodexPrimaryRuntime.v26-1123-915-0_26.1123.9
 
 De portable GCC16.2.0 staat lokaal in `../../.tools/w64devkit/bin/g++.exe`
 ten opzichte van `analysis`; deze compiler en de binaries zijn niet gecommit.
-De relatieve compilerfallback in `build.ps1` zoekt dit pad. De gebruikte CPU
-heeft 16 kernen/32 threads; alle productietaken gebruikten32 threads en
-steenbehoudcontrole na iedere handeling.
+De relatieve compilerfallback in `build.ps1` zoekt dit pad. De oorspronkelijke
+Windows-machine heeft 16 kernen en 32 logische processoren. Deze productietaken
+gebruikten 32 threads. De Linux-VM bood 2 logische CPU's aan en draaide de
+productietaken met 2 threads. In beide omgevingen controleert de engine
+steenbehoud na iedere handeling.
 
 Checkpoints staan lokaal onder `analysis/checkpoints/<run_id>/` en worden niet
 gepushd. De volledige geaggregeerde resultaten, histogrammen en manifests wel.
@@ -126,6 +140,8 @@ kampioenconsistentie; onafhankelijke integriteit controleert de taakroosters.
   alle wijzigingen/downloads bleven beperkt tot de onderzoekswerkmap.
 - Er was geen bruikbare C++-compiler. De officiële portable compiler is lokaal
   gedownload en de SHA-256 is gecontroleerd; geen systeeminstallatie nodig.
+  Voor de Linux-hercontrole is GCC 14.2.0 uit Debian-pakketten in een
+  tijdelijke sysroot uitgepakt.
 - Beide oorspronkelijke herhalingssleutels misten de pasteller. De onafhankelijke
   onderzoeksafhandeling neemt deze op; de historische Pythonkopieën blijven
   herkenbaar en hun gedrag wordt tegen de oracle gecontroleerd.
@@ -139,12 +155,12 @@ kampioenconsistentie; onafhankelijke integriteit controleert de taakroosters.
 
 ## Logische vervolgstappen
 
-Dit zijn nieuwe onderzoeksvragen, geen ontbrekende verplichte runs:
+Open onderzoeksvragen:
 
 - Test plaatsingskeuzes tegen sterkere, gedeelde bewegingsstrategieën en
   gebruik onafhankelijke bevestiging voor nieuwe kandidaten.
-- Isoleer uitsluitend vroege ontsnappingsvoorkeur; de huidige ontsnappingsproef
-  geeft prioriteit aan alle legale ontsnappingen en registreert vroege apart.
+- Test vroege ontsnappingsprioriteit tegen voorraadbeleid dat de tegenstander
+  sneller toegang tot de buitenring geeft, en tegen sterkere bewegingskeuze.
 - Varieer B-voorraaddrempels en conditionele slagkansen; de huidige optimale
   verhouding geldt alleen binnen de zes geteste heuristieken.
 - Gebruik gestratificeerde/importance sampling of lokale exacte tellingen

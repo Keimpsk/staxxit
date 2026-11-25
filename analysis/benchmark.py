@@ -14,6 +14,7 @@ def main():
     p.add_argument('--engine', type=Path, default=HERE/'build'/'staxxit.exe')
     p.add_argument('--games', type=int, default=10000)
     p.add_argument('--threads', type=int, nargs='+', default=[1, 4, 8, 16, 32])
+    p.add_argument('--output', type=Path, default=HERE/'results'/'benchmark.json')
     a = p.parse_args()
     rows = []
     (HERE/'build').mkdir(exist_ok=True)
@@ -39,7 +40,7 @@ def main():
                        outcome_sha256=hashlib.sha256(json.dumps(stable, sort_keys=True).encode()).hexdigest())
             rows.append(row)
             print(json.dumps(row), flush=True)
-    atomic_json(HERE/'results'/'benchmark.json', dict(engine_sha256=hashlib.sha256(a.engine.read_bytes()).hexdigest(),
+    atomic_json(a.output, dict(engine_sha256=hashlib.sha256(a.engine.read_bytes()).hexdigest(),
                note='Single measured trial per condition; shared machine, thermal/load effects uncontrolled.', rows=rows))
 
 if __name__=='__main__': main()

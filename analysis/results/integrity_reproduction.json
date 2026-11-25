@@ -1,0 +1,98 @@
+{
+  "status": "passed",
+  "all_required_suites_checked": true,
+  "checked_at_utc": "2026-11-25T14:20:26.813743+00:00",
+  "required_tasks": 490,
+  "required_games": 8320000,
+  "verified_tasks": 490,
+  "verified_games": 8320000,
+  "center_resets_zero_hypothesis_checked": true,
+  "provenance": {
+    "engine_sha256": "d567083b456e8bf7753d886479905560159f78dcfa32668b071776d5b4816f16",
+    "source_sha256": "8d20fe2a9ccc5ef2eb67d70aa2bb90c41b0a765c711d06d408ef38d17b9e9354",
+    "runner_sha256": "34f7fb29fe51eeaed08126d0c754152bc05fc92a3d343d3896c0b6f26ad980b5"
+  },
+  "runner_versions": {
+    "recorded_commit": "3ae6a1de7c9fa2b3cade991709381915fdeef2d5",
+    "verification_mode": "current",
+    "recorded_git_blob": "8e4166d4a886dceedf848c320c614e5afcc8bcde",
+    "recorded_runner_sha256": "206967d54eeeabc909365c713107f28e6b2cc04fe1467acb51f959627993bd57",
+    "current_maintenance_runner_sha256": "34f7fb29fe51eeaed08126d0c754152bc05fc92a3d343d3896c0b6f26ad980b5",
+    "note": "Published manifests must match the immutable production runner; subsequent checkpoint-maintenance code is recorded separately."
+  },
+  "verifier_sha256": "b65833bc8f91c01a32a57ac0a1c0d73c1dece2e57da2c765505fb8f68ba2e99c",
+  "suites": {
+    "baseline": {
+      "status": "passed",
+      "tasks": 2,
+      "games": 2000000,
+      "independently_summed_chunks": 200,
+      "run_id": "a061c173fb74933b",
+      "compared_artifact_sha256": "5158255f4c7bdf76a0ea86e10cf7b1c7d1bc9da6cc148ce3b381e8b5f3a6cf9b",
+      "artifact_sha256": "e092f49329e7e405d6c156684fcab0529565f5ff6fe2b78e8ddcfc98bd4cbcdc",
+      "checkpoint_manifest_sha256": "f6f5a4069c9a97e5ebce45e42508f83fe0e8fef6ebdea556e86cd1934a1499bf"
+    },
+    "matrix": {
+      "status": "passed",
+      "tasks": 288,
+      "games": 2880000,
+      "independently_summed_chunks": 288,
+      "run_id": "00b82a1ace88fc4b",
+      "compared_artifact_sha256": "1e6fd26641a4264ce123f24f26a02fcd91e3b1d9296d16d4a98f6e3171b577db",
+      "artifact_sha256": "df0c46a2f9f604ab7935376e56efa2f3b510fbd22ae7d8d19f1fc77632612672",
+      "checkpoint_manifest_sha256": "547ba61f6333b6b24e921d9007eb674567aae9b378cd608a0d4de210141556e5"
+    },
+    "phased": {
+      "status": "passed",
+      "tasks": 144,
+      "games": 1440000,
+      "independently_summed_chunks": 144,
+      "run_id": "647547f71593c3d4",
+      "compared_artifact_sha256": "c2ae01d3efd5a6339239603513e5feabf68ab33afe7e8a2c9f62ac95f60e0fae",
+      "artifact_sha256": "5237080c72567f8298726e374d4d7959a64a8b70c2560ba2b5dfc483a10bc1de",
+      "checkpoint_manifest_sha256": "05776914ae08282563cb9ee14d51a0f950acfbf9289e273d37d0d17e9bf5dd3e"
+    },
+    "policies": {
+      "status": "passed",
+      "tasks": 36,
+      "games": 360000,
+      "independently_summed_chunks": 36,
+      "run_id": "4ef3d35d976fdf6a",
+      "compared_artifact_sha256": "0eb05fca4f7791aaeb8ebf8edc9f4548d7557a08eb119203e7d034651e1fa051",
+      "artifact_sha256": "f154ee0d0c76a85c1aca3b0bee9d363d1acf01d199f62d45022ced3d5e772c37",
+      "checkpoint_manifest_sha256": "aa8e9350ff225870664059f57cee5a7d6d192035d0655168a9afc6b3bb41e89b"
+    },
+    "escape": {
+      "status": "passed",
+      "tasks": 4,
+      "games": 40000,
+      "independently_summed_chunks": 4,
+      "run_id": "94cc8d6c4bf360a2",
+      "compared_artifact_sha256": "59e6fa987b40d5d563dc24c361863ca180a9dc35e1bb4746ee5c27bfe728a89f",
+      "artifact_sha256": "7770b3889d8d67ac2d0171550b93dfb6279a4d5095d5f0abbcf46be47e7bf7f9",
+      "checkpoint_manifest_sha256": "8d41cf47c1a0cb477698f5ce04a015f9e0f27fc988e06a02b3df38c1b58fe90f"
+    },
+    "adaptive": {
+      "status": "passed",
+      "tasks": 8,
+      "games": 800000,
+      "independently_summed_chunks": 80,
+      "run_id": "c8b04f4f86890410",
+      "compared_artifact_sha256": "5bf72d6d73b680318adea56108dc518469acdfdcb9be140ae99b8d7baa4d0282",
+      "artifact_sha256": "5d49b5b8eebbdb70cc5e747eeb2a5239297cd937bbbd826c47f1933c6c0eb11f",
+      "checkpoint_manifest_sha256": "ca6aede3890510595232d73428f2d227eb3a5b40309e16f943265fd87a5b146a"
+    },
+    "sensitivity": {
+      "status": "passed",
+      "tasks": 8,
+      "games": 800000,
+      "independently_summed_chunks": 80,
+      "run_id": "d9d4496ce8915773",
+      "compared_artifact_sha256": "6902c840b94d3be85987e8476e6100275457ce1f7f73cf013da7c2fc337819f0",
+      "artifact_sha256": "cdd4654a9e324f02d97a070bdd0cd41d0f68cf79141b5a43243d9d793d8510d5",
+      "checkpoint_manifest_sha256": "5eaf24ae552738322982a41d124795da0462cf4295a870a560172ec878973efb"
+    }
+  },
+  "errors": [],
+  "scope": "Integer counters, complete task grids, final engine/source/runner hashes, and independent checkpoint reaggregation; not a proof of strategic optimality."
+}

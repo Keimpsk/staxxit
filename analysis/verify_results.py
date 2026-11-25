@@ -1,4 +1,4 @@
-"""Independent integrity audit of the seven completed study suites.
+"""Independent integrity audit of the Staxxit study suites.
 
 Does not import the research runner or its aggregation code. Every integer
 counter is checked and independently re-summed from the checkpoint files.
@@ -18,7 +18,8 @@ HERE = Path(__file__).resolve().parent
 PLAN = {'baseline': (2, 1_000_000), 'matrix': (288, 10_000),
         'phased': (144, 10_000), 'policies': (36, 10_000),
         'escape': (4, 10_000), 'adaptive': (8, 100_000),
-        'sensitivity': (8, 100_000)}
+        'sensitivity': (8, 100_000), 'early_escape': (8, 100_000)}
+PUBLISHED_SUITES = tuple(suite for suite in PLAN if suite != 'early_escape')
 SCALARS = ('games', 'turns', 'passes', 'center_resets', 'early_capture',
            'early_escape', 'conservation_checks')
 SHAPES = {'outcomes': (6,), 'actions': (5,), 'phase_turns': (2,),
@@ -160,6 +161,16 @@ def expected_tasks(suite, manifest):
         return [task('B', champions['B'], champions['B'],
                      (['--white-escape-first'] if w else []) + (['--black-escape-first'] if b else []),
                      f'we{w}_be{b}') for w in range(2) for b in range(2)]
+    if suite == 'early_escape':
+        return [task('B', champions['B'], champions['B'],
+                     ['--white-policy', str(wp), '--black-policy', str(bp)] +
+                     (['--white-early-escape-first'] if we else []) +
+                     (['--black-early-escape-first'] if be else []),
+                     f'wp{wp}_bp{bp}_we{we}_be{be}')
+                for wp, bp, we, be in ((0, 0, 0, 0), (0, 0, 1, 0),
+                                       (0, 0, 0, 1), (0, 0, 1, 1),
+                                       (1, 2, 0, 0), (1, 2, 1, 0),
+                                       (2, 1, 0, 0), (2, 1, 0, 1))]
     if suite == 'adaptive':
         return [task(v, champions[v], champions[v],
                      (['--white-schedule', schedules[v]] if w else []) +
@@ -173,7 +184,8 @@ def expected_tasks(suite, manifest):
 
 def engine_options(task):
     result = dict(white_policy=0, black_policy=0, white_escape_first=False,
-                  black_escape_first=False, white_schedule=[-1, -1, -1],
+                  black_escape_first=False, white_early_escape_first=False,
+                  black_early_escape_first=False, white_schedule=[-1, -1, -1],
                   black_schedule=[-1, -1, -1])
     tokens = iter(task['extra'])
     for option in tokens:
@@ -189,6 +201,7 @@ def engine_options(task):
         task['white'] == task['black'] == 0 and
         result['white_policy'] == result['black_policy'] == 0 and
         not result['white_escape_first'] and not result['black_escape_first'] and
+        not result['white_early_escape_first'] and not result['black_early_escape_first'] and
         result['white_schedule'] == result['black_schedule'] == [-1, -1, -1])
     return result
 
@@ -215,6 +228,14 @@ def verify_suite(suite, args, provenance):
     require(len(ids) == len(set(ids)), 'Duplicate result task ID')
     require(set(ids) == set(expected_by_id), 'Missing/unexpected task combinations')
     require(manifest['selected_task_ids'] == [t['id'] for t in expected], 'Manifest selected tasks differ from full plan')
+    comparison = {}
+    if args.compare_with:
+        published = read(args.compare_with / f'{suite}.json')
+        for field in ('seed', 'limit', 'champions', 'schedules', 'games_per_task'):
+            require(published['manifest'][field] == manifest[field], f'Reproduction differs in {field}')
+        comparison = {x['task']['id']: x for x in published['results']}
+        require(len(comparison) == len(expected) == len(published['results']) and set(comparison) == set(expected_by_id),
+                'Comparison data has a different task grid')
     checkpoint_root = args.checkpoint_dir / run_id
     raw_manifest = read(checkpoint_root / 'manifest.json')
     for field, value in manifest.items():
@@ -251,7 +272,10 @@ def verify_suite(suite, args, provenance):
                                      ('white', t['white']), ('black', t['black'])):
                     require(raw[field] == value, f'Raw engine config mismatch: {field}')
                 for field, value in engine_options(t).items():
-                    require(raw[field] == value, f'Raw policy/schedule config mismatch: {field}')
+                    if field.endswith('_early_escape_first') and not args.use_current_runner:
+                        require(raw.get(field, False) == value, f'Raw early preference mismatch: {field}')
+                    else:
+                        require(raw[field] == value, f'Raw policy/schedule config mismatch: {field}')
                 for field in fields:
                     aggregate[field] = raw[field] if field not in aggregate else add(aggregate[field], raw[field])
                 require(type(checkpoint['elapsed_seconds']) in (int, float) and
@@ -260,6 +284,12 @@ def verify_suite(suite, args, provenance):
                 chunks_total += 1
             for field in fields:
                 require(aggregate[field] == r[field], f'Independent checkpoint sum differs: {field}')
+                if comparison:
+                    require(r[field] == comparison[t['id']]['result'][field],
+                            f'Published integer counter differs: {field}')
+            if comparison:
+                require(comparison[t['id']]['task'] == t and comparison[t['id']]['seed'] == seed,
+                        'Published task metadata differs')
             require(r['chunks'] == len(expected_paths), 'Aggregated chunk count mismatch')
             require(r['tree_estimator_valid'] == engine_options(t)['tree_estimator_valid'],
                     'Aggregated tree-estimator validity flag differs from task')
@@ -269,6 +299,7 @@ def verify_suite(suite, args, provenance):
     require(game_total == PLAN[suite][0]*PLAN[suite][1], 'Suite total games differ from plan')
     return dict(status='passed', tasks=len(expected), games=game_total,
                 independently_summed_chunks=chunks_total, run_id=run_id,
+                compared_artifact_sha256=sha(args.compare_with / f'{suite}.json') if comparison else None,
                 artifact_sha256=sha(path), checkpoint_manifest_sha256=sha(checkpoint_root/'manifest.json'))
 
 
@@ -277,21 +308,26 @@ def main():
     parser.add_argument('--results-dir', type=Path, default=HERE/'results')
     parser.add_argument('--checkpoint-dir', type=Path, default=HERE/'checkpoints')
     parser.add_argument('--engine', type=Path, default=HERE/'build'/'staxxit.exe')
-    parser.add_argument('--suites', nargs='+', choices=list(PLAN), default=list(PLAN))
+    parser.add_argument('--suites', nargs='+', choices=list(PLAN), default=list(PUBLISHED_SUITES))
     parser.add_argument('--output', type=Path)
+    parser.add_argument('--compare-with', type=Path,
+                        help='Compare every integer counter to an aggregate result directory')
     parser.add_argument('--recorded-runner-commit', default='3ae6a1de7c9fa2b3cade991709381915fdeef2d5',
                         help='Immutable Git version of the runner that generated the published study')
     parser.add_argument('--use-current-runner', action='store_true',
                         help='Verify a fresh reproduction generated by the current maintenance runner')
     args = parser.parse_args()
     require(len(args.suites) == len(set(args.suites)), 'Duplicate suite selection')
-    full = set(args.suites) == set(PLAN)
+    full = set(PUBLISHED_SUITES).issubset(args.suites)
+    required = tuple(PLAN) if 'early_escape' in args.suites else PUBLISHED_SUITES
     def git(*tokens):
         return subprocess.check_output(['git', *tokens], cwd=HERE.parent)
     recorded_commit = git('rev-parse', '--verify', args.recorded_runner_commit+'^{commit}').decode().strip()
     recorded_blob = git('show', recorded_commit+':analysis/run_study.py')
     recorded_runner_hash = hashlib.sha256(recorded_blob).hexdigest()
-    provenance = dict(engine_sha256=sha(args.engine), source_sha256=sha(HERE/'staxxit.cpp'),
+    source_hash = (sha(HERE/'staxxit.cpp') if args.use_current_runner else
+                   hashlib.sha256(git('show', recorded_commit+':analysis/staxxit.cpp')).hexdigest())
+    provenance = dict(engine_sha256=sha(args.engine), source_sha256=source_hash,
                       runner_sha256=sha(HERE/'run_study.py') if args.use_current_runner else recorded_runner_hash)
     runner_versions = dict(recorded_commit=recorded_commit,
                            verification_mode='current' if args.use_current_runner else 'published',
@@ -311,8 +347,8 @@ def main():
     status = 'failed' if errors else ('passed' if full else 'partial_pass')
     report = dict(status=status, all_required_suites_checked=full,
                   checked_at_utc=datetime.now(timezone.utc).isoformat(),
-                  required_tasks=sum(n for n, _ in PLAN.values()),
-                  required_games=sum(n*g for n, g in PLAN.values()),
+                  required_tasks=sum(PLAN[s][0] for s in required),
+                  required_games=sum(PLAN[s][0]*PLAN[s][1] for s in required),
                   verified_tasks=sum(s.get('tasks', 0) for s in suites.values()),
                   verified_games=sum(s.get('games', 0) for s in suites.values()),
                   center_resets_zero_hypothesis_checked=True,

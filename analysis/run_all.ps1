@@ -27,7 +27,7 @@ try {
     RunPython @('analysis/select_experiments.py', '--matrix-only')
     $selected = Get-Content -LiteralPath "$PSScriptRoot\results\experiment_selection.json" -Raw | ConvertFrom-Json
     $championArgs = @('--champion-a', "$($selected.champions.A)", '--champion-b', "$($selected.champions.B)")
-    foreach ($suite in @('phased', 'policies', 'escape')) {
+    foreach ($suite in @('phased', 'policies', 'escape', 'early_escape')) {
         RunPython (@('analysis/run_study.py', '--suite', $suite, '--threads', "$Threads") + $championArgs)
     }
     RunPython @('analysis/summarize.py')
@@ -38,5 +38,5 @@ try {
     RunPython @('analysis/run_study.py', '--suite', 'sensitivity', '--games', '100000', '--threads', "$Threads")
     RunPython @('analysis/summarize.py')
     RunPython @('analysis/tree_summary.py')
-    RunPython @('analysis/verify_results.py', '--use-current-runner')
+    RunPython @('analysis/verify_results.py', '--use-current-runner', '--suites', 'baseline', 'matrix', 'phased', 'policies', 'escape', 'adaptive', 'sensitivity', 'early_escape')
 } finally { Pop-Location }

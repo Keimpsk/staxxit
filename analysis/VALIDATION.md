@@ -2,6 +2,30 @@
 
 De officiële regels uit de opdracht zijn de norm. Eerdere simulatie-uitkomsten zijn niet als bewijs hergebruikt.
 
+## Hercontrole op Linux
+
+De twee Pythonbestanden zijn byte voor byte vergeleken met
+`origin/complexity-analysis`. De Linux-build met GCC 14.2.0 doorstond
+373.682 toestandsvergelijkingen en 351.711 overgangsvergelijkingen met de
+onafhankelijke oracle en Pythonreferentie. De runner-audit vergeleek nog
+1.000 volledig overeenkomende trajecten per variant, met gewijzigde
+threadindeling en afzonderlijke startindices. De 28 Python-unittests,
+de C++-heuristiektests en de twee bereikbare cycli slaagden ook.
+
+De twee virtuele cores leveren bij 30.000 benchmarkpartijen per conditie
+circa 13.482 partijen per seconde voor A en 12.168 voor B. Eén core
+haalt respectievelijk 6.974 en 6.232. De deterministische tellers hebben
+dezelfde benchmarkhashes als de Windows-build. De acht nieuwe condities
+met vroege ontsnappingsprioriteit zijn onafhankelijk uit 80 chunks
+opgeteld. Hervatting op één thread hergebruikte alle 800.000 partijen
+en gaf byte-identieke JSON. De details staan in
+`results/reproduction_validation.json` en `results/integrity_early_escape.json`.
+
+Dezelfde build heeft alle zeven Windows-series opnieuw afgespeeld. De audit
+in `results/integrity_reproduction.json` telt 832 nieuwe chunks en
+vergelijkt op taakniveau elke geheeltallige teller over 8.320.000 partijen.
+De afgeleide CSV-winstmatrices vergelijken byte voor byte gelijk.
+
 ## Bronnen en onafhankelijkheid
 
 De Pythonbestanden in `reference/` zijn ongewijzigde kopieën uit branch `complexity-analysis`, commit `9894202dec429fbda6e221c459c47bbad8929bb8`. Hun Git-blobidentiteiten zijn:
@@ -41,7 +65,11 @@ De aanvullende C++-auditbestanden `validation_long_A.json` en `validation_long_B
 
 `verify_results.py` controleert de volledige einddataset onafhankelijk van de onderzoeksrunner en diens optelfuncties. De uitgevoerde controle in `results/integrity.json` slaagde voor alle zeven reeksen: 490 unieke taken en 8.320.000 partijen. Alle 832 lokale checkpointchunks zijn opnieuw ingelezen, per chunk op consistentie gecontroleerd en onafhankelijk opgeteld naar de gepubliceerde taakaggregaten. De controle omvat onder andere de exacte taakroosters, aantallen partijen, uitslagen, duur- en hoogtehistogrammen, zetten en passen, fasen, vroege acties, acties per speler, materiaalcontroles, voorraaduitputting, nul middenherstarts en de feitelijk aan de engine doorgegeven strategieën, beleidskeuzes en faseschema's.
 
-Engine- en C++-bronhashes moeten exact overeenkomen met de definitieve lokale bestanden. De productierunner is onveranderlijk geïdentificeerd door Git-commit `3ae6a1de7c9fa2b3cade991709381915fdeef2d5`; de verifier leest de oorspronkelijke runnerbytes uit die commit en controleert de opgeslagen SHA-256. Onderhoud aan hervatten en Windows-bestandsvergrendeling na de productie verandert die historische herkomst niet. De huidige onderhoudsrunner wordt met een afzonderlijke hash in het integriteitsrapport vermeld. De checker importeert geen code van de runner of samenvatter.
+Bij een huidige run worden de hashes van de gebruikte executable, C++-bron
+en runner gecontroleerd. Bij de oorspronkelijke Windows-run leest de verifier
+bron en runner uit productiecommit `3ae6a1de7c9fa2b3cade991709381915fdeef2d5`.
+Hij verwerkt de oorspronkelijke executable via `--engine`.
+De checker importeert geen code van de runner of samenvatter.
 
 Voer `python analysis/verify_results.py` uit om de volledige controle te herhalen. Hiervoor zijn ook de lokale, niet in Git opgenomen checkpointbestanden nodig. Een gedeeltelijke selectie via `--suites` schrijft uitsluitend `integrity_partial.json` met status `partial_pass`; alleen een geslaagde controle van alle zeven volledige reeksen krijgt de eindstatus `passed`. De controle bewijst de samenhang en herkomst van de dataset, niet de uitputtende juistheid van de engines of strategische optimaliteit.
 

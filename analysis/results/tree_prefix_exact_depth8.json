@@ -1,0 +1,62 @@
+{
+  "schema": "staxxit.exact_history_prefix.v1",
+  "complete": true,
+  "method": "Exhaustive legal action histories through the independent Python oracle; no transposition merging.",
+  "results": [
+    {
+      "variant": "A",
+      "max_depth": 8,
+      "history_nodes_by_depth": [
+        1,
+        1,
+        6,
+        48,
+        468,
+        5328,
+        68928,
+        994086,
+        15752700
+      ],
+      "total_history_nodes": 16821566,
+      "log10_history_nodes_by_depth": [
+        0.0,
+        0.0,
+        0.7781512503836436,
+        1.6812412373755872,
+        2.670245853074124,
+        3.7265642161622448,
+        4.838395677281869,
+        5.997423957546027,
+        7.197355002227491
+      ]
+    },
+    {
+      "variant": "B",
+      "max_depth": 8,
+      "history_nodes_by_depth": [
+        1,
+        1,
+        6,
+        54,
+        582,
+        7560,
+        112134,
+        1885614,
+        34919910
+      ],
+      "total_history_nodes": 36925862,
+      "log10_history_nodes_by_depth": [
+        0.0,
+        0.0,
+        0.7781512503836436,
+        1.7323937598229686,
+        2.7649229846498886,
+        3.8785217955012063,
+        5.049737314410915,
+        6.275452794007238,
+        7.543073115716415
+      ]
+    }
+  ],
+  "elapsed_seconds": 60.823281570999825
+}
