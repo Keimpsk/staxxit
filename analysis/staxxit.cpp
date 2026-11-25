@@ -385,8 +385,11 @@ struct Config {
   int threads = 1, limit = 536;
   int strategy[2] = {0, 0}, policy[2] = {0, 0};
   std::array<int, 3> schedule[2] = {{{-1, -1, -1}}, {{-1, -1, -1}}};
-  std::string output;
+  std::string output, records;
+  bool replay = false;
+  uint64_t replay_id = 0;
 };
+#include "game_records.hpp"
 struct Stats {
   uint64_t games = 0, turns = 0, passes = 0, center_resets = 0,
            early_capture = 0, early_escape = 0, conservation_checks = 0;
@@ -444,7 +447,14 @@ struct Stats {
     logtree_sum2 = logadd(logtree_sum2, o.logtree_sum2);
   }
 };
-void game(const Config& cfg, uint64_t id, Stats& stats) {
+void game(const Config& cfg, uint64_t id, Stats& stats,
+          RecordStore* records = nullptr, GameRecord* replay = nullptr) {
+  bool recording = records || replay;
+  GameRecord archive;
+  if (recording) {
+    archive.id = id;
+    archive.moves.reserve(std::min(cfg.limit, 512));
+  }
   State s;
   RNG rng{mix(cfg.seed ^ mix(id))};
   std::unordered_map<std::string, uint8_t> seen;
@@ -474,6 +484,7 @@ void game(const Config& cfg, uint64_t id, Stats& stats) {
     stats.turns++;
     length++;
     if (moves.empty()) {
+      if (recording) archive.append(s, {'x', -1, -1, 0}, 0, -1);
       stats.passes++;
       if (++s.passes == 2) {
         out = 4;
@@ -486,6 +497,7 @@ void game(const Config& cfg, uint64_t id, Stats& stats) {
         strat = cfg.schedule[s.side][stage];
       Move a = choose(s, moves, strat, cfg.policy[s.side],
                       cfg.escape_first[s.side], rng);
+      if (recording) archive.append(s, a, int(moves.size()), strat);
       if (a.t == 'p') {
         stats.actions[0]++;
         if (turn > 0 && empty_inside(s)) stats.center_resets++;
@@ -522,6 +534,7 @@ void game(const Config& cfg, uint64_t id, Stats& stats) {
         stats.conservation_checks++;
       }
       int r = result(s, cfg.variant);
+      if (recording) archive.observe(s, r >= 0);
       if (r >= 0) {
         out = r;
         break;
@@ -542,6 +555,13 @@ void game(const Config& cfg, uint64_t id, Stats& stats) {
   stats.first_empty[first < 0 ? 2 : first][out]++;
   stats.logtree_sum = logadd(stats.logtree_sum, logtree);
   stats.logtree_sum2 = logadd(stats.logtree_sum2, 2 * logtree);
+  if (recording) {
+    archive.outcome = out;
+    archive.max_height = maxheight;
+    archive.final = record_totals(s);
+    if (records) records->consider(cfg, archive);
+    if (replay) *replay = std::move(archive);
+  }
 }
 template <class C>
 void array_json(std::ostream& o, const C& a) {
@@ -733,6 +753,12 @@ Config parse(int argc, char** argv) {
       c.policy[1] = std::stoi(v);
     else if (k == "--output")
       c.output = v;
+    else if (k == "--records")
+      c.records = v;
+    else if (k == "--replay") {
+      c.replay = true;
+      c.replay_id = std::stoull(v);
+    }
     else if (k == "--white-schedule" || k == "--black-schedule") {
       int side = k == "--white-schedule" ? 0 : 1;
       std::replace(v.begin(), v.end(), ',', ' ');
@@ -746,6 +772,8 @@ Config parse(int argc, char** argv) {
   if (c.threads < 1 || c.threads > 256 || c.limit < 1 || c.limit > 100000 ||
       c.games == 0)
     throw std::runtime_error("invalid run size/threads/limit");
+  if (!c.records.empty() && (c.records == c.output || c.replay))
+    throw std::runtime_error("records must use a separate output path and cannot combine with replay");
   for (int i = 0; i < 2; i++) {
     if (c.strategy[i] < 0 || c.strategy[i] > 11 || c.policy[i] < 0 ||
         c.policy[i] > 5)
@@ -765,8 +793,25 @@ int main(int argc, char** argv) {
       return 0;
     }
     Config c = parse(argc, argv);
+    if (c.replay) {
+      Stats single(c.limit);
+      GameRecord trace;
+      game(c, c.replay_id, single, nullptr, &trace);
+      if (c.output.empty()) {
+        record_trace(std::cout, c, trace);
+        std::cout << '\n';
+      } else {
+        std::ofstream out(c.output);
+        if (!out) throw std::runtime_error("cannot open replay output");
+        record_trace(out, c, trace);
+        out << '\n';
+        if (!out) throw std::runtime_error("replay output write failure");
+      }
+      return 0;
+    }
     auto start = std::chrono::steady_clock::now();
     Stats total(c.limit);
+    RecordStore records;
     std::atomic<uint64_t> next{0};
     std::mutex mutex;
     std::vector<std::thread> workers;
@@ -775,14 +820,17 @@ int main(int argc, char** argv) {
       workers.emplace_back([&] {
         try {
           Stats local(c.limit);
+          RecordStore local_records;
           for (;;) {
             uint64_t first = next.fetch_add(64);
             if (first >= c.games) break;
             uint64_t end = std::min(first + 64, c.games);
-            for (uint64_t i = first; i < end; i++) game(c, c.start + i, local);
+            for (uint64_t i = first; i < end; i++)
+              game(c, c.start + i, local, c.records.empty() ? nullptr : &local_records);
           }
           std::lock_guard<std::mutex> lock(mutex);
           total.add(local);
+          if (!c.records.empty()) records.add(local_records);
         } catch (...) {
           std::lock_guard<std::mutex> lock(mutex);
           error = std::current_exception();
@@ -804,6 +852,12 @@ int main(int argc, char** argv) {
     }
     std::cerr << "completed " << total.games << " games, "
               << total.games / seconds << " games/s, " << seconds << " s\n";
+    if (!c.records.empty()) {
+      std::ofstream out(c.records);
+      if (!out) throw std::runtime_error("cannot open records output");
+      record_catalog(out, c, records);
+      if (!out) throw std::runtime_error("records output write failure");
+    }
     return 0;
   } catch (const std::exception& e) {
     std::cerr << "error: " << e.what() << '\n';
