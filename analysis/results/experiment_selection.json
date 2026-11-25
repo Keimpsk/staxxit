@@ -1,0 +1,25 @@
+{
+  "rule": "Largest score among regular outcomes, ties by smallest strategy id; exploratory, conditional on completion. Follow-up seeds independent.",
+  "champions": {
+    "A": 8,
+    "B": 8
+  },
+  "schedules": {
+    "A": [
+      8,
+      8,
+      6
+    ],
+    "B": [
+      8,
+      8,
+      6
+    ]
+  },
+  "source_hashes": {
+    "matrix.json": "2c97dc661e95b0e13a9bbdaa3ffacfa908ed657f7763b021c74c10c3fa1568d6",
+    "ranking_A.json": "cef630dabc5faf9dcd0fa03968cd3d2a4f46337c46c25a0ed0d7995f7a215103",
+    "ranking_B.json": "7dc6446eb0a081708a64c1bacc4915e2676ed2ada2a5232f5446747e41866621",
+    "phased.json": "54a1adc8f129181cd97ddbd7a97852db49af8b4b506a5b8148e8b536f26b9b7b"
+  }
+}

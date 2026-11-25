@@ -8,8 +8,8 @@ function RunPython {
 Push-Location (Join-Path $PSScriptRoot '..')
 try {
     if (-not $SkipBuild) {
-        if ($Compiler) { & "$PSScriptRoot\build.ps1" -Compiler $Compiler }
-        else { & "$PSScriptRoot\build.ps1" }
+        if ($Compiler) { & "$PSScriptRoot\build.ps1" -Compiler $Compiler -TestHeuristics }
+        else { & "$PSScriptRoot\build.ps1" -TestHeuristics }
     }
     $engine = Join-Path $PSScriptRoot 'build\staxxit.exe'
     $env:STAXXIT_CPP = $engine
@@ -18,12 +18,13 @@ try {
     RunPython @('analysis/tests/runner_audit.py', '--cpp', $engine)
     RunPython @('analysis/complexity.py')
     RunPython @('analysis/tree_summary.py', '--self-test')
+    RunPython @('analysis/tree_prefix_exact.py', '--depth', '6')
     RunPython @('analysis/benchmark.py', '--games', '30000')
     foreach ($suite in @('baseline', 'matrix')) {
         RunPython @('analysis/run_study.py', '--suite', $suite, '--threads', "$Threads")
     }
     RunPython @('analysis/summarize.py')
-    RunPython @('analysis/select_experiments.py')
+    RunPython @('analysis/select_experiments.py', '--matrix-only')
     $selected = Get-Content -LiteralPath "$PSScriptRoot\results\experiment_selection.json" -Raw | ConvertFrom-Json
     $championArgs = @('--champion-a', "$($selected.champions.A)", '--champion-b', "$($selected.champions.B)")
     foreach ($suite in @('phased', 'policies', 'escape')) {
@@ -37,4 +38,5 @@ try {
     RunPython @('analysis/run_study.py', '--suite', 'sensitivity', '--games', '100000', '--threads', "$Threads")
     RunPython @('analysis/summarize.py')
     RunPython @('analysis/tree_summary.py')
+    RunPython @('analysis/verify_results.py', '--use-current-runner')
 } finally { Pop-Location }

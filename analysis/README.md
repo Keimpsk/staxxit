@@ -22,13 +22,14 @@ Voer vanuit de repositoryroot uit. Stel `$Python` in op een werkende Python.
 
 ```powershell
 $Python = 'python'
-.\analysis\build.ps1 -Compiler 'C:\pad\naar\g++.exe'
+.\analysis\build.ps1 -Compiler 'C:\pad\naar\g++.exe' -TestHeuristics
 $env:STAXXIT_CPP = (Resolve-Path .\analysis\build\staxxit.exe).Path
 & $Python -m unittest discover -s analysis/tests -p 'test_*.py'
 & $Python analysis/tests/differential.py --cpp $env:STAXXIT_CPP
 & $Python analysis/tests/runner_audit.py --cpp $env:STAXXIT_CPP
 & $Python analysis/complexity.py
 & $Python analysis/tree_summary.py --self-test
+& $Python analysis/tree_prefix_exact.py --depth 6
 & $Python analysis/benchmark.py --games 30000
 ```
 
@@ -112,3 +113,32 @@ De vervolgruns gebruiken onafhankelijke taak-seeds. Een winnaar tegen deze
 tegenstanders is geen bewijs van een wiskundig optimale of dominante strategie.
 Bereikbare cycli bewijzen dat de onbeperkte geschiedenisboom oneindig is;
 de statistische schatting geldt alleen voor de afgeknotte onderzoeksboom.
+
+## Audit en figuur
+
+Op deze lokale onderzoekscheckout, met de oorspronkelijke checkpoints/binary:
+
+```powershell
+& $Python analysis/verify_results.py
+```
+
+Een nieuwe volledige reproductie heeft een eigen runnerhash; `run_all.ps1`
+controleert die met `verify_results.py --use-current-runner`. De verifier
+controleert alle taakroosters en telt de checkpointcijfers onafhankelijk op.
+De gepubliceerde productierunner blijft via zijn vaste Git-commit controleerbaar.
+
+Na uitsluitend runneronderhoud kan `--resume-run <run_id>` de oorspronkelijke
+run-identiteit behouden. Alle enginehashes en simulatie-instellingen moeten
+blijven overeenkomen; ook hergebruikte counters worden opnieuw gecontroleerd.
+Zie de daadwerkelijk uitgevoerde hervattingsproef in `Handover.md`.
+
+Voor de optionele overzichtsfiguur (Matplotlib en NumPy zijn alleen hiervoor nodig):
+
+```powershell
+& $Python -m pip install --target analysis/build/plot_packages matplotlib==3.11.2 numpy==2.5.5
+& $Python analysis/plot_results.py --svg analysis/results/overview.svg
+```
+
+`results/overview.provenance.json` bewaart de gebruikte data-/scripthashes en
+pakketversies. De figuur toont gemeten uitkomsten; de intervallen staan in
+het rapport en de CSV/JSON-tabellen.

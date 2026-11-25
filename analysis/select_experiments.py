@@ -3,7 +3,7 @@ import argparse
 import hashlib
 import json
 from pathlib import Path
-from summarize import write_csv, wilson
+from summarize import write_csv, wilson, render_suite
 from run_study import atomic_json
 
 HERE = Path(__file__).resolve().parent
@@ -26,18 +26,22 @@ def score(o, color):
 def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--results-dir', type=Path, default=HERE/'results')
+    p.add_argument('--matrix-only', action='store_true', help='Select fixed champions before running a fresh phased experiment')
     a = p.parse_args()
+    matrix_path = a.results_dir/'matrix.json'
+    matrix = load_complete(matrix_path)
+    if len(matrix['results']) != 288: raise RuntimeError('Expected full 12x12x2 matrix')
+    render_suite(matrix_path)
     selection = dict(rule='Largest score among regular outcomes, ties by smallest strategy id; exploratory, conditional on completion. Follow-up seeds independent.', champions={}, schedules={}, source_hashes={})
+    selection['source_hashes']['matrix.json'] = hashlib.sha256(matrix_path.read_bytes()).hexdigest()
     for v in 'AB':
         path = a.results_dir/f'ranking_{v}.json'
         rows = json.loads(path.read_text(encoding='utf-8'))
         rows.sort(key=lambda x: (-(x['regular_score'] if x['regular_score'] is not None else -1), x['strategy']))
         selection['champions'][v] = rows[0]['strategy']
         selection['source_hashes'][path.name] = hashlib.sha256(path.read_bytes()).hexdigest()
-    matrix = load_complete(a.results_dir/'matrix.json')
-    if len(matrix['results']) != 288: raise RuntimeError('Expected full 12x12x2 matrix')
     path = a.results_dir/'phased.json'
-    if path.exists():
+    if path.exists() and not a.matrix_only:
         phased = load_complete(path)
         if phased['manifest']['champions'] != selection['champions']:
             raise RuntimeError('Stale phased experiment: champions differ from current matrix selection')

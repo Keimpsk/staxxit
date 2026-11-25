@@ -62,7 +62,7 @@ def wilson(k, n, z=1.959963984540054):
     d = 1+z*z/n
     mid = (ph+z*z/(2*n))/d
     half = z*math.sqrt(ph*(1-ph)/n+z*z/(4*n*n))/d
-    return [max(0., mid-half), min(1., mid+half)]
+    return [0. if k==0 else max(0., mid-half), 1. if k==n else min(1., mid+half)]
 
 def quantile(hist, fraction):
     n = sum(hist)
@@ -119,10 +119,10 @@ def render_suite(path):
     for item in data['results']:
         item['summary'] = describe(item['result'])
         s, t = item['summary'], item['task']
-        row = dict(id=t['id'], variant=t['variant'], white=t['white'], black=t['black'], games=s['games'])
+        row = dict(id=t['id'], variant=t['variant'], white_strategy=t['white'], black_strategy=t['black'], games=s['games'])
         for name in OUTCOMES:
             v = s['outcomes'][name]
-            row[name] = v['count']
+            row[name+'_count'] = v['count']
             row[name+'_rate'] = v['rate']
             row[name+'_ci_low'], row[name+'_ci_high'] = v['ci95']
         row.update(mean_turns=s['mean_turns'], median_turns=s['median_turns'],

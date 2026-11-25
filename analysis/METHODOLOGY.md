@@ -21,6 +21,13 @@ Omdat een pas bord en voorraad niet verandert, kan geen tweede pas volgen.
 De aparte teller blijft nuttig als defensieve foutdetectie. Dit bewijs is
 afhankelijk van de huidige regels, inclusief de voorlopige middenherstart.
 
+Ook een middenherstart na de beginzet is in een legale volledige partij
+onbereikbaar. Alleen ontsnappen kan het laatste actieve binnenveld leegmaken;
+de ontsnappende speler heeft dan geen voorraad en geen actieve stapels meer,
+waardoor de partij onmiddellijk regulier eindigt. De andere handelingen laten
+minstens één actieve stapel over. `center_resets` moet daarom eveneens nul
+blijven. Een fallback voor synthetische toestanden verandert dit bereikbaarheidsoordeel niet.
+
 ## Eenheid van waarneming en reproduceerbaarheid
 
 De onafhankelijke eenheid is één partij, met een eigen deterministische
@@ -131,6 +138,15 @@ Een exacte mediaan uit een histogram bevat nog steeds steekproefonzekerheid.
 Als geen kwantielinterval is berekend, wordt er geen interval gesuggereerd.
 De volledige histogram maakt latere intervalberekening en vergelijking van de
 staarten mogelijk.
+
+Een conditionele score telt onder de `R=W+L+D` reguliere uitslagen de waarden
+1 voor winst, 0,5 voor remise en 0 voor verlies. De schatting is
+`m=(W+0,5D)/R`; een normale benadering gebruikt
+`SE=sqrt(((W+0,25D)/R-m²)/(R-1))` en `m ± 1,96 SE`.
+Dit is een interval voor de conditionele score, geen Wilsoninterval voor een
+binomiale winstkans en geen oplossing voor selectieve onderzoeksafbreking.
+Intervallen voor geselecteerde fasewinnaars blijven exploratief; de afzonderlijk
+gespeelde schema-holdout geeft een nieuwe schatting tegen de vaste referentie.
 
 ## Plaatsingsmatrix en selectie van een kampioen
 

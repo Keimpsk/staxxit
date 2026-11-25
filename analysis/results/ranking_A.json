@@ -1,0 +1,134 @@
+[
+  {
+    "strategy": 8,
+    "games": 240000,
+    "wins": 159207,
+    "draws": 27803,
+    "regular_games": 236889,
+    "unresolved": 3111,
+    "regular_score": 0.7307578654981869,
+    "score_lower": 0.7212854166666667,
+    "score_upper": 0.7342479166666667
+  },
+  {
+    "strategy": 6,
+    "games": 240000,
+    "wins": 155570,
+    "draws": 25008,
+    "regular_games": 237005,
+    "unresolved": 2995,
+    "regular_score": 0.7091580346406194,
+    "score_lower": 0.7003083333333333,
+    "score_upper": 0.7127875
+  },
+  {
+    "strategy": 4,
+    "games": 240000,
+    "wins": 112936,
+    "draws": 32791,
+    "regular_games": 236013,
+    "unresolved": 3987,
+    "regular_score": 0.5479846449136276,
+    "score_lower": 0.53888125,
+    "score_upper": 0.55549375
+  },
+  {
+    "strategy": 9,
+    "games": 240000,
+    "wins": 78452,
+    "draws": 66630,
+    "regular_games": 235863,
+    "unresolved": 4137,
+    "regular_score": 0.47386406515646795,
+    "score_lower": 0.4656958333333333,
+    "score_upper": 0.4829333333333333
+  },
+  {
+    "strategy": 2,
+    "games": 240000,
+    "wins": 78077,
+    "draws": 66079,
+    "regular_games": 235912,
+    "unresolved": 4088,
+    "regular_score": 0.4710082573162874,
+    "score_lower": 0.46298541666666665,
+    "score_upper": 0.48001875
+  },
+  {
+    "strategy": 10,
+    "games": 240000,
+    "wins": 78019,
+    "draws": 65896,
+    "regular_games": 235899,
+    "unresolved": 4101,
+    "regular_score": 0.470400467996897,
+    "score_lower": 0.4623625,
+    "score_upper": 0.47945
+  },
+  {
+    "strategy": 5,
+    "games": 240000,
+    "wins": 87099,
+    "draws": 40576,
+    "regular_games": 235809,
+    "unresolved": 4191,
+    "regular_score": 0.45539822483450587,
+    "score_lower": 0.4474458333333333,
+    "score_upper": 0.4649083333333333
+  },
+  {
+    "strategy": 1,
+    "games": 240000,
+    "wins": 87013,
+    "draws": 39297,
+    "regular_games": 235975,
+    "unresolved": 4025,
+    "regular_score": 0.45200339018963875,
+    "score_lower": 0.44442291666666667,
+    "score_upper": 0.46119375
+  },
+  {
+    "strategy": 3,
+    "games": 240000,
+    "wins": 75950,
+    "draws": 60655,
+    "regular_games": 235986,
+    "unresolved": 4014,
+    "regular_score": 0.4503551058113617,
+    "score_lower": 0.4428229166666667,
+    "score_upper": 0.45954791666666667
+  },
+  {
+    "strategy": 0,
+    "games": 240000,
+    "wins": 82516,
+    "draws": 47067,
+    "regular_games": 236230,
+    "unresolved": 3770,
+    "regular_score": 0.4489247767006731,
+    "score_lower": 0.44187291666666667,
+    "score_upper": 0.45758125
+  },
+  {
+    "strategy": 11,
+    "games": 240000,
+    "wins": 75940,
+    "draws": 59948,
+    "regular_games": 236073,
+    "unresolved": 3927,
+    "regular_score": 0.44864935846115395,
+    "score_lower": 0.44130833333333336,
+    "score_upper": 0.45767083333333336
+  },
+  {
+    "strategy": 7,
+    "games": 240000,
+    "wins": 57078,
+    "draws": 46516,
+    "regular_games": 236326,
+    "unresolved": 3674,
+    "regular_score": 0.33993720538578065,
+    "score_lower": 0.3347333333333333,
+    "score_upper": 0.35004166666666664
+  }
+]

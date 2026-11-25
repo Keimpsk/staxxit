@@ -18,7 +18,30 @@ def atomic_json(path, value):
     path.parent.mkdir(parents=True, exist_ok=True)
     temp = path.with_suffix(path.suffix + '.tmp')
     temp.write_text(json.dumps(value, indent=2, allow_nan=False) + '\n', encoding='utf-8')
-    os.replace(temp, path)
+    # Windows scanners/readers can briefly hold a destination handle without
+    # FILE_SHARE_DELETE. Retry the same atomic replacement; never truncate it.
+    for attempt in range(8):
+        try:
+            os.replace(temp, path)
+            return
+        except PermissionError:
+            if attempt == 7: raise
+            time.sleep(min(.05 * 2**attempt, 1.))
+
+def validate_chunk(data, config):
+    n, limit = config['games'], config['limit']
+    if data['games'] != n or len(data['outcomes']) != 6 or sum(data['outcomes']) != n:
+        raise RuntimeError('Invalid checkpoint outcome counters')
+    if len(data['duration']) != limit+1 or sum(data['duration']) != n:
+        raise RuntimeError('Invalid checkpoint duration histogram')
+    turns = sum(i*k for i,k in enumerate(data['duration']))
+    actions = sum(data['actions'])
+    if turns != data['turns'] or turns != actions+data['passes']:
+        raise RuntimeError('Inconsistent checkpoint action/turn counters')
+    if data['conservation_checks'] != actions+n:
+        raise RuntimeError('Missing runtime stone-conservation checks')
+    if data['seed'] != config['seed'] or data['start'] != config['start'] or data['limit'] != limit:
+        raise RuntimeError('Checkpoint engine metadata differs from configuration')
 
 def task(suite, variant, white=0, black=0, extra=None, tag=None):
     extra = extra or []
@@ -78,6 +101,7 @@ def main():
     p.add_argument('--checkpoint-dir', type=Path, default=HERE/'checkpoints')
     p.add_argument('--results-dir', type=Path, default=HERE/'results')
     p.add_argument('--only', help='task-id substring filter for diagnosis')
+    p.add_argument('--resume-run', help='Existing 16-hex checkpoint id; permits runner-only maintenance with identical engine/settings')
     a = p.parse_args()
     n = a.games if a.games is not None else (1000000 if a.suite == 'baseline' else 10000)
     if n <= 0 or a.chunk <= 0 or a.threads <= 0:
@@ -93,9 +117,19 @@ def main():
                        champions=champions, schedules=schedules, suite=a.suite, chunk=a.chunk,
                        selected_task_ids=[t['id'] for t in tasks])
     run_id = hashlib.sha256(json.dumps(fingerprint, sort_keys=True).encode()).hexdigest()[:16]
+    if a.resume_run:
+        if len(a.resume_run) != 16 or any(c not in '0123456789abcdef' for c in a.resume_run):
+            p.error('resume-run must be a 16-character lowercase hexadecimal id')
+        original = json.loads((a.checkpoint_dir/a.resume_run/'manifest.json').read_text(encoding='utf-8'))
+        for key, value in fingerprint.items():
+            if key != 'runner_sha256' and original.get(key) != value:
+                raise RuntimeError(f'Resume configuration mismatch: {key}')
+        fingerprint['runner_sha256'] = original['runner_sha256']
+        run_id = a.resume_run
     checkpoint_root = a.checkpoint_dir/run_id
     checkpoint_root.mkdir(parents=True, exist_ok=True)
-    atomic_json(checkpoint_root/'manifest.json', dict(**fingerprint, tasks=tasks, threads=a.threads))
+    atomic_json(checkpoint_root/'manifest.json', dict(**fingerprint, tasks=tasks, threads=a.threads,
+                current_resume_runner_sha256=digest(__file__)))
     total = len(tasks)*n
     completed = 0
     newly_run = 0
@@ -127,11 +161,11 @@ def main():
                 before = time.monotonic()
                 subprocess.run(cmd, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
                 data = json.loads(raw.read_text(encoding='utf-8'))
-                if data['games'] != count or sum(data['outcomes']) != count or sum(data['duration']) != count:
-                    raise RuntimeError(f'Invalid engine counters: {raw}')
+                validate_chunk(data, cfg)
                 atomic_json(path, dict(config=cfg, elapsed_seconds=time.monotonic()-before, result=data))
                 raw.unlink()
                 newly_run += count
+            validate_chunk(data, cfg)
             chunks.append(data)
             completed += count
             elapsed = time.monotonic()-started

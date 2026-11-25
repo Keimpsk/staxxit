@@ -31,7 +31,19 @@ De C++-engine wordt benaderd via een stateloos, regelgebaseerd `--protocol`. Hie
 
 De actuele C++-validatie staat in `results/validation.json`, nadat de hieronder beschreven vergelijking met het gebouwde uitvoerbestand is uitgevoerd. Het bestand zelf is leidend voor het aantal vergelijkingen, de seed, looptijd en executablehash.
 
+De definitieve C++-build met SHA-256 `7960cb96613703d91ca0ce7cfdc61064d6573cb191448e81d286fd8f31b5553c` is daadwerkelijk getest. Alle 26 handgemaakte tests en alle 373.682 differentiële toestandsvergelijkingen slaagden. De volledige runneraudit voor 1.000 partijen per variant en alle 21 integerstatistieken slaagde eveneens. Aanvullend is dezelfde audit met limiet 10.000 uitgevoerd (`validation_runner_long.json`): daarbij werd voor variant A werkelijk een derde herhaling bereikt en exact gelijk door Python en C++ geregistreerd. Een gerichte audit van partij-ID's 1600–1699 met dezelfde seed en limiet bereikte voor variant B één herhaling (`validation_runner_B_repetition.json`), eveneens exact overeenkomend. Daarmee is herhalingsafhandeling niet uitsluitend op nul waarnemingen gecontroleerd.
+
+De aanvullende C++-auditbestanden `validation_long_A.json` en `validation_long_B.json` bevatten elk 10.000 werkelijk gespeelde controlepartijen met limiet 10.000. Zij bevatten respectievelijk 16 en 12 herhalingen, geen vastgelopen partijen en geen bereikte limieten. Deze runs hebben een ander doel en een andere limiet dan de officiële nulmeting; hun aantallen worden niet met die nulmeting samengevoegd.
+
 `tests/runner_audit.py` controleert daarnaast de volledige onderzoeksrunner onafhankelijk. De Python-oracle gebruikt daarvoor dezelfde expliciet geïmplementeerde SplitMix64-generator en zetvolgorde, zodat iedere individuele willekeurige partij exact dezelfde keuzes krijgt. Voor 1.000 partijen per variant worden 21 integerstatistieken exact vergeleken: uitslagen, zetten-/pas-/actieaantallen, fasen en legale keuzes, duurverdeling, bron- en maximale stapelhoogtes, acties en vroege acties per speler, eerste lege voorraad, materiaalcontroles en bezochte dieptes. Dezelfde resultaten moeten met één en vier threads ontstaan en moeten optellen uit twee hervatbare `--start`-batches van 500 partijen. Een aanvullende zetlimiet van één beurt moet alle tien testpartijen als zetlimiet beëindigen. `results/validation_runner.json` bevat het resultaat. Deze controle dekt ook de aflooplogica en telling, naast de vergelijking van losse zetten.
+
+## Integriteit van de volledige onderzoeksresultaten
+
+`verify_results.py` controleert de volledige einddataset onafhankelijk van de onderzoeksrunner en diens optelfuncties. De uitgevoerde controle in `results/integrity.json` slaagde voor alle zeven reeksen: 490 unieke taken en 8.320.000 partijen. Alle 832 lokale checkpointchunks zijn opnieuw ingelezen, per chunk op consistentie gecontroleerd en onafhankelijk opgeteld naar de gepubliceerde taakaggregaten. De controle omvat onder andere de exacte taakroosters, aantallen partijen, uitslagen, duur- en hoogtehistogrammen, zetten en passen, fasen, vroege acties, acties per speler, materiaalcontroles, voorraaduitputting, nul middenherstarts en de feitelijk aan de engine doorgegeven strategieën, beleidskeuzes en faseschema's.
+
+Engine- en C++-bronhashes moeten exact overeenkomen met de definitieve lokale bestanden. De productierunner is onveranderlijk geïdentificeerd door Git-commit `3ae6a1de7c9fa2b3cade991709381915fdeef2d5`; de verifier leest de oorspronkelijke runnerbytes uit die commit en controleert de opgeslagen SHA-256. Onderhoud aan hervatten en Windows-bestandsvergrendeling na de productie verandert die historische herkomst niet. De huidige onderhoudsrunner wordt met een afzonderlijke hash in het integriteitsrapport vermeld. De checker importeert geen code van de runner of samenvatter.
+
+Voer `python analysis/verify_results.py` uit om de volledige controle te herhalen. Hiervoor zijn ook de lokale, niet in Git opgenomen checkpointbestanden nodig. Een gedeeltelijke selectie via `--suites` schrijft uitsluitend `integrity_partial.json` met status `partial_pass`; alleen een geslaagde controle van alle zeven volledige reeksen krijgt de eindstatus `passed`. De controle bewijst de samenhang en herkomst van de dataset, niet de uitputtende juistheid van de engines of strategische optimaliteit.
 
 ## Bereikbare herhalingscycli
 
@@ -50,6 +62,8 @@ $env:STAXXIT_CPP = (Resolve-Path analysis/build/staxxit.exe).Path
 python -m unittest discover -s analysis/tests -p test_rules.py -v
 python analysis/tests/differential.py --cpp analysis/build/staxxit.exe --games 1000 --synthetic 10000
 python analysis/tests/runner_audit.py --cpp analysis/build/staxxit.exe --games 1000
+python analysis/tests/runner_audit.py --cpp analysis/build/staxxit.exe --games 1000 --limit 10000 --output analysis/results/validation_runner_long.json
+python analysis/tests/runner_audit.py --cpp analysis/build/staxxit.exe --games 100 --start 1600 --limit 10000 --output analysis/results/validation_runner_B_repetition.json
 python analysis/tests/cycle_witness.py --cpp analysis/build/staxxit.exe
 ```
 

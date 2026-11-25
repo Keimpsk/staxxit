@@ -128,14 +128,14 @@ def check_equal(expected,actual):
 def run(args):
     started=time.perf_counter(); checks=[]
     for variant in ('A','B'):
-        expected=python_games(variant,args.games,args.seed,0,args.limit)
-        actual=cpp_games(args,variant,args.games,0,1,args.limit)
+        expected=python_games(variant,args.games,args.seed,args.start,args.limit)
+        actual=cpp_games(args,variant,args.games,args.start,1,args.limit)
         check_equal(expected,actual)
-        parallel=cpp_games(args,variant,args.games,0,4,args.limit)
+        parallel=cpp_games(args,variant,args.games,args.start,4,args.limit)
         check_equal(expected,parallel)
         mid=args.games//2
-        left=cpp_games(args,variant,mid,0,2,args.limit)
-        right=cpp_games(args,variant,args.games-mid,mid,2,args.limit)
+        left=cpp_games(args,variant,mid,args.start,2,args.limit)
+        right=cpp_games(args,variant,args.games-mid,args.start+mid,2,args.limit)
         for field,value in expected.items():
             def add(a,b):
                 return [add(x,y) for x,y in zip(a,b)] if isinstance(a,list) else a+b
@@ -148,7 +148,7 @@ def run(args):
                            exact_full_game_comparison=True,thread_counts=[1,4],
                            start_offset_batches=[mid,args.games-mid],forced_limit_test=True,
                            outcomes=expected['outcomes'],conservation_checks=expected['conservation_checks']))
-    report=dict(status='passed',seed=args.seed,limit=args.limit,checks=checks,
+    report=dict(status='passed',seed=args.seed,start=args.start,limit=args.limit,checks=checks,
                 elapsed_seconds=time.perf_counter()-started,
                 executable_sha256=hashlib.sha256(Path(args.cpp).read_bytes()).hexdigest(),
                 note='Audit sample, not the research baseline. RNG and move order match C++ to compare entire games exactly.')
@@ -162,6 +162,7 @@ if __name__=='__main__':
     parser.add_argument('--cpp',required=True)
     parser.add_argument('--games',type=int,default=1000)
     parser.add_argument('--seed',type=int,default=20261125)
+    parser.add_argument('--start',type=int,default=0)
     parser.add_argument('--limit',type=int,default=536)
     parser.add_argument('--output',default='analysis/results/validation_runner.json')
     run(parser.parse_args())
