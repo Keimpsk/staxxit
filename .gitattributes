@@ -3,3 +3,7 @@ analysis/*.cpp text eol=lf
 analysis/*.hpp text eol=lf
 analysis/results/gallery/** text eol=lf
 analysis/results/gallery_long/** text eol=lf
+analysis/tests/*.mjs text eol=lf
+analysis/tests/*.py text eol=lf
+analysis/results/simulator_replays/** text eol=lf
+analysis/results/simulator_replays/*.zip binary

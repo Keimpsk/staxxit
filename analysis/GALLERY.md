@@ -1,5 +1,11 @@
 # Bijzondere partijen: automatisch bewaard en nagespeeld
 
+De bewaarde dossiers zijn nu ook beschikbaar als [kant-en-klare simulatorbestanden](SIMULATOR_REPLAY.md).
+Alle 55 exports zijn gecontroleerd met de echte replayfunctie van
+`staxxit-simulator`. Download de [ZIP](results/simulator_replays/staxxit-partijen.zip),
+pak die uit en gebruik **Load .staxxit replay** in de simulatorfeaturebranch.
+Voor deze omzetting hoefde geen partij opnieuw te worden gesimuleerd.
+
 De engine bewaart nu automatisch opvallende partijen. De registratie is getest
 en daadwerkelijk gebruikt voor een nieuwe reeks van **4.880.000 partijen**:
 1.000.000 willekeurige partijen per variant en 10.000 partijen voor ieder

@@ -1,0 +1,902 @@
+{
+  "schema": "staxxit.simulator_exports.v1",
+  "complete": true,
+  "exported_at": "2026-11-25T16:11:57Z",
+  "date_semantics": "Actual export timestamp; original simulation wall-clock times were not recorded.",
+  "target_simulator": {
+    "repository": "Keimpsk/staxxit-simulator",
+    "ref": "feature/game-rules-and-replay",
+    "commit": "6feac4bc4db75df842064e4496132a928a8706cb",
+    "format_version": 1
+  },
+  "converter_sha256": "f30f74d2a6f06ae8507014de6fe364fe91005de63260e044408ac54e91d1a9cb",
+  "source_catalogs": {
+    "analysis/results/gallery/catalog.json": "bfcb15e4901122e84eca01762a3888666e648e3b65e032dbf2c94668242eb616",
+    "analysis/results/gallery_long/catalog.json": "de1799e9c61453a4607e30c074ad412b1abed69e64781e49aecc23431144cc9c"
+  },
+  "files": [
+    {
+      "file": "hoofd/A-comeback-score.staxxit",
+      "trace_file": "analysis/results/gallery/games/A-matrix_A_w01_b08-g000006701.json",
+      "source_sha256": "68695a771ef3461d095d0fcbc13cc1e726c777954480e0e2434810e414089102",
+      "sha256": "d0152831f7a87eb827a48a320ab2d680923ac479bec23104273462577f3e04e2",
+      "source_outcome": 0,
+      "source_termination": "white",
+      "source_file_id": "A-matrix_A_w01_b08-g000006701",
+      "source_catalog": "analysis/results/gallery/catalog.json",
+      "moves": 509,
+      "variant": "A",
+      "bytes": 49328,
+      "categories": [
+        "comeback_score"
+      ]
+    },
+    {
+      "file": "hoofd/A-comeback-stapelcontrole.staxxit",
+      "trace_file": "analysis/results/gallery/games/A-baseline_A-g000042836.json",
+      "source_sha256": "0d1903f1886f89dedc237b56a08e0aaa5a07af3e85457af249b504c5093d1c0e",
+      "sha256": "b9b8cfcbff46ba272486b03ba819205f32630c2288cab7ec456a7578ced2db16",
+      "source_outcome": 1,
+      "source_termination": "black",
+      "source_file_id": "A-baseline_A-g000042836",
+      "source_catalog": "analysis/results/gallery/catalog.json",
+      "moves": 84,
+      "variant": "A",
+      "bytes": 8291,
+      "categories": [
+        "comeback_material"
+      ]
+    },
+    {
+      "file": "hoofd/A-hoogste-stapel.staxxit",
+      "trace_file": "analysis/results/gallery/games/A-matrix_A_w10_b05-g000002222.json",
+      "source_sha256": "e4aa9266866fd65e03b1a63b9e32842c33c678c6497d728663994542eed64035",
+      "sha256": "0e926491dd79ace9151934676d07f0fc3dd41bd61c30356d522b056259ee8f2a",
+      "source_outcome": 1,
+      "source_termination": "black",
+      "source_file_id": "A-matrix_A_w10_b05-g000002222",
+      "source_catalog": "analysis/results/gallery/catalog.json",
+      "moves": 116,
+      "variant": "A",
+      "bytes": 11322,
+      "categories": [
+        "tallest_stack"
+      ]
+    },
+    {
+      "file": "hoofd/A-kortste-winst.staxxit",
+      "trace_file": "analysis/results/gallery/games/A-matrix_A_w09_b06-g000004907.json",
+      "source_sha256": "d5adf28c7cd492b993818a0ab290f54fc0deb5c3212e1e47fad62392a31c2164",
+      "sha256": "853558f337a3526c80c24f8d6501d9e49c1d7a5fa1c8f62ecbb0faad3e812225",
+      "source_outcome": 1,
+      "source_termination": "black",
+      "source_file_id": "A-matrix_A_w09_b06-g000004907",
+      "source_catalog": "analysis/results/gallery/catalog.json",
+      "moves": 64,
+      "variant": "A",
+      "bytes": 6164,
+      "categories": [
+        "shortest_won"
+      ]
+    },
+    {
+      "file": "hoofd/A-langste-reguliere.staxxit",
+      "trace_file": "analysis/results/gallery/games/A-baseline_A-g000022583.json",
+      "source_sha256": "b89eeb30605a0cdfb2c47c911485902394420841dbbbef682925059b652cbd59",
+      "sha256": "37798014417e9bb322281fc10f45d60efef44036fa18dc07e3a9c3adf2de10ff",
+      "source_outcome": 1,
+      "source_termination": "black",
+      "source_file_id": "A-baseline_A-g000022583",
+      "source_catalog": "analysis/results/gallery/catalog.json",
+      "moves": 536,
+      "variant": "A",
+      "bytes": 51887,
+      "categories": [
+        "longest_regular"
+      ]
+    },
+    {
+      "file": "hoofd/A-langste-waargenomen.staxxit",
+      "trace_file": "analysis/results/gallery/games/A-baseline_A-g000000027.json",
+      "source_sha256": "a6aeaacab034aeba3e586404ce1385094f9de7280255f85248b5a0f21fca6307",
+      "sha256": "be331859364449363dea20b93f2ab2b028a0d77ddf672f10c44338e5a612a81c",
+      "source_outcome": 5,
+      "source_termination": "limit",
+      "source_file_id": "A-baseline_A-g000000027",
+      "source_catalog": "analysis/results/gallery/catalog.json",
+      "moves": 536,
+      "variant": "A",
+      "bytes": 51872,
+      "categories": [
+        "longest_observed"
+      ]
+    },
+    {
+      "file": "hoofd/A-meeste-slagzetten.staxxit",
+      "trace_file": "analysis/results/gallery/games/A-baseline_A-g000397409.json",
+      "source_sha256": "c9171abc1143c9262c90ce0a9c119d3ad628f34dc69283775fa228ea7be441e7",
+      "sha256": "4898ded0c8f4a61561f40aef73788fe4c12d6d317d9340f428991aed41adb3ff",
+      "source_outcome": 5,
+      "source_termination": "limit",
+      "source_file_id": "A-baseline_A-g000397409",
+      "source_catalog": "analysis/results/gallery/catalog.json",
+      "moves": 536,
+      "variant": "A",
+      "bytes": 52421,
+      "categories": [
+        "most_captures"
+      ]
+    },
+    {
+      "file": "hoofd/A-offer-terugslag.staxxit",
+      "trace_file": "analysis/results/gallery/games/A-baseline_A-g000750520.json",
+      "source_sha256": "abb64a7f7d284a6cb403b36b4b96dc901f88cc7bee6f7b8e88621a765b8e48ec",
+      "sha256": "5d9850bd879fe438d5772f3ef1035ee5016e4aa748dcf7911ac7126e6b87f1ba",
+      "source_outcome": 0,
+      "source_termination": "white",
+      "source_file_id": "A-baseline_A-g000750520",
+      "source_catalog": "analysis/results/gallery/catalog.json",
+      "moves": 222,
+      "variant": "A",
+      "bytes": 21753,
+      "categories": [
+        "tactical_offer"
+      ]
+    },
+    {
+      "file": "hoofd/A-strategie-00.staxxit",
+      "trace_file": "analysis/results/gallery/games/A-matrix_A_w00_b10-g000008554.json",
+      "source_sha256": "7cbcd03a307a2b08a04ca8d231113bc386bc9547c56d51ed2277b3a362c565c1",
+      "sha256": "9c990d3795fc375938bdb07751d02f4429eb2d4e6908c2531d32a9dbe4d22df9",
+      "source_outcome": 0,
+      "source_termination": "white",
+      "source_file_id": "A-matrix_A_w00_b10-g000008554",
+      "source_catalog": "analysis/results/gallery/catalog.json",
+      "moves": 431,
+      "variant": "A",
+      "bytes": 41690,
+      "categories": [
+        "best_strategy"
+      ]
+    },
+    {
+      "file": "hoofd/A-strategie-01.staxxit",
+      "trace_file": "analysis/results/gallery/games/A-matrix_A_w07_b01-g000007616.json",
+      "source_sha256": "48b23832f4d70aa04d63e7c214e72c77be8189b37dfbf6f3799997fb0ddd7c5a",
+      "sha256": "60f9e90315650494f9fab35d7a893d9ef1a718fa96213f7679735c4c0b0c5c9e",
+      "source_outcome": 1,
+      "source_termination": "black",
+      "source_file_id": "A-matrix_A_w07_b01-g000007616",
+      "source_catalog": "analysis/results/gallery/catalog.json",
+      "moves": 190,
+      "variant": "A",
+      "bytes": 18261,
+      "categories": [
+        "best_strategy"
+      ]
+    },
+    {
+      "file": "hoofd/A-strategie-02.staxxit",
+      "trace_file": "analysis/results/gallery/games/A-matrix_A_w02_b09-g000002445.json",
+      "source_sha256": "50c6d9d4004edf015826f7fda67847f1e3cff63479a125fb76d92b04625cf272",
+      "sha256": "408571d3845143da06053d0c3dff950da95e34a2731d459b24dda0dc71d553ef",
+      "source_outcome": 0,
+      "source_termination": "white",
+      "source_file_id": "A-matrix_A_w02_b09-g000002445",
+      "source_catalog": "analysis/results/gallery/catalog.json",
+      "moves": 271,
+      "variant": "A",
+      "bytes": 26300,
+      "categories": [
+        "best_strategy"
+      ]
+    },
+    {
+      "file": "hoofd/A-strategie-03.staxxit",
+      "trace_file": "analysis/results/gallery/games/A-matrix_A_w03_b00-g000001585.json",
+      "source_sha256": "99bc8fbec8ff72dc82b87a7abac63ea5a6719a8d5cda563998e036dc1909cccd",
+      "sha256": "e8b7209eab50aaae4035b93aa5a429ff549806983eef15e668ac346df8d03068",
+      "source_outcome": 0,
+      "source_termination": "white",
+      "source_file_id": "A-matrix_A_w03_b00-g000001585",
+      "source_catalog": "analysis/results/gallery/catalog.json",
+      "moves": 169,
+      "variant": "A",
+      "bytes": 16348,
+      "categories": [
+        "best_strategy"
+      ]
+    },
+    {
+      "file": "hoofd/A-strategie-04.staxxit",
+      "trace_file": "analysis/results/gallery/games/A-matrix_A_w01_b04-g000003672.json",
+      "source_sha256": "d84de36e84c7c1a1a32d19b2b68f45a3633a337b811f17c80c831e7c8e3b968e",
+      "sha256": "490b0c0d0fa644bbd7c28da376fcd283f8fbd5d2e9922d55a74fc7f8c5a567d3",
+      "source_outcome": 1,
+      "source_termination": "black",
+      "source_file_id": "A-matrix_A_w01_b04-g000003672",
+      "source_catalog": "analysis/results/gallery/catalog.json",
+      "moves": 174,
+      "variant": "A",
+      "bytes": 16760,
+      "categories": [
+        "best_strategy"
+      ]
+    },
+    {
+      "file": "hoofd/A-strategie-05.staxxit",
+      "trace_file": "analysis/results/gallery/games/A-matrix_A_w07_b05-g000007372.json",
+      "source_sha256": "88180746a284cbcb69de0db15f272d5518a62f9136dd58462add6ed6bdf4e7b2",
+      "sha256": "eaed5df15ad429f83112eb5fc92b31138623bb3bb3c040e78b161a1c62e220fd",
+      "source_outcome": 1,
+      "source_termination": "black",
+      "source_file_id": "A-matrix_A_w07_b05-g000007372",
+      "source_catalog": "analysis/results/gallery/catalog.json",
+      "moves": 212,
+      "variant": "A",
+      "bytes": 20515,
+      "categories": [
+        "best_strategy"
+      ]
+    },
+    {
+      "file": "hoofd/A-strategie-06.staxxit",
+      "trace_file": "analysis/results/gallery/games/A-matrix_A_w07_b06-g000008609.json",
+      "source_sha256": "2d725c3d30840404adf14b32d023bee6b9c3b897800a7aa6e0d8b11a94a8799d",
+      "sha256": "d207d52a08fd4c0698581544b22b90ce849ac11363b267e0ac3448986f398f45",
+      "source_outcome": 1,
+      "source_termination": "black",
+      "source_file_id": "A-matrix_A_w07_b06-g000008609",
+      "source_catalog": "analysis/results/gallery/catalog.json",
+      "moves": 124,
+      "variant": "A",
+      "bytes": 11929,
+      "categories": [
+        "best_strategy"
+      ]
+    },
+    {
+      "file": "hoofd/A-strategie-07.staxxit",
+      "trace_file": "analysis/results/gallery/games/A-matrix_A_w05_b07-g000000302.json",
+      "source_sha256": "c81176d8f424cd9123415f8a57d4a898ef62139623d77fba7586e3825510c13c",
+      "sha256": "29be1ac07be7c614a89087d51e3583bdff1678db81cd6bd3878e95222a68ae68",
+      "source_outcome": 1,
+      "source_termination": "black",
+      "source_file_id": "A-matrix_A_w05_b07-g000000302",
+      "source_catalog": "analysis/results/gallery/catalog.json",
+      "moves": 152,
+      "variant": "A",
+      "bytes": 14651,
+      "categories": [
+        "best_strategy"
+      ]
+    },
+    {
+      "file": "hoofd/A-strategie-08.staxxit",
+      "trace_file": "analysis/results/gallery/games/A-matrix_A_w05_b08-g000009614.json",
+      "source_sha256": "d948cda72df8d9beda55194b1879c7ac148a85637e8c728bedf4d7399757fe3b",
+      "sha256": "5dcbdb3691b5cafae1d488dd0bc2c0c564cd274f42bf4a4c3b3cd77dcadbb947",
+      "source_outcome": 1,
+      "source_termination": "black",
+      "source_file_id": "A-matrix_A_w05_b08-g000009614",
+      "source_catalog": "analysis/results/gallery/catalog.json",
+      "moves": 160,
+      "variant": "A",
+      "bytes": 15396,
+      "categories": [
+        "best_strategy"
+      ]
+    },
+    {
+      "file": "hoofd/A-strategie-09.staxxit",
+      "trace_file": "analysis/results/gallery/games/A-matrix_A_w09_b10-g000007123.json",
+      "source_sha256": "01fa7f12047fc9fc69694c6962d819c5b67f0c9cd50707461f5aeda1f3c8f77d",
+      "sha256": "cc4b388e3cd0eeb1ef742dd5c2e771fc27bcde4ba1b991ad6d17ada5cc5fc391",
+      "source_outcome": 0,
+      "source_termination": "white",
+      "source_file_id": "A-matrix_A_w09_b10-g000007123",
+      "source_catalog": "analysis/results/gallery/catalog.json",
+      "moves": 185,
+      "variant": "A",
+      "bytes": 17937,
+      "categories": [
+        "best_strategy"
+      ]
+    },
+    {
+      "file": "hoofd/A-strategie-10.staxxit",
+      "trace_file": "analysis/results/gallery/games/A-matrix_A_w05_b10-g000005999.json",
+      "source_sha256": "a6e5bc18b13ce9aa1aeaeda6cf2d6a74d04fbdba5fa078b9f5072b796e5f3141",
+      "sha256": "c82b2e52d1edf97c7d6bef861e0b3e37582033100e4d12422857d1f4c5705afb",
+      "source_outcome": 1,
+      "source_termination": "black",
+      "source_file_id": "A-matrix_A_w05_b10-g000005999",
+      "source_catalog": "analysis/results/gallery/catalog.json",
+      "moves": 344,
+      "variant": "A",
+      "bytes": 33303,
+      "categories": [
+        "best_strategy"
+      ]
+    },
+    {
+      "file": "hoofd/A-strategie-11.staxxit",
+      "trace_file": "analysis/results/gallery/games/A-matrix_A_w11_b02-g000005593.json",
+      "source_sha256": "701720c8d02a4578d0c91c11a2f91c803acb48b177701cab12242475a4fa65c5",
+      "sha256": "bafb6b4e93d42e33dd6315f7f1fb1251b9992856ba5f358bbd631fa889371a38",
+      "source_outcome": 0,
+      "source_termination": "white",
+      "source_file_id": "A-matrix_A_w11_b02-g000005593",
+      "source_catalog": "analysis/results/gallery/catalog.json",
+      "moves": 165,
+      "variant": "A",
+      "bytes": 16095,
+      "categories": [
+        "best_strategy"
+      ]
+    },
+    {
+      "file": "hoofd/B-comeback-score.staxxit",
+      "trace_file": "analysis/results/gallery/games/B-matrix_B_w05_b08-g000001749.json",
+      "source_sha256": "29bbdd555b87237759d2f7fb40d15bd0beeebbe935bd64dfa2b24770a698a04d",
+      "sha256": "2472148963e1c630c15bb955a72e1b5959e7ce11d221548ea4e403906e5ad4c9",
+      "source_outcome": 0,
+      "source_termination": "white",
+      "source_file_id": "B-matrix_B_w05_b08-g000001749",
+      "source_catalog": "analysis/results/gallery/catalog.json",
+      "moves": 337,
+      "variant": "B",
+      "bytes": 32618,
+      "categories": [
+        "comeback_score"
+      ]
+    },
+    {
+      "file": "hoofd/B-comeback-stapelcontrole.staxxit",
+      "trace_file": "analysis/results/gallery/games/B-baseline_B-g000004319.json",
+      "source_sha256": "3aea620cdf3412a1bd87548a41234c42d08c18f1ab560a8d8d14b4e5f30ffd3b",
+      "sha256": "7ed37566c176bd17b05f684c5bd336309042646138de5c5798d3ae14ab9a7fa9",
+      "source_outcome": 1,
+      "source_termination": "black",
+      "source_file_id": "B-baseline_B-g000004319",
+      "source_catalog": "analysis/results/gallery/catalog.json",
+      "moves": 82,
+      "variant": "B",
+      "bytes": 8046,
+      "categories": [
+        "comeback_material"
+      ]
+    },
+    {
+      "file": "hoofd/B-hoogste-stapel.staxxit",
+      "trace_file": "analysis/results/gallery/games/B-baseline_B-g000802613.json",
+      "source_sha256": "691f5af5a43ea8bce22c5c21f9eabfeca71daccd9a29e1be999d52b7d1205a34",
+      "sha256": "c8fa09c8d62ca0abfcb20f5b9e06e8186345e6fc24602ce3c0b20726f201521a",
+      "source_outcome": 0,
+      "source_termination": "white",
+      "source_file_id": "B-baseline_B-g000802613",
+      "source_catalog": "analysis/results/gallery/catalog.json",
+      "moves": 166,
+      "variant": "B",
+      "bytes": 16132,
+      "categories": [
+        "tallest_stack"
+      ]
+    },
+    {
+      "file": "hoofd/B-kortste-winst.staxxit",
+      "trace_file": "analysis/results/gallery/games/B-matrix_B_w08_b05-g000002508.json",
+      "source_sha256": "ec284e03a4005520ac7bbe8c7b698e9a47ba0d81b75d9a32d5843021390900c2",
+      "sha256": "0acee08fcd029796b3b0e068a8e66f89136e60a15b09772a872ee9b6bfca61e2",
+      "source_outcome": 0,
+      "source_termination": "white",
+      "source_file_id": "B-matrix_B_w08_b05-g000002508",
+      "source_catalog": "analysis/results/gallery/catalog.json",
+      "moves": 63,
+      "variant": "B",
+      "bytes": 6026,
+      "categories": [
+        "shortest_won"
+      ]
+    },
+    {
+      "file": "hoofd/B-langste-reguliere.staxxit",
+      "trace_file": "analysis/results/gallery/games/B-baseline_B-g000028308.json",
+      "source_sha256": "1fe6f2f00e793714a90156b279dc60c5671b900fbb657eba8ce46305536849f4",
+      "sha256": "88438b146f7a3d37d5b26c05e5801acc6c73ca3f3ef20a9d48202b7860094424",
+      "source_outcome": 1,
+      "source_termination": "black",
+      "source_file_id": "B-baseline_B-g000028308",
+      "source_catalog": "analysis/results/gallery/catalog.json",
+      "moves": 536,
+      "variant": "B",
+      "bytes": 51860,
+      "categories": [
+        "longest_regular"
+      ]
+    },
+    {
+      "file": "hoofd/B-langste-waargenomen.staxxit",
+      "trace_file": "analysis/results/gallery/games/B-baseline_B-g000000019.json",
+      "source_sha256": "e520f9e32c86eaacd9979a02b2889b769a99ed660a7df093f61b9d0355827d60",
+      "sha256": "4b5daa586a8278c77d8b17f9fcc030ba49d0fdfbf232476ff50bf8dfaa10af59",
+      "source_outcome": 5,
+      "source_termination": "limit",
+      "source_file_id": "B-baseline_B-g000000019",
+      "source_catalog": "analysis/results/gallery/catalog.json",
+      "moves": 536,
+      "variant": "B",
+      "bytes": 51941,
+      "categories": [
+        "longest_observed"
+      ]
+    },
+    {
+      "file": "hoofd/B-meeste-slagzetten.staxxit",
+      "trace_file": "analysis/results/gallery/games/B-matrix_B_w11_b07-g000006782.json",
+      "source_sha256": "8e05b73dd63a6dfecc1274eb7d7ae5be50d6591e41082adbd5d92b79fcd76c63",
+      "sha256": "1ba6bf8d5769b4510aa4fd8c2ce0ad52da63a2ffbf87177645608a092f478925",
+      "source_outcome": 1,
+      "source_termination": "black",
+      "source_file_id": "B-matrix_B_w11_b07-g000006782",
+      "source_catalog": "analysis/results/gallery/catalog.json",
+      "moves": 521,
+      "variant": "B",
+      "bytes": 50801,
+      "categories": [
+        "most_captures"
+      ]
+    },
+    {
+      "file": "hoofd/B-offer-terugslag.staxxit",
+      "trace_file": "analysis/results/gallery/games/B-matrix_B_w00_b11-g000005673.json",
+      "source_sha256": "1cc759ceba5746809229bce49dbb52919dfd3ab6d278567b0423aceb670fc61c",
+      "sha256": "11f12adeac0e11b5c671b435362d0345220dcc0e0f93406add9ba0bc3db2ff12",
+      "source_outcome": 1,
+      "source_termination": "black",
+      "source_file_id": "B-matrix_B_w00_b11-g000005673",
+      "source_catalog": "analysis/results/gallery/catalog.json",
+      "moves": 144,
+      "variant": "B",
+      "bytes": 14181,
+      "categories": [
+        "tactical_offer"
+      ]
+    },
+    {
+      "file": "hoofd/B-strategie-00.staxxit",
+      "trace_file": "analysis/results/gallery/games/B-matrix_B_w00_b00-g000001902.json",
+      "source_sha256": "cdebb21abcc08154f1d3a1862c368e0363cbfe35b90cb8d3874c36715c985977",
+      "sha256": "5b9bc0e05a1c4f802d4bec17966456e51a5feb562ed9efd07594df9d09735430",
+      "source_outcome": 0,
+      "source_termination": "white",
+      "source_file_id": "B-matrix_B_w00_b00-g000001902",
+      "source_catalog": "analysis/results/gallery/catalog.json",
+      "moves": 249,
+      "variant": "B",
+      "bytes": 24147,
+      "categories": [
+        "best_strategy"
+      ]
+    },
+    {
+      "file": "hoofd/B-strategie-01.staxxit",
+      "trace_file": "analysis/results/gallery/games/B-matrix_B_w07_b01-g000007034.json",
+      "source_sha256": "093b7dc385293866832d5da14a46c678a36a71bade1fc5d8225cebfec19856af",
+      "sha256": "adcd02771cd6d5087a95cb7475b89c1a6b0b14d16828d75d87ad7c406b5f415d",
+      "source_outcome": 1,
+      "source_termination": "black",
+      "source_file_id": "B-matrix_B_w07_b01-g000007034",
+      "source_catalog": "analysis/results/gallery/catalog.json",
+      "moves": 208,
+      "variant": "B",
+      "bytes": 20214,
+      "categories": [
+        "best_strategy"
+      ]
+    },
+    {
+      "file": "hoofd/B-strategie-02.staxxit",
+      "trace_file": "analysis/results/gallery/games/B-matrix_B_w02_b02-g000007159.json",
+      "source_sha256": "665868eac6f1fcf7e40513e6b1cf6f0785cd29e9968f5976e1b873bb0e48f628",
+      "sha256": "36ac6f13d851d77f51d9f4408fcc296d8149f80512f53984b0c7af5bd4928662",
+      "source_outcome": 0,
+      "source_termination": "white",
+      "source_file_id": "B-matrix_B_w02_b02-g000007159",
+      "source_catalog": "analysis/results/gallery/catalog.json",
+      "moves": 193,
+      "variant": "B",
+      "bytes": 18737,
+      "categories": [
+        "best_strategy"
+      ]
+    },
+    {
+      "file": "hoofd/B-strategie-03.staxxit",
+      "trace_file": "analysis/results/gallery/games/B-matrix_B_w00_b03-g000007565.json",
+      "source_sha256": "c2b4d730e4138ec8f40e66bf5c8b2302a393e2b0eda3af7d8206dfa37b7dec86",
+      "sha256": "e48dbe1632c84f50b348826c0fae739419a70b8373c309bb98f5d2b17773639e",
+      "source_outcome": 1,
+      "source_termination": "black",
+      "source_file_id": "B-matrix_B_w00_b03-g000007565",
+      "source_catalog": "analysis/results/gallery/catalog.json",
+      "moves": 222,
+      "variant": "B",
+      "bytes": 21446,
+      "categories": [
+        "best_strategy"
+      ]
+    },
+    {
+      "file": "hoofd/B-strategie-04.staxxit",
+      "trace_file": "analysis/results/gallery/games/B-matrix_B_w04_b04-g000001141.json",
+      "source_sha256": "bbec74a18f54ae878e46d237a609c1a67865be2c486bc74aba43cbb24d474763",
+      "sha256": "e26fe9936c5a13610f557f514ef4e83c2b240f706071e5e756aa81d2938f0b2a",
+      "source_outcome": 1,
+      "source_termination": "black",
+      "source_file_id": "B-matrix_B_w04_b04-g000001141",
+      "source_catalog": "analysis/results/gallery/catalog.json",
+      "moves": 174,
+      "variant": "B",
+      "bytes": 16841,
+      "categories": [
+        "best_strategy"
+      ]
+    },
+    {
+      "file": "hoofd/B-strategie-05.staxxit",
+      "trace_file": "analysis/results/gallery/games/B-matrix_B_w07_b05-g000000916.json",
+      "source_sha256": "b5893c9f4311a6a30898162d8ccfee56fc405c0ff8a89f7683cb2a87b4ab33c2",
+      "sha256": "28a7fc50f765109d16452e317e63b58381f0dd1a63fb47368958d38765cc33f6",
+      "source_outcome": 1,
+      "source_termination": "black",
+      "source_file_id": "B-matrix_B_w07_b05-g000000916",
+      "source_catalog": "analysis/results/gallery/catalog.json",
+      "moves": 414,
+      "variant": "B",
+      "bytes": 40292,
+      "categories": [
+        "best_strategy"
+      ]
+    },
+    {
+      "file": "hoofd/B-strategie-06.staxxit",
+      "trace_file": "analysis/results/gallery/games/B-matrix_B_w06_b07-g000007437.json",
+      "source_sha256": "7fd9b9f941e2876870096eec97c741d81125c04f3a46e49337d3545038b1aaa8",
+      "sha256": "b3867563d3a8d68472e25cbe755048df67a76f884f91799058023d630db15688",
+      "source_outcome": 0,
+      "source_termination": "white",
+      "source_file_id": "B-matrix_B_w06_b07-g000007437",
+      "source_catalog": "analysis/results/gallery/catalog.json",
+      "moves": 124,
+      "variant": "B",
+      "bytes": 11933,
+      "categories": [
+        "best_strategy"
+      ]
+    },
+    {
+      "file": "hoofd/B-strategie-07.staxxit",
+      "trace_file": "analysis/results/gallery/games/B-matrix_B_w07_b09-g000004862.json",
+      "source_sha256": "3b75fea17ee1816ba83529e7a58d292afd59c9268ef178c66b9be003a4d7cc2f",
+      "sha256": "27748742a73d8754dcf7a03c41f08a45a54d6b5dab67ffe102759ce0a56a3433",
+      "source_outcome": 0,
+      "source_termination": "white",
+      "source_file_id": "B-matrix_B_w07_b09-g000004862",
+      "source_catalog": "analysis/results/gallery/catalog.json",
+      "moves": 213,
+      "variant": "B",
+      "bytes": 20614,
+      "categories": [
+        "best_strategy"
+      ]
+    },
+    {
+      "file": "hoofd/B-strategie-08.staxxit",
+      "trace_file": "analysis/results/gallery/games/B-matrix_B_w08_b01-g000004863.json",
+      "source_sha256": "2a4958ebc7bee4f31a09207d9206170b84468072497208df742bf8b85893e96c",
+      "sha256": "2593cc976400d6e209db996146ed6fe225871244196a319b5009d05fe0086030",
+      "source_outcome": 0,
+      "source_termination": "white",
+      "source_file_id": "B-matrix_B_w08_b01-g000004863",
+      "source_catalog": "analysis/results/gallery/catalog.json",
+      "moves": 84,
+      "variant": "B",
+      "bytes": 8077,
+      "categories": [
+        "best_strategy"
+      ]
+    },
+    {
+      "file": "hoofd/B-strategie-09.staxxit",
+      "trace_file": "analysis/results/gallery/games/B-matrix_B_w09_b07-g000006282.json",
+      "source_sha256": "d59d6340c3a5f7ae471a891577da27ea7ca6f73b96373d1652d9a6c149128b6f",
+      "sha256": "cbd90df3d1fa69853d5596f368f3e3f919201bf0b07eb019297c815763c6da1f",
+      "source_outcome": 0,
+      "source_termination": "white",
+      "source_file_id": "B-matrix_B_w09_b07-g000006282",
+      "source_catalog": "analysis/results/gallery/catalog.json",
+      "moves": 265,
+      "variant": "B",
+      "bytes": 25623,
+      "categories": [
+        "best_strategy"
+      ]
+    },
+    {
+      "file": "hoofd/B-strategie-10.staxxit",
+      "trace_file": "analysis/results/gallery/games/B-matrix_B_w10_b01-g000004184.json",
+      "source_sha256": "41b439e25dec7fd806ec32467dc717405640e2a55f7cebea7daf3ab4ac8f8ae8",
+      "sha256": "d80ae734f4227e9cb56bdc4514ff49328e9b8e2641cfe70fc24dc7bdd45da154",
+      "source_outcome": 0,
+      "source_termination": "white",
+      "source_file_id": "B-matrix_B_w10_b01-g000004184",
+      "source_catalog": "analysis/results/gallery/catalog.json",
+      "moves": 175,
+      "variant": "B",
+      "bytes": 16914,
+      "categories": [
+        "best_strategy"
+      ]
+    },
+    {
+      "file": "hoofd/B-strategie-11.staxxit",
+      "trace_file": "analysis/results/gallery/games/B-matrix_B_w10_b11-g000002944.json",
+      "source_sha256": "bb13c7096fa0bf596b732a621b150b22300b5fc6bdee4346af63e541aecc1b66",
+      "sha256": "c85cea83bff510729d9a5cc5ee88ddef6d96b24178610ca9be026321e2a40ae5",
+      "source_outcome": 1,
+      "source_termination": "black",
+      "source_file_id": "B-matrix_B_w10_b11-g000002944",
+      "source_catalog": "analysis/results/gallery/catalog.json",
+      "moves": 360,
+      "variant": "B",
+      "bytes": 34899,
+      "categories": [
+        "best_strategy"
+      ]
+    },
+    {
+      "file": "lang/A-comeback-score.staxxit",
+      "trace_file": "analysis/results/gallery_long/games/A-baseline_A-g000048448.json",
+      "source_sha256": "185619c97743e8b7c84feb39f60308f5ebd6237c20eb5330de8e5d84428480cd",
+      "sha256": "a8854357b8aebb14313a98b1592b5b73ca2c89d6d24ca3b82e00a13140566db7",
+      "source_outcome": 1,
+      "source_termination": "black",
+      "source_file_id": "A-baseline_A-g000048448",
+      "source_catalog": "analysis/results/gallery_long/catalog.json",
+      "moves": 202,
+      "variant": "A",
+      "bytes": 19601,
+      "categories": [
+        "comeback_score"
+      ]
+    },
+    {
+      "file": "lang/A-comeback-stapelcontrole.staxxit",
+      "trace_file": "analysis/results/gallery_long/games/A-baseline_A-g000042836.json",
+      "source_sha256": "abf53d47eb5be20f709931377f9125f47b74970f7f6658f02ae0a16747deea6a",
+      "sha256": "b9b8cfcbff46ba272486b03ba819205f32630c2288cab7ec456a7578ced2db16",
+      "source_outcome": 1,
+      "source_termination": "black",
+      "source_file_id": "A-baseline_A-g000042836",
+      "source_catalog": "analysis/results/gallery_long/catalog.json",
+      "moves": 84,
+      "variant": "A",
+      "bytes": 8291,
+      "categories": [
+        "comeback_material"
+      ]
+    },
+    {
+      "file": "lang/A-hoogste-stapel.staxxit",
+      "trace_file": "analysis/results/gallery_long/games/A-baseline_A-g000033173.json",
+      "source_sha256": "ed5a48ca3acd441d6b2cab9aa8d0d13458c1a1a8cc94d14055eb6d888de81cf7",
+      "sha256": "ba1736835e65633a8f82717b02ce13b195c2db374ae0594cbad85f2c170d5269",
+      "source_outcome": 1,
+      "source_termination": "black",
+      "source_file_id": "A-baseline_A-g000033173",
+      "source_catalog": "analysis/results/gallery_long/catalog.json",
+      "moves": 288,
+      "variant": "A",
+      "bytes": 27985,
+      "categories": [
+        "tallest_stack"
+      ]
+    },
+    {
+      "file": "lang/A-kortste-winst.staxxit",
+      "trace_file": "analysis/results/gallery_long/games/A-baseline_A-g000082262.json",
+      "source_sha256": "f7c1050bd3089c5dd8373f3e877f7b6cacbceb58901a367c04e9278d87a79b15",
+      "sha256": "97f896fe94dd02cb3426d9f1e8f26e13cf1518d0a03eba9a7bfb7d651a43e38e",
+      "source_outcome": 1,
+      "source_termination": "black",
+      "source_file_id": "A-baseline_A-g000082262",
+      "source_catalog": "analysis/results/gallery_long/catalog.json",
+      "moves": 66,
+      "variant": "A",
+      "bytes": 6352,
+      "categories": [
+        "shortest_won"
+      ]
+    },
+    {
+      "file": "lang/A-langste-reguliere.staxxit",
+      "trace_file": "analysis/results/gallery_long/games/A-baseline_A-g000053221.json",
+      "source_sha256": "679d9a295641345acc83a8780230bc7a5f8fdc44801f3a61884e21b8b21c71b0",
+      "sha256": "9a50b1219e4141e9fc52b49cdac28dacfe29cfda880683613f6cee935afe6e49",
+      "source_outcome": 1,
+      "source_termination": "black",
+      "source_file_id": "A-baseline_A-g000053221",
+      "source_catalog": "analysis/results/gallery_long/catalog.json",
+      "moves": 2246,
+      "variant": "A",
+      "bytes": 217248,
+      "categories": [
+        "longest_regular"
+      ]
+    },
+    {
+      "file": "lang/A-langste-waargenomen.staxxit",
+      "trace_file": "analysis/results/gallery_long/games/A-baseline_A-g000013752.json",
+      "source_sha256": "d24d9741f5dccb4dd111f1db17f2479505e70ca5d1882b84ba29f48c039e38a5",
+      "sha256": "5700e95aaeaae6ff973ec5674beff765ff104080d6e48dcec6d473e9c22cb5e5",
+      "source_outcome": 3,
+      "source_termination": "repeat",
+      "source_file_id": "A-baseline_A-g000013752",
+      "source_catalog": "analysis/results/gallery_long/catalog.json",
+      "moves": 2846,
+      "variant": "A",
+      "bytes": 275440,
+      "categories": [
+        "longest_observed"
+      ]
+    },
+    {
+      "file": "lang/A-meeste-slagzetten.staxxit",
+      "trace_file": "analysis/results/gallery_long/games/A-baseline_A-g000088322.json",
+      "source_sha256": "32e2ae147971c94174a0013f9edfb51e1f04c547a4acf4de8611910f2cd816c9",
+      "sha256": "d07ad3a391058a28beb6141251ef73fd154b31840ce64c4b0f6de2120ec94cf0",
+      "source_outcome": 0,
+      "source_termination": "white",
+      "source_file_id": "A-baseline_A-g000088322",
+      "source_catalog": "analysis/results/gallery_long/catalog.json",
+      "moves": 385,
+      "variant": "A",
+      "bytes": 37529,
+      "categories": [
+        "most_captures"
+      ]
+    },
+    {
+      "file": "lang/A-offer-terugslag.staxxit",
+      "trace_file": "analysis/results/gallery_long/games/A-baseline_A-g000008016.json",
+      "source_sha256": "41c0e96602250c6db24734779a52c0edf887471d06d12f6468d9201b36a31a09",
+      "sha256": "c509a51a991044c64794d1d02d813972c5e430efa4b432d6e0ab44bff7ebf5b9",
+      "source_outcome": 1,
+      "source_termination": "black",
+      "source_file_id": "A-baseline_A-g000008016",
+      "source_catalog": "analysis/results/gallery_long/catalog.json",
+      "moves": 227,
+      "variant": "A",
+      "bytes": 22235,
+      "categories": [
+        "tactical_offer"
+      ]
+    },
+    {
+      "file": "lang/B-comeback-score.staxxit",
+      "trace_file": "analysis/results/gallery_long/games/B-baseline_B-g000031382.json",
+      "source_sha256": "5b9188195d7d5a4e4f5b716b36a2dffb95e5383b657b5866dc5d0710cfddc477",
+      "sha256": "5843cc023cb037f1d2d13aca6378e997a89a1848bec6e186a5d914939c41ab77",
+      "source_outcome": 0,
+      "source_termination": "white",
+      "source_file_id": "B-baseline_B-g000031382",
+      "source_catalog": "analysis/results/gallery_long/catalog.json",
+      "moves": 135,
+      "variant": "B",
+      "bytes": 13157,
+      "categories": [
+        "comeback_score"
+      ]
+    },
+    {
+      "file": "lang/B-comeback-stapelcontrole.staxxit",
+      "trace_file": "analysis/results/gallery_long/games/B-baseline_B-g000004319.json",
+      "source_sha256": "cb7250fef86670f731f6b91635fba994af429b964952b45260c7dae462e8595b",
+      "sha256": "7ed37566c176bd17b05f684c5bd336309042646138de5c5798d3ae14ab9a7fa9",
+      "source_outcome": 1,
+      "source_termination": "black",
+      "source_file_id": "B-baseline_B-g000004319",
+      "source_catalog": "analysis/results/gallery_long/catalog.json",
+      "moves": 82,
+      "variant": "B",
+      "bytes": 8046,
+      "categories": [
+        "comeback_material"
+      ]
+    },
+    {
+      "file": "lang/B-hoogste-stapel.staxxit",
+      "trace_file": "analysis/results/gallery_long/games/B-baseline_B-g000053782.json",
+      "source_sha256": "4e7272b2926a400347b2c0ccba3bdec6354c77914370c6613e7cd81f51531cbd",
+      "sha256": "60ad51602d8443afe79ce826b40724d5e14bfda665371a7d2201e791167b4a75",
+      "source_outcome": 1,
+      "source_termination": "black",
+      "source_file_id": "B-baseline_B-g000053782",
+      "source_catalog": "analysis/results/gallery_long/catalog.json",
+      "moves": 307,
+      "variant": "B",
+      "bytes": 29777,
+      "categories": [
+        "tallest_stack"
+      ]
+    },
+    {
+      "file": "lang/B-kortste-winst.staxxit",
+      "trace_file": "analysis/results/gallery_long/games/B-baseline_B-g000019771.json",
+      "source_sha256": "a9a6f969a0df713583bba7a34580d60f9fcf6c0b7e4f4a2642a49d2c8af40959",
+      "sha256": "0bebf6b6d66157c8f12a62447fb3d3ea9361d503bc1e1010cae4fb7177e2b1e0",
+      "source_outcome": 1,
+      "source_termination": "black",
+      "source_file_id": "B-baseline_B-g000019771",
+      "source_catalog": "analysis/results/gallery_long/catalog.json",
+      "moves": 67,
+      "variant": "B",
+      "bytes": 6412,
+      "categories": [
+        "shortest_won"
+      ]
+    },
+    {
+      "file": "lang/B-langste-reguliere.staxxit",
+      "trace_file": "analysis/results/gallery_long/games/B-baseline_B-g000022974.json",
+      "source_sha256": "a0b1d0b76be9b39aed6a0f93c62311049d6711277ae3ccb3246e333f7a988175",
+      "sha256": "7207c844e138d6c635aace8bb80b736d61f81b266ee8085ca440c0aad4563061",
+      "source_outcome": 1,
+      "source_termination": "black",
+      "source_file_id": "B-baseline_B-g000022974",
+      "source_catalog": "analysis/results/gallery_long/catalog.json",
+      "moves": 2751,
+      "variant": "B",
+      "bytes": 266335,
+      "categories": [
+        "longest_observed",
+        "longest_regular"
+      ]
+    },
+    {
+      "file": "lang/B-meeste-slagzetten.staxxit",
+      "trace_file": "analysis/results/gallery_long/games/B-baseline_B-g000013163.json",
+      "source_sha256": "bf1e476b01c28d3addcdedd7f80b4bfbc22eb0234fe473c49cba66839c7b3c63",
+      "sha256": "1df19b53f20edbd37df79354f743a5e86d6ad6fa4622244d6b34c026a18b11c6",
+      "source_outcome": 1,
+      "source_termination": "black",
+      "source_file_id": "B-baseline_B-g000013163",
+      "source_catalog": "analysis/results/gallery_long/catalog.json",
+      "moves": 458,
+      "variant": "B",
+      "bytes": 44601,
+      "categories": [
+        "most_captures"
+      ]
+    },
+    {
+      "file": "lang/B-offer-terugslag.staxxit",
+      "trace_file": "analysis/results/gallery_long/games/B-baseline_B-g000007129.json",
+      "source_sha256": "303885479b64613866a94c96eb25d0b9027abfabe1533358e7f24757ec32da58",
+      "sha256": "720702e5ac48a5ed0d8a8857c68c9ef014ac81bf2e43c42dbb3bca2cafd4ed38",
+      "source_outcome": 1,
+      "source_termination": "black",
+      "source_file_id": "B-baseline_B-g000007129",
+      "source_catalog": "analysis/results/gallery_long/catalog.json",
+      "moves": 142,
+      "variant": "B",
+      "bytes": 13937,
+      "categories": [
+        "tactical_offer"
+      ]
+    }
+  ],
+  "total_files": 55,
+  "total_moves": 20532
+}

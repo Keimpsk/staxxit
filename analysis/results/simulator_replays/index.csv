@@ -1,0 +1,56 @@
+file,variant,moves,research_ending,categories,source_trace
+hoofd/A-comeback-score.staxxit,A,509,white,Grootste comeback in ontsnappingsscore,analysis/results/gallery/games/A-matrix_A_w01_b08-g000006701.json
+hoofd/A-comeback-stapelcontrole.staxxit,A,84,black,Grootste comeback in stapelcontrole,analysis/results/gallery/games/A-baseline_A-g000042836.json
+hoofd/A-hoogste-stapel.staxxit,A,116,black,Hoogste stapel,analysis/results/gallery/games/A-matrix_A_w10_b05-g000002222.json
+hoofd/A-kortste-winst.staxxit,A,64,black,Kortste gewonnen partij,analysis/results/gallery/games/A-matrix_A_w09_b06-g000004907.json
+hoofd/A-langste-reguliere.staxxit,A,536,black,Langste regulier beëindigde partij,analysis/results/gallery/games/A-baseline_A-g000022583.json
+hoofd/A-langste-waargenomen.staxxit,A,536,limit,Langste waargenomen partij,analysis/results/gallery/games/A-baseline_A-g000000027.json
+hoofd/A-meeste-slagzetten.staxxit,A,536,limit,Meeste slagzetten,analysis/results/gallery/games/A-baseline_A-g000397409.json
+hoofd/A-offer-terugslag.staxxit,A,222,white,Offer- en terugslagmotief,analysis/results/gallery/games/A-baseline_A-g000750520.json
+hoofd/A-strategie-00.staxxit,A,431,white,Gewonnen voorbeeld per plaatsingsstrategie,analysis/results/gallery/games/A-matrix_A_w00_b10-g000008554.json
+hoofd/A-strategie-01.staxxit,A,190,black,Gewonnen voorbeeld per plaatsingsstrategie,analysis/results/gallery/games/A-matrix_A_w07_b01-g000007616.json
+hoofd/A-strategie-02.staxxit,A,271,white,Gewonnen voorbeeld per plaatsingsstrategie,analysis/results/gallery/games/A-matrix_A_w02_b09-g000002445.json
+hoofd/A-strategie-03.staxxit,A,169,white,Gewonnen voorbeeld per plaatsingsstrategie,analysis/results/gallery/games/A-matrix_A_w03_b00-g000001585.json
+hoofd/A-strategie-04.staxxit,A,174,black,Gewonnen voorbeeld per plaatsingsstrategie,analysis/results/gallery/games/A-matrix_A_w01_b04-g000003672.json
+hoofd/A-strategie-05.staxxit,A,212,black,Gewonnen voorbeeld per plaatsingsstrategie,analysis/results/gallery/games/A-matrix_A_w07_b05-g000007372.json
+hoofd/A-strategie-06.staxxit,A,124,black,Gewonnen voorbeeld per plaatsingsstrategie,analysis/results/gallery/games/A-matrix_A_w07_b06-g000008609.json
+hoofd/A-strategie-07.staxxit,A,152,black,Gewonnen voorbeeld per plaatsingsstrategie,analysis/results/gallery/games/A-matrix_A_w05_b07-g000000302.json
+hoofd/A-strategie-08.staxxit,A,160,black,Gewonnen voorbeeld per plaatsingsstrategie,analysis/results/gallery/games/A-matrix_A_w05_b08-g000009614.json
+hoofd/A-strategie-09.staxxit,A,185,white,Gewonnen voorbeeld per plaatsingsstrategie,analysis/results/gallery/games/A-matrix_A_w09_b10-g000007123.json
+hoofd/A-strategie-10.staxxit,A,344,black,Gewonnen voorbeeld per plaatsingsstrategie,analysis/results/gallery/games/A-matrix_A_w05_b10-g000005999.json
+hoofd/A-strategie-11.staxxit,A,165,white,Gewonnen voorbeeld per plaatsingsstrategie,analysis/results/gallery/games/A-matrix_A_w11_b02-g000005593.json
+hoofd/B-comeback-score.staxxit,B,337,white,Grootste comeback in ontsnappingsscore,analysis/results/gallery/games/B-matrix_B_w05_b08-g000001749.json
+hoofd/B-comeback-stapelcontrole.staxxit,B,82,black,Grootste comeback in stapelcontrole,analysis/results/gallery/games/B-baseline_B-g000004319.json
+hoofd/B-hoogste-stapel.staxxit,B,166,white,Hoogste stapel,analysis/results/gallery/games/B-baseline_B-g000802613.json
+hoofd/B-kortste-winst.staxxit,B,63,white,Kortste gewonnen partij,analysis/results/gallery/games/B-matrix_B_w08_b05-g000002508.json
+hoofd/B-langste-reguliere.staxxit,B,536,black,Langste regulier beëindigde partij,analysis/results/gallery/games/B-baseline_B-g000028308.json
+hoofd/B-langste-waargenomen.staxxit,B,536,limit,Langste waargenomen partij,analysis/results/gallery/games/B-baseline_B-g000000019.json
+hoofd/B-meeste-slagzetten.staxxit,B,521,black,Meeste slagzetten,analysis/results/gallery/games/B-matrix_B_w11_b07-g000006782.json
+hoofd/B-offer-terugslag.staxxit,B,144,black,Offer- en terugslagmotief,analysis/results/gallery/games/B-matrix_B_w00_b11-g000005673.json
+hoofd/B-strategie-00.staxxit,B,249,white,Gewonnen voorbeeld per plaatsingsstrategie,analysis/results/gallery/games/B-matrix_B_w00_b00-g000001902.json
+hoofd/B-strategie-01.staxxit,B,208,black,Gewonnen voorbeeld per plaatsingsstrategie,analysis/results/gallery/games/B-matrix_B_w07_b01-g000007034.json
+hoofd/B-strategie-02.staxxit,B,193,white,Gewonnen voorbeeld per plaatsingsstrategie,analysis/results/gallery/games/B-matrix_B_w02_b02-g000007159.json
+hoofd/B-strategie-03.staxxit,B,222,black,Gewonnen voorbeeld per plaatsingsstrategie,analysis/results/gallery/games/B-matrix_B_w00_b03-g000007565.json
+hoofd/B-strategie-04.staxxit,B,174,black,Gewonnen voorbeeld per plaatsingsstrategie,analysis/results/gallery/games/B-matrix_B_w04_b04-g000001141.json
+hoofd/B-strategie-05.staxxit,B,414,black,Gewonnen voorbeeld per plaatsingsstrategie,analysis/results/gallery/games/B-matrix_B_w07_b05-g000000916.json
+hoofd/B-strategie-06.staxxit,B,124,white,Gewonnen voorbeeld per plaatsingsstrategie,analysis/results/gallery/games/B-matrix_B_w06_b07-g000007437.json
+hoofd/B-strategie-07.staxxit,B,213,white,Gewonnen voorbeeld per plaatsingsstrategie,analysis/results/gallery/games/B-matrix_B_w07_b09-g000004862.json
+hoofd/B-strategie-08.staxxit,B,84,white,Gewonnen voorbeeld per plaatsingsstrategie,analysis/results/gallery/games/B-matrix_B_w08_b01-g000004863.json
+hoofd/B-strategie-09.staxxit,B,265,white,Gewonnen voorbeeld per plaatsingsstrategie,analysis/results/gallery/games/B-matrix_B_w09_b07-g000006282.json
+hoofd/B-strategie-10.staxxit,B,175,white,Gewonnen voorbeeld per plaatsingsstrategie,analysis/results/gallery/games/B-matrix_B_w10_b01-g000004184.json
+hoofd/B-strategie-11.staxxit,B,360,black,Gewonnen voorbeeld per plaatsingsstrategie,analysis/results/gallery/games/B-matrix_B_w10_b11-g000002944.json
+lang/A-comeback-score.staxxit,A,202,black,Grootste comeback in ontsnappingsscore,analysis/results/gallery_long/games/A-baseline_A-g000048448.json
+lang/A-comeback-stapelcontrole.staxxit,A,84,black,Grootste comeback in stapelcontrole,analysis/results/gallery_long/games/A-baseline_A-g000042836.json
+lang/A-hoogste-stapel.staxxit,A,288,black,Hoogste stapel,analysis/results/gallery_long/games/A-baseline_A-g000033173.json
+lang/A-kortste-winst.staxxit,A,66,black,Kortste gewonnen partij,analysis/results/gallery_long/games/A-baseline_A-g000082262.json
+lang/A-langste-reguliere.staxxit,A,2246,black,Langste regulier beëindigde partij,analysis/results/gallery_long/games/A-baseline_A-g000053221.json
+lang/A-langste-waargenomen.staxxit,A,2846,repeat,Langste waargenomen partij,analysis/results/gallery_long/games/A-baseline_A-g000013752.json
+lang/A-meeste-slagzetten.staxxit,A,385,white,Meeste slagzetten,analysis/results/gallery_long/games/A-baseline_A-g000088322.json
+lang/A-offer-terugslag.staxxit,A,227,black,Offer- en terugslagmotief,analysis/results/gallery_long/games/A-baseline_A-g000008016.json
+lang/B-comeback-score.staxxit,B,135,white,Grootste comeback in ontsnappingsscore,analysis/results/gallery_long/games/B-baseline_B-g000031382.json
+lang/B-comeback-stapelcontrole.staxxit,B,82,black,Grootste comeback in stapelcontrole,analysis/results/gallery_long/games/B-baseline_B-g000004319.json
+lang/B-hoogste-stapel.staxxit,B,307,black,Hoogste stapel,analysis/results/gallery_long/games/B-baseline_B-g000053782.json
+lang/B-kortste-winst.staxxit,B,67,black,Kortste gewonnen partij,analysis/results/gallery_long/games/B-baseline_B-g000019771.json
+lang/B-langste-reguliere.staxxit,B,2751,black,Langste waargenomen partij; Langste regulier beëindigde partij,analysis/results/gallery_long/games/B-baseline_B-g000022974.json
+lang/B-meeste-slagzetten.staxxit,B,458,black,Meeste slagzetten,analysis/results/gallery_long/games/B-baseline_B-g000013163.json
+lang/B-offer-terugslag.staxxit,B,142,black,Offer- en terugslagmotief,analysis/results/gallery_long/games/B-baseline_B-g000007129.json

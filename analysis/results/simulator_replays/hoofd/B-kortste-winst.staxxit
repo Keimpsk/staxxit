@@ -1,0 +1,372 @@
+{
+  "version": 1,
+  "variant": "B",
+  "rules": {
+    "allowPass": true,
+    "endOnTwoPasses": true,
+    "threefold": true,
+    "restartAtCenter": true
+  },
+  "date": "2026-11-25T16:11:57Z",
+  "players": {
+    "W": "Onderzoek: Naar buitenring",
+    "B": "Onderzoek: Compact"
+  },
+  "initial": {
+    "board": {},
+    "current": "W",
+    "piecesLeft": {
+      "W": 18,
+      "B": 18
+    }
+  },
+  "moves": [
+    {
+      "player": "W",
+      "kind": "place",
+      "to": "0,0",
+      "comment": "Bron: B-matrix_B_w08_b05-g000002508; seed 16228259881896218526; partij-index 2508. De datum is de exportdatum; de oorspronkelijke partijtijd is niet vastgelegd."
+    },
+    {
+      "player": "B",
+      "kind": "place",
+      "to": "1,0"
+    },
+    {
+      "player": "W",
+      "kind": "place",
+      "to": "2,-1"
+    },
+    {
+      "player": "B",
+      "kind": "place",
+      "to": "2,0"
+    },
+    {
+      "player": "W",
+      "kind": "place",
+      "to": "3,-1"
+    },
+    {
+      "player": "B",
+      "kind": "place",
+      "to": "1,1"
+    },
+    {
+      "player": "W",
+      "kind": "place",
+      "to": "4,-2"
+    },
+    {
+      "player": "B",
+      "kind": "capture",
+      "to": "2,-1",
+      "from": "1,0"
+    },
+    {
+      "player": "W",
+      "kind": "place",
+      "to": "5,-2"
+    },
+    {
+      "player": "B",
+      "kind": "place",
+      "to": "1,0"
+    },
+    {
+      "player": "W",
+      "kind": "place",
+      "to": "5,-1"
+    },
+    {
+      "player": "B",
+      "kind": "capture",
+      "to": "3,-1",
+      "from": "2,0"
+    },
+    {
+      "player": "W",
+      "kind": "place",
+      "to": "5,0"
+    },
+    {
+      "player": "B",
+      "kind": "place",
+      "to": "2,0"
+    },
+    {
+      "player": "W",
+      "kind": "place",
+      "to": "5,-3"
+    },
+    {
+      "player": "B",
+      "kind": "place",
+      "to": "2,1"
+    },
+    {
+      "player": "W",
+      "kind": "place",
+      "to": "4,1"
+    },
+    {
+      "player": "B",
+      "kind": "place",
+      "to": "3,0"
+    },
+    {
+      "player": "W",
+      "kind": "place",
+      "to": "5,-4"
+    },
+    {
+      "player": "B",
+      "kind": "capture",
+      "to": "5,-1",
+      "from": "3,-1"
+    },
+    {
+      "player": "W",
+      "kind": "place",
+      "to": "5,-5"
+    },
+    {
+      "player": "B",
+      "kind": "place",
+      "to": "3,-1"
+    },
+    {
+      "player": "W",
+      "kind": "place",
+      "to": "3,2"
+    },
+    {
+      "player": "B",
+      "kind": "place",
+      "to": "4,-1"
+    },
+    {
+      "player": "W",
+      "kind": "place",
+      "to": "2,3"
+    },
+    {
+      "player": "B",
+      "kind": "place",
+      "to": "4,0"
+    },
+    {
+      "player": "W",
+      "kind": "place",
+      "to": "4,-5"
+    },
+    {
+      "player": "B",
+      "kind": "capture",
+      "to": "5,-2",
+      "from": "4,-1"
+    },
+    {
+      "player": "W",
+      "kind": "place",
+      "to": "1,4"
+    },
+    {
+      "player": "B",
+      "kind": "place",
+      "to": "4,-1"
+    },
+    {
+      "player": "W",
+      "kind": "place",
+      "to": "3,-5"
+    },
+    {
+      "player": "B",
+      "kind": "place",
+      "to": "3,1"
+    },
+    {
+      "player": "W",
+      "kind": "capture",
+      "to": "4,0",
+      "from": "4,1"
+    },
+    {
+      "player": "B",
+      "kind": "place",
+      "to": "3,-2"
+    },
+    {
+      "player": "W",
+      "kind": "place",
+      "to": "2,-5"
+    },
+    {
+      "player": "B",
+      "kind": "place",
+      "to": "2,2"
+    },
+    {
+      "player": "W",
+      "kind": "place",
+      "to": "1,-5"
+    },
+    {
+      "player": "B",
+      "kind": "place",
+      "to": "1,2"
+    },
+    {
+      "player": "W",
+      "kind": "capture",
+      "to": "5,-2",
+      "from": "5,-3"
+    },
+    {
+      "player": "B",
+      "kind": "capture",
+      "to": "4,0",
+      "from": "3,1"
+    },
+    {
+      "player": "W",
+      "kind": "capture",
+      "to": "1,0",
+      "from": "0,0"
+    },
+    {
+      "player": "B",
+      "kind": "place",
+      "to": "3,1"
+    },
+    {
+      "player": "W",
+      "kind": "capture",
+      "to": "3,-1",
+      "from": "4,-2"
+    },
+    {
+      "player": "B",
+      "kind": "capture",
+      "to": "3,-1",
+      "from": "3,-2"
+    },
+    {
+      "player": "W",
+      "kind": "capture",
+      "to": "3,1",
+      "from": "3,2"
+    },
+    {
+      "player": "B",
+      "kind": "capture",
+      "to": "5,-2",
+      "from": "4,-1"
+    },
+    {
+      "player": "W",
+      "kind": "capture",
+      "to": "2,2",
+      "from": "2,3"
+    },
+    {
+      "player": "B",
+      "kind": "place",
+      "to": "4,-1"
+    },
+    {
+      "player": "W",
+      "kind": "capture",
+      "to": "4,0",
+      "from": "5,0"
+    },
+    {
+      "player": "B",
+      "kind": "place",
+      "to": "4,-2"
+    },
+    {
+      "player": "W",
+      "kind": "exit",
+      "to": "5,1",
+      "from": "3,1"
+    },
+    {
+      "player": "B",
+      "kind": "capture",
+      "to": "2,2",
+      "from": "1,2"
+    },
+    {
+      "player": "W",
+      "kind": "exit",
+      "to": "5,-6",
+      "from": "4,-5"
+    },
+    {
+      "player": "B",
+      "kind": "capture",
+      "to": "4,0",
+      "from": "4,-1"
+    },
+    {
+      "player": "W",
+      "kind": "exit",
+      "to": "3,-6",
+      "from": "3,-5"
+    },
+    {
+      "player": "B",
+      "kind": "capture",
+      "to": "1,0",
+      "from": "2,0"
+    },
+    {
+      "player": "W",
+      "kind": "move",
+      "to": "5,-3",
+      "from": "5,-4"
+    },
+    {
+      "player": "B",
+      "kind": "capture",
+      "to": "5,-3",
+      "from": "4,-2"
+    },
+    {
+      "player": "W",
+      "kind": "move",
+      "to": "0,-5",
+      "from": "1,-5"
+    },
+    {
+      "player": "B",
+      "kind": "capture",
+      "to": "5,-5",
+      "from": "5,-3"
+    },
+    {
+      "player": "W",
+      "kind": "exit",
+      "to": "0,-6",
+      "from": "0,-5"
+    },
+    {
+      "player": "B",
+      "kind": "capture",
+      "to": "2,-5",
+      "from": "5,-5"
+    },
+    {
+      "player": "W",
+      "kind": "exit",
+      "to": "1,5",
+      "from": "1,4"
+    }
+  ],
+  "result": {
+    "winner": "W",
+    "ending": "regular"
+  }
+}

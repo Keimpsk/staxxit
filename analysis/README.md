@@ -1,5 +1,11 @@
 # Staxxit onderzoeksengine
 
+De 55 bijzondere partijopnamen kunnen direct in de simulator worden geladen.
+Zie [SIMULATOR_REPLAY.md](SIMULATOR_REPLAY.md) en de
+[ZIP met .staxxit-bestanden](results/simulator_replays/staxxit-partijen.zip).
+De bestaande opnamen zijn omgezet en met de simulatorparser gecontroleerd;
+hiervoor zijn geen onderzoekspartijen opnieuw berekend.
+
 De nieuwe [partijgalerij](GALLERY.md) bewaart automatisch bijzondere partijen
 met volledige replaybestanden, zetlijsten en borddiagrammen. De hoofdgalerij
 is gebaseerd op 4.880.000 partijen; een aparte reeks laat dezelfde eerste

@@ -2,6 +2,16 @@
 
 ## Status op 25 november 2026
 
+Alle 55 partijdossiers zijn ook geëxporteerd naar `.staxxit` v1 voor
+`Keimpsk/staxxit-simulator`, branch `feature/game-rules-and-replay`.
+Alle 20.532 zetten en 20.587 frames komen overeen na laden door de echte
+simulatorparser op commit `6feac4bc4db75df842064e4496132a928a8706cb`.
+Zie `SIMULATOR_REPLAY.md`, `results/simulator_replays/README.md` en de ZIP.
+`export_simulator_replays.py` converteert bestaande trajecten zonder nieuwe
+simulaties. Zetlimietopnamen blijven open; herhaling houdt de eigen eindreden.
+De simulatorrepo is ongewijzigd. Bron- en exporthashes staan in het manifest
+en `results/simulator_replays/validation.json`.
+
 Aanvullend is automatische registratie van bijzondere partijen opgeleverd.
 De [galerij](GALLERY.md) bevat 40 dossiers uit een aparte reeks van 4.880.000
 partijen en 15 dossiers uit 200.000 herberekeningen met een ruimere zetlimiet.
