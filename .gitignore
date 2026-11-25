@@ -8,3 +8,5 @@ analysis/build/
 analysis/checkpoints/
 __pycache__/
 *.pyc
+analysis/*.exe
+analysis/benchmark_smoke*.json

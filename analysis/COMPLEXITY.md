@@ -156,10 +156,15 @@ beslissingsproblemen worden gedefinieerd.
 
 De boom van zetgeschiedenissen verschilt van de graaf van bordposities: meerdere
 geschiedenissen kunnen hetzelfde bord bereiken. Een eindige positievoorraad
-bewijst daarom geen eindige, onbeperkte spelboom. Zonder definitieve
-herhalingsregel is niet aangetoond dat alle mogelijke spelverlopen eindigen.
-Het feit dat materiaal behouden blijft is geen strikt dalende grootheid:
-gewone bewegingen zijn omkeerbaar wanneer geen slagplicht in de weg staat.
+bewijst daarom geen eindige, onbeperkte spelboom. Er zijn voor beide varianten
+concrete vanaf de beginpositie bereikbare vierzetten-cycli gevonden, opgeslagen
+in `results/cycle_witness_A.json` en `results/cycle_witness_B.json`. De prefixes
+hebben respectievelijk 56 en 64 zetten; zie de replaycontroles in `VALIDATION.md`.
+De cyclus herstelt de volledige toestand, bevat geen passen en bereikt geen
+reguliere eindstand. Zonder herhalings-/zetlimietregel kan zij dus onbeperkt
+worden herhaald: **de onbeperkte geschiedenisboom is voor beide varianten
+oneindig**. Dat zegt niets over de frequentie onder willekeurig spel of over
+een oneindig verloop bij optimaal spel.
 
 Voor de simulaties is de onderzochte boom expliciet begrensd door de gekozen
 zetlimiet en de voorlopige pas- en herhalingsregels. Een pas is één verplichte

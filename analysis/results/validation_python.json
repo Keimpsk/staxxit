@@ -1,0 +1,33 @@
+{
+  "status": "passed",
+  "seed": 20261125,
+  "games_per_variant": 1000,
+  "synthetic_states": 10000,
+  "turn_limit": 536,
+  "compared_states": 373682,
+  "compared_transitions": 351711,
+  "action_coverage": {
+    "p": 91048,
+    "c": 67679,
+    "m": 186598,
+    "s": 3105,
+    "e": 3281
+  },
+  "outcomes": {
+    "A": {
+      "draw": 230,
+      "black": 407,
+      "white": 348,
+      "limit": 15
+    },
+    "B": {
+      "black": 363,
+      "draw": 249,
+      "limit": 14,
+      "white": 374
+    }
+  },
+  "cpp_requests": 0,
+  "elapsed_seconds": 24.907916300000124,
+  "note": "Validation sample only; not a baseline simulation result."
+}

@@ -1,0 +1,102 @@
+{
+  "status": "passed",
+  "seed": 20261125,
+  "limit": 536,
+  "checks": [
+    {
+      "variant": "A",
+      "games": 1000,
+      "integer_fields": [
+        "games",
+        "turns",
+        "passes",
+        "center_resets",
+        "early_capture",
+        "early_escape",
+        "conservation_checks",
+        "outcomes",
+        "actions",
+        "phase_turns",
+        "actions_by_player",
+        "early_capture_by_player",
+        "early_escape_by_player",
+        "phase_choices",
+        "placement_phase_turns",
+        "placement_phase_choices",
+        "source_heights",
+        "max_heights",
+        "first_empty",
+        "duration",
+        "depth_n"
+      ],
+      "exact_full_game_comparison": true,
+      "thread_counts": [
+        1,
+        4
+      ],
+      "start_offset_batches": [
+        500,
+        500
+      ],
+      "forced_limit_test": true,
+      "outcomes": [
+        367,
+        402,
+        216,
+        0,
+        0,
+        15
+      ],
+      "conservation_checks": 165580
+    },
+    {
+      "variant": "B",
+      "games": 1000,
+      "integer_fields": [
+        "games",
+        "turns",
+        "passes",
+        "center_resets",
+        "early_capture",
+        "early_escape",
+        "conservation_checks",
+        "outcomes",
+        "actions",
+        "phase_turns",
+        "actions_by_player",
+        "early_capture_by_player",
+        "early_escape_by_player",
+        "phase_choices",
+        "placement_phase_turns",
+        "placement_phase_choices",
+        "source_heights",
+        "max_heights",
+        "first_empty",
+        "duration",
+        "depth_n"
+      ],
+      "exact_full_game_comparison": true,
+      "thread_counts": [
+        1,
+        4
+      ],
+      "start_offset_batches": [
+        500,
+        500
+      ],
+      "forced_limit_test": true,
+      "outcomes": [
+        363,
+        380,
+        243,
+        0,
+        0,
+        14
+      ],
+      "conservation_checks": 164647
+    }
+  ],
+  "elapsed_seconds": 12.012329000000136,
+  "executable_sha256": "7960cb96613703d91ca0ce7cfdc61064d6573cb191448e81d286fd8f31b5553c",
+  "note": "Audit sample, not the research baseline. RNG and move order match C++ to compare entire games exactly."
+}

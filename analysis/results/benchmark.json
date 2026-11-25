@@ -1,0 +1,96 @@
+{
+  "engine_sha256": "7960cb96613703d91ca0ce7cfdc61064d6573cb191448e81d286fd8f31b5553c",
+  "note": "Single measured trial per condition; shared machine, thermal/load effects uncontrolled.",
+  "rows": [
+    {
+      "variant": "A",
+      "threads": 1,
+      "games": 30000,
+      "elapsed_seconds": 5.364466600000014,
+      "games_per_second": 5592.354699346981,
+      "turns_per_second": 915283.5437543757,
+      "outcome_sha256": "0da8e6494a3a39fee046da4c5a3e89f50a49d84d0845dc08e8efb286fc87d7c1"
+    },
+    {
+      "variant": "A",
+      "threads": 4,
+      "games": 30000,
+      "elapsed_seconds": 1.442319600000019,
+      "games_per_second": 20799.828276617474,
+      "turns_per_second": 3404244.107893934,
+      "outcome_sha256": "0da8e6494a3a39fee046da4c5a3e89f50a49d84d0845dc08e8efb286fc87d7c1"
+    },
+    {
+      "variant": "A",
+      "threads": 8,
+      "games": 30000,
+      "elapsed_seconds": 0.8600086000001284,
+      "games_per_second": 34883.372096506384,
+      "turns_per_second": 5709254.535360771,
+      "outcome_sha256": "0da8e6494a3a39fee046da4c5a3e89f50a49d84d0845dc08e8efb286fc87d7c1"
+    },
+    {
+      "variant": "A",
+      "threads": 16,
+      "games": 30000,
+      "elapsed_seconds": 0.6649969000000056,
+      "games_per_second": 45112.99225605375,
+      "turns_per_second": 7383505.096038732,
+      "outcome_sha256": "0da8e6494a3a39fee046da4c5a3e89f50a49d84d0845dc08e8efb286fc87d7c1"
+    },
+    {
+      "variant": "A",
+      "threads": 32,
+      "games": 30000,
+      "elapsed_seconds": 0.4918225999999777,
+      "games_per_second": 60997.60360748238,
+      "turns_per_second": 9983290.72311891,
+      "outcome_sha256": "0da8e6494a3a39fee046da4c5a3e89f50a49d84d0845dc08e8efb286fc87d7c1"
+    },
+    {
+      "variant": "B",
+      "threads": 1,
+      "games": 30000,
+      "elapsed_seconds": 5.956142699999873,
+      "games_per_second": 5036.8168647135735,
+      "turns_per_second": 826648.2601231339,
+      "outcome_sha256": "0256cebcb75038e11f226c3971ffaf125bb911cac17cfc7f2b521fe36a0fcb03"
+    },
+    {
+      "variant": "B",
+      "threads": 4,
+      "games": 30000,
+      "elapsed_seconds": 1.5757734000001165,
+      "games_per_second": 19038.270350291343,
+      "turns_per_second": 3124583.141205224,
+      "outcome_sha256": "0256cebcb75038e11f226c3971ffaf125bb911cac17cfc7f2b521fe36a0fcb03"
+    },
+    {
+      "variant": "B",
+      "threads": 8,
+      "games": 30000,
+      "elapsed_seconds": 0.9561039999998684,
+      "games_per_second": 31377.339703634887,
+      "turns_per_second": 5149685.599056878,
+      "outcome_sha256": "0256cebcb75038e11f226c3971ffaf125bb911cac17cfc7f2b521fe36a0fcb03"
+    },
+    {
+      "variant": "B",
+      "threads": 16,
+      "games": 30000,
+      "elapsed_seconds": 0.6524635999999191,
+      "games_per_second": 45979.576485192,
+      "turns_per_second": 7546221.735588944,
+      "outcome_sha256": "0256cebcb75038e11f226c3971ffaf125bb911cac17cfc7f2b521fe36a0fcb03"
+    },
+    {
+      "variant": "B",
+      "threads": 32,
+      "games": 30000,
+      "elapsed_seconds": 0.5192982999999458,
+      "games_per_second": 57770.26422001214,
+      "turns_per_second": 9481323.162429983,
+      "outcome_sha256": "0256cebcb75038e11f226c3971ffaf125bb911cac17cfc7f2b521fe36a0fcb03"
+    }
+  ]
+}
